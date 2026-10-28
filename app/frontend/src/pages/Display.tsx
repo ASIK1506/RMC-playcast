@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { syncManager, type DisplayState } from '@/lib/sync';
 import { SlideRenderer } from '@/components/studio/SlideRenderer';
+import { getApiUrl } from '@/lib/api';
 
 export default function DisplayPage() {
   const [state, setState] = useState<DisplayState>(() => syncManager.getState());
@@ -17,11 +18,11 @@ export default function DisplayPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // 1. Initial fetch from PHP Backend (/api/live) for OBS Studio CEF
+  // 1. Initial fetch from Backend for OBS Studio CEF
   useEffect(() => {
     const fetchInitial = async () => {
       try {
-        const res = await fetch('/api/live');
+        const res = await fetch(getApiUrl('/live'));
         if (res.ok) {
           const json = await res.json();
           if (json?.success && json?.state) {
@@ -38,7 +39,7 @@ export default function DisplayPage() {
     fetchInitial();
   }, []);
 
-  // 2. Dual Sync: BroadcastChannel (Instant <2ms for browser) + PHP Polling (300ms for OBS CEF)
+  // 2. Dual Sync: BroadcastChannel (Instant <2ms for browser) + Backend Polling (300ms for OBS CEF)
   useEffect(() => {
     // A. BroadcastChannel subscriber (same-browser tabs)
     const unsubscribe = syncManager.subscribe((newState) => {
@@ -58,10 +59,10 @@ export default function DisplayPage() {
       }
     });
 
-    // B. PHP Backend Polling (/api/live) every 300ms for OBS Studio CEF isolation
+    // B. Backend Polling every 300ms for OBS Studio CEF isolation
     const pollInterval = setInterval(async () => {
       try {
-        const res = await fetch('/api/live');
+        const res = await fetch(getApiUrl('/live'));
         if (res.ok) {
           const json = await res.json();
           if (json?.success && json?.state) {

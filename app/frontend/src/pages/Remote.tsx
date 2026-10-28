@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { syncManager, type DisplayState } from '@/lib/sync';
+import { getApiUrl } from '@/lib/api';
 import {
   Play,
   Square,
@@ -19,7 +20,20 @@ export default function RemotePage() {
       setState(newState);
     });
 
-    const poll = setInterval(() => {
+    const poll = setInterval(async () => {
+      try {
+        const res = await fetch(getApiUrl('/live'));
+        if (res.ok) {
+          const json = await res.json();
+          if (json?.success && json?.state) {
+            setState(json.state);
+            return;
+          }
+        }
+      } catch {
+        // Fall back to localStorage
+      }
+
       try {
         const stored = localStorage.getItem('playcast-obs-state');
         if (stored) {

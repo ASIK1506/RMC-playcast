@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { syncManager, type DisplayState } from '@/lib/sync';
 import { SlideRenderer } from '@/components/studio/SlideRenderer';
+import { getApiUrl } from '@/lib/api';
 
 export default function ProjectorPage() {
   const [state, setState] = useState<DisplayState>(() => syncManager.getState());
@@ -9,7 +10,7 @@ export default function ProjectorPage() {
 
   useEffect(() => {
     // Initial fetch from backend
-    fetch('/api/live')
+    fetch(getApiUrl('/live'))
       .then((r) => r.json())
       .then((json) => {
         if (json?.success && json?.state) {
@@ -25,7 +26,7 @@ export default function ProjectorPage() {
 
     const poll = setInterval(async () => {
       try {
-        const res = await fetch('/api/live');
+        const res = await fetch(getApiUrl('/live'));
         if (res.ok) {
           const json = await res.json();
           if (json?.success && json?.state) {

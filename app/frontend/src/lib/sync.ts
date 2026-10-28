@@ -187,7 +187,7 @@ class SyncManager {
 
     // Persist to PHP backend REST API for OBS Studio CEF & cross-browser synchronization
     try {
-      fetch('/api/live', {
+      fetch(getApiUrl('/live'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedState),
