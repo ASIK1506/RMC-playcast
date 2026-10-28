@@ -1,0 +1,44 @@
+# ==============================================================================
+# PlayCast REST API - Apache / LiteSpeed Configuration for MilesWeb
+# Target Subdomain: api.sriinfyllc.com
+# ==============================================================================
+
+# 1. Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Handle CORS Preflight OPTIONS requests
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ index.php [QSA,L]
+
+    # If the requested file or directory exists physically, serve it directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Route all other API requests (/health, /api/health, /songs, /live, etc.) to index.php
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# 2. Block Direct Access to Sensitive Files (.env, SQLite databases, SQL dumps)
+<FilesMatch "^(\.env|\.git|playcast\.db|.*\.sqlite|.*\.sql)">
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</FilesMatch>
+
+# 3. Global CORS Headers (Allows OBS Studio & Web Frontends to Connect)
+<IfModule mod_headers.c>
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Origin"
+    Header always set Access-Control-Max-Age "86400"
+</IfModule>
+
+# 4. Security: Disable Directory Browsing
+Options -Indexes

@@ -1,0 +1,249 @@
+<?php
+// PlayCast Backend Database & Configuration (Universal MySQL + SQLite PDO)
+
+// 1. Native .env loader
+function loadEnvFile($path) {
+    if (!file_exists($path)) return;
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if ($line === '' || $line[0] === '#') continue;
+        $parts = explode('=', $line, 2);
+        if (count($parts) === 2) {
+            $key = trim($parts[0]);
+            $val = trim($parts[1]);
+            $len = strlen($val);
+            if ($len >= 2 && (($val[0] === '"' && $val[$len - 1] === '"') || ($val[0] === "'" && $val[$len - 1] === "'"))) {
+                $val = substr($val, 1, -1);
+            }
+            if (!array_key_exists($key, $_SERVER) && !array_key_exists($key, $_ENV)) {
+                putenv("$key=$val");
+                $_ENV[$key] = $val;
+                $_SERVER[$key] = $val;
+            }
+        }
+    }
+}
+
+loadEnvFile(__DIR__ . '/.env');
+
+// 2. Configuration Parameters
+$dbDriver = strtolower(getenv('DB_DRIVER') ?: 'sqlite');
+$dbHost   = getenv('DB_HOST') ?: 'localhost';
+$dbPort   = getenv('DB_PORT') ?: '3306';
+$dbName   = getenv('DB_NAME') ?: 'Velloreh1_Playcast';
+$dbUser   = getenv('DB_USER') ?: 'velloreh1_Playcast';
+$dbPass   = getenv('DB_PASS') !== false ? getenv('DB_PASS') : '';
+$fallbackSqlite = getenv('DB_FALLBACK_SQLITE') !== 'false';
+
+$dataDir = __DIR__ . '/data';
+if (!is_dir($dataDir)) {
+    @mkdir($dataDir, 0755, true);
+}
+$sqlitePath = $dataDir . '/playcast.db';
+
+$db = null;
+$activeDriver = 'none';
+
+// 3. Connect to Database (MySQL with SQLite Fallback)
+if ($dbDriver === 'mysql' && !empty($dbPass) && $dbPass !== 'YOUR_MYSQL_PASSWORD_HERE') {
+    try {
+        $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$dbName};charset=utf8mb4";
+        $db = new PDO($dsn, $dbUser, $dbPass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
+        ]);
+        $activeDriver = 'mysql';
+    } catch (PDOException $e) {
+        if (!$fallbackSqlite) {
+            header('Content-Type: application/json; charset=utf-8');
+            http_response_code(500);
+            echo json_encode([
+                'error' => 'MySQL connection failed: ' . $e->getMessage(),
+                'hint' => 'Check your DB_USER, DB_NAME, and DB_PASS in .env file.'
+            ]);
+            exit;
+        }
+    }
+}
+
+// Fallback to SQLite if MySQL not connected
+if (!$db) {
+    try {
+        $db = new PDO("sqlite:" . $sqlitePath);
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $activeDriver = 'sqlite';
+    } catch (PDOException $e) {
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(500);
+        echo json_encode(['error' => 'SQLite connection failed: ' . $e->getMessage()]);
+        exit;
+    }
+}
+
+// 4. Auto-create tables if they don't exist
+try {
+    if ($activeDriver === 'mysql') {
+        $db->exec("CREATE TABLE IF NOT EXISTS `services` (
+            `id` VARCHAR(128) NOT NULL,
+            `name` VARCHAR(255) NOT NULL,
+            `is_active` TINYINT(1) DEFAULT 0,
+            `sections_json` LONGTEXT NOT NULL,
+            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS `songs` (
+            `id` VARCHAR(128) NOT NULL,
+            `title` VARCHAR(255) NOT NULL,
+            `tamil_title` VARCHAR(255) DEFAULT NULL,
+            `author` VARCHAR(255) DEFAULT NULL,
+            `song_key` VARCHAR(32) DEFAULT NULL,
+            `sections_json` LONGTEXT NOT NULL,
+            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS `settings` (
+            `setting_key` VARCHAR(128) NOT NULL,
+            `value_json` LONGTEXT NOT NULL,
+            `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`setting_key`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS `live_state` (
+            `id` INT NOT NULL,
+            `state_json` LONGTEXT NOT NULL,
+            `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+    } else {
+        $db->exec("CREATE TABLE IF NOT EXISTS services (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            is_active INTEGER DEFAULT 0,
+            sections_json TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS songs (
+            id TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            tamil_title TEXT,
+            author TEXT,
+            song_key TEXT,
+            sections_json TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS settings (
+            setting_key TEXT PRIMARY KEY,
+            value_json TEXT NOT NULL,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS live_state (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            state_json TEXT NOT NULL,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+    }
+
+    // Seed default songs if table is empty
+    $count = (int) $db->query("SELECT COUNT(*) FROM songs")->fetchColumn();
+    if ($count === 0) {
+        $defaultSongs = [
+            [
+                'id' => 'song-ag',
+                'title' => 'Amazing Grace',
+                'tamil_title' => 'அற்புத கிருபை என்னை மீட்டதே',
+                'author' => 'John Newton',
+                'song_key' => 'G',
+                'sections' => [
+                    [
+                        'tag' => 'Verse 1',
+                        'tamilText' => "அற்புத கிருபை என்னையே மீட்டதே,\nநான் தொலைந்தேன், இப்போது கண்டேன்,\nகுருடனாயிருந்தேன், பார்க்கிறேன்.",
+                        'englishText' => "Amazing grace how sweet the sound that saved a wretch like me!\nI once was lost, but now am found;\nwas blind, but now I see."
+                    ],
+                    [
+                        'tag' => 'Verse 2',
+                        'tamilText' => "பயப்படக் கற்பித்தது கிருபையே,\nஎன் பயங்களை நீக்கியதும் கிருபையே;\nவிசுவாசித்த முதல் நாழிகையிலே,\nஅந்தக் கிருபை எவ்வளவு விலையேறப்பெற்றது!",
+                        'englishText' => "'Twas grace that taught my heart to fear, and grace my fears relieved;\nHow precious did that grace appear the hour I first believed."
+                    ],
+                    [
+                        'tag' => 'Chorus',
+                        'tamilText' => "என் விலங்குகள் உடைந்தன, நான் விடுதலையானேன்,\nஎன் தேவன், என் மீட்பர் என்னை மீட்டாரே;\nவெள்ளம் போல அவருடைய இரக்கம் பாய்கிறது,\nமுடிவில்லா அன்பு, அற்புத கிருபை.",
+                        'englishText' => "My chains are gone, I have been set free,\nMy God, my Savior has ransomed me;\nAnd like a flood His mercy reigns,\nUnending love, amazing grace."
+                    ],
+                    [
+                        'tag' => 'Verse 3',
+                        'tamilText' => "கர்த்தர் எனக்கு நன்மையை வாக்களித்தார்,\nஅவருடைய வார்த்தை என் நம்பிக்கையை உறுதிப்படுத்துகிறது;\nஎன் கேடகமும் பங்கும் அவரே,\nஆயுள் உள்ள வரை என்னோடிருப்பார்.",
+                        'englishText' => "The Lord has promised good to me, His word my hope secures;\nHe will my shield and portion be as long as life endures."
+                    ]
+                ]
+            ],
+            [
+                'id' => 'song-10000',
+                'title' => '10,000 Reasons',
+                'tamil_title' => 'என் ஆத்துமாவே கர்த்தரை ஸ்தோத்திரி',
+                'author' => 'Matt Redman',
+                'song_key' => 'G',
+                'sections' => [
+                    [
+                        'tag' => 'Chorus',
+                        'tamilText' => "என் ஆத்துமாவே கர்த்தரை ஸ்தோத்திரி,\nஅவருடைய பரிசுத்த நாமத்தை பாடு;\nமுன்பெப்போதும் இல்லாதபடி பாடு,\nஉம் பரிசுத்த நாமத்தை தொழுதிடுவேன்.",
+                        'englishText' => "Bless the Lord O my soul, O my soul, worship His holy name.\nSing like never before, O my soul, I will worship Your holy name."
+                    ],
+                    [
+                        'tag' => 'Verse 1',
+                        'tamilText' => "சூரியன் உதிக்கும் புது நாள் இது,\nமீண்டும் உம்மைப் பாட நேரம் இது;\nஎன்ன நேரிடினும், என் முன் என்ன வரினும்,\nமாலை வேளையிலும் நான் பாடுவேன்.",
+                        'englishText' => "The sun comes up, it's a new day dawning; it's time to sing Your song again.\nWhatever may pass, and whatever lies before me, let me be singing when the evening comes."
+                    ]
+                ]
+            ],
+            [
+                'id' => 'song-in-christ-alone',
+                'title' => 'In Christ Alone',
+                'tamil_title' => 'கிறிஸ்துவுக்குள் மட்டுமே என் நம்பிக்கை',
+                'author' => 'Keith Getty, Stuart Townend',
+                'song_key' => 'D',
+                'sections' => [
+                    [
+                        'tag' => 'Verse 1',
+                        'tamilText' => "கிறிஸ்துவுக்குள் மட்டுமே என் நம்பிக்கை உள்ளது,\nஅவரே என் ஒளி, என் பலன், என் பாடல்;",
+                        'englishText' => "In Christ alone my hope is found, He is my light, my strength, my song;\nThis Cornerstone, this solid Ground, firm through the fiercest drought and storm."
+                    ],
+                    [
+                        'tag' => 'Chorus',
+                        'tamilText' => "என் பயங்கள் நீங்கின, கிறிஸ்து என் இரட்சகர்,\nஅவருடைய அன்பில் நான் நிலைத்திருப்பேன்.",
+                        'englishText' => "No guilt in life, no fear in death, this is the power of Christ in me;\nFrom life’s first cry to final breath, Jesus commands my destiny."
+                    ]
+                ]
+            ]
+        ];
+
+        $stmt = $db->prepare("REPLACE INTO songs (id, title, tamil_title, author, song_key, sections_json) VALUES (?, ?, ?, ?, ?, ?)");
+        foreach ($defaultSongs as $s) {
+            $stmt->execute([
+                $s['id'],
+                $s['title'],
+                $s['tamil_title'],
+                $s['author'],
+                $s['song_key'],
+                json_encode($s['sections'], JSON_UNESCAPED_UNICODE)
+            ]);
+        }
+    }
+} catch (Exception $e) {
+    header('Content-Type: application/json; charset=utf-8');
+    http_response_code(500);
+    echo json_encode(['error' => 'Database initialization error: ' . $e->getMessage()]);
+    exit;
+}

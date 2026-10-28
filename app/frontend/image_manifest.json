@@ -1,0 +1,37 @@
+{
+  "status": "success",
+  "results": [
+    {
+      "status": "success",
+      "filename": "logo-tamil-bible-obs.png",
+      "url": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpneacajsq/logo-tamil-bible-obs.png",
+      "path": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpneacajsq/logo-tamil-bible-obs.png",
+      "absolute_path": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpneacajsq/logo-tamil-bible-obs.png"
+    },
+    {
+      "status": "success",
+      "filename": "bg-church-golden-light.jpg",
+      "url": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpnracajra/bg-church-golden-light.png",
+      "path": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpnracajra/bg-church-golden-light.png",
+      "absolute_path": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpnracajra/bg-church-golden-light.png"
+    },
+    {
+      "status": "success",
+      "filename": "bg-abstract-spiritual-dark.jpg",
+      "url": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpn5ycajqq/bg-abstract-spiritual-dark.png",
+      "path": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpn5ycajqq/bg-abstract-spiritual-dark.png",
+      "absolute_path": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpn5ycajqq/bg-abstract-spiritual-dark.png"
+    },
+    {
+      "status": "success",
+      "filename": "bg-night-sky-worship.jpg",
+      "url": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpokqcajsq/bg-night-sky-worship.png",
+      "path": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpokqcajsq/bg-night-sky-worship.png",
+      "absolute_path": "https://mgx-backend-cdn.metadl.com/generate/images/1472679/2026-07-27/tiwpokqcajsq/bg-night-sky-worship.png"
+    }
+  ],
+  "success_count": 4,
+  "failed_count": 0,
+  "running_count": 0,
+  "message": "Generated 4/4 images total"
+}
