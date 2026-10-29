@@ -122,6 +122,58 @@ try {
             `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS `bible_verses` (
+            `id` INT AUTO_INCREMENT NOT NULL,
+            `book_id` INT NOT NULL,
+            `book_name` VARCHAR(64) NOT NULL,
+            `book_tamil` VARCHAR(64) NOT NULL,
+            `chapter` INT NOT NULL,
+            `verse` INT NOT NULL,
+            `verse_text` LONGTEXT NOT NULL,
+            PRIMARY KEY (`id`),
+            INDEX `idx_bk_ch` (`book_id`, `chapter`),
+            INDEX `idx_bk_ch_vs` (`book_id`, `chapter`, `verse`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS `backgrounds` (
+            `id` VARCHAR(128) NOT NULL,
+            `name` VARCHAR(255) NOT NULL,
+            `type` VARCHAR(32) NOT NULL,
+            `gradient_from` VARCHAR(32) DEFAULT NULL,
+            `gradient_to` VARCHAR(32) DEFAULT NULL,
+            `color` VARCHAR(32) DEFAULT NULL,
+            `image_url` TEXT DEFAULT NULL,
+            `video_url` TEXT DEFAULT NULL,
+            `is_default` TINYINT(1) DEFAULT 0,
+            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS `templates` (
+            `id` VARCHAR(128) NOT NULL,
+            `name` VARCHAR(255) NOT NULL,
+            `description` VARCHAR(255) DEFAULT NULL,
+            `layout_type` VARCHAR(64) NOT NULL,
+            `config_json` LONGTEXT NOT NULL,
+            `is_default` TINYINT(1) DEFAULT 0,
+            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS `media` (
+            `id` VARCHAR(128) NOT NULL,
+            `name` VARCHAR(255) NOT NULL,
+            `type` VARCHAR(32) NOT NULL,
+            `file_url` TEXT NOT NULL,
+            `file_path` TEXT NOT NULL,
+            `file_size` INT DEFAULT 0,
+            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
     } else {
         $db->exec("CREATE TABLE IF NOT EXISTS services (
             id TEXT PRIMARY KEY,
@@ -154,9 +206,63 @@ try {
             state_json TEXT NOT NULL,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS bible_verses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            book_id INTEGER NOT NULL,
+            book_name TEXT NOT NULL,
+            book_tamil TEXT NOT NULL,
+            chapter INTEGER NOT NULL,
+            verse INTEGER NOT NULL,
+            verse_text TEXT NOT NULL
+        )");
+        $db->exec("CREATE INDEX IF NOT EXISTS idx_bv_bk_ch ON bible_verses (book_id, chapter)");
+        $db->exec("CREATE INDEX IF NOT EXISTS idx_bv_bk_ch_vs ON bible_verses (book_id, chapter, verse)");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS backgrounds (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            type TEXT NOT NULL,
+            gradient_from TEXT,
+            gradient_to TEXT,
+            color TEXT,
+            image_url TEXT,
+            video_url TEXT,
+            is_default INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS templates (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            description TEXT,
+            layout_type TEXT NOT NULL,
+            config_json TEXT NOT NULL,
+            is_default INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        $db->exec("CREATE TABLE IF NOT EXISTS media (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            type TEXT NOT NULL,
+            file_url TEXT NOT NULL,
+            file_path TEXT NOT NULL,
+            file_size INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
     }
 
-    // Seed default songs if table is empty
+    // Ensure uploads directory exists
+    $uploadsDir = __DIR__ . '/uploads';
+    if (!is_dir($uploadsDir)) {
+        @mkdir($uploadsDir, 0755, true);
+    }
+
+    // 1. Seed default songs if table is empty
     $count = (int) $db->query("SELECT COUNT(*) FROM songs")->fetchColumn();
     if ($count === 0) {
         $defaultSongs = [
@@ -239,6 +345,74 @@ try {
                 $s['song_key'],
                 json_encode($s['sections'], JSON_UNESCAPED_UNICODE)
             ]);
+        }
+    }
+
+    // 2. Seed default backgrounds if table is empty
+    $bgCount = (int) $db->query("SELECT COUNT(*) FROM backgrounds")->fetchColumn();
+    if ($bgCount === 0) {
+        $defaultBgs = [
+            ['id' => 'bg-charcoal', 'name' => 'Charcoal Dark', 'type' => 'gradient', 'gradient_from' => '#080811', 'gradient_to' => '#1a1829', 'color' => null, 'is_default' => 1],
+            ['id' => 'bg-royal-purple', 'name' => 'Royal Purple', 'type' => 'gradient', 'gradient_from' => '#120b22', 'gradient_to' => '#43135c', 'color' => null, 'is_default' => 0],
+            ['id' => 'bg-midnight-blue', 'name' => 'Midnight Blue', 'type' => 'gradient', 'gradient_from' => '#061325', 'gradient_to' => '#0f3156', 'color' => null, 'is_default' => 0],
+            ['id' => 'bg-deep-crimson', 'name' => 'Deep Crimson', 'type' => 'gradient', 'gradient_from' => '#200810', 'gradient_to' => '#4f1425', 'color' => null, 'is_default' => 0],
+            ['id' => 'bg-emerald', 'name' => 'Emerald Green', 'type' => 'gradient', 'gradient_from' => '#071d18', 'gradient_to' => '#124337', 'color' => null, 'is_default' => 0],
+            ['id' => 'bg-obs-transparent', 'name' => 'OBS Transparent Key', 'type' => 'transparent', 'gradient_from' => null, 'gradient_to' => null, 'color' => 'transparent', 'is_default' => 0],
+        ];
+        $stmtBg = $db->prepare("REPLACE INTO backgrounds (id, name, type, gradient_from, gradient_to, color, is_default) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        foreach ($defaultBgs as $b) {
+            $stmtBg->execute([$b['id'], $b['name'], $b['type'], $b['gradient_from'], $b['gradient_to'], $b['color'], $b['is_default']]);
+        }
+    }
+
+    // 3. Seed default templates if table is empty
+    $tplCount = (int) $db->query("SELECT COUNT(*) FROM templates")->fetchColumn();
+    if ($tplCount === 0) {
+        $defaultTpls = [
+            [
+                'id' => 'fullscreen',
+                'name' => 'Fullscreen Sanctuary',
+                'description' => 'Standard clean centered presentation with bilingual stacking',
+                'layout_type' => 'fullscreen',
+                'config_json' => json_encode(['align' => 'center', 'style' => 'standard', 'bilingual' => true]),
+                'is_default' => 1
+            ],
+            [
+                'id' => 'lower-third',
+                'name' => 'OBS Lower-Third Banner',
+                'description' => 'Broadcast overlay for church cameras with alpha channel',
+                'layout_type' => 'lower-third',
+                'config_json' => json_encode(['position' => 'bottom', 'alpha' => true, 'accentBar' => true]),
+                'is_default' => 0
+            ],
+            [
+                'id' => 'box',
+                'name' => 'Frosted Glass Box',
+                'description' => 'Modern frosted glass backdrop for scripture & prayer',
+                'layout_type' => 'box',
+                'config_json' => json_encode(['backdropBlur' => 'md', 'card' => true]),
+                'is_default' => 0
+            ],
+            [
+                'id' => 'trendy',
+                'name' => 'Trendy Accent Modern',
+                'description' => 'Contemporary youth worship layout with accent pill badges',
+                'layout_type' => 'trendy',
+                'config_json' => json_encode(['badges' => true, 'accentColor' => 'fuchsia']),
+                'is_default' => 0
+            ],
+            [
+                'id' => 'minimal',
+                'name' => 'Minimalist Clean',
+                'description' => 'Subtle typography-first layout with high legibility',
+                'layout_type' => 'minimal',
+                'config_json' => json_encode(['padding' => 'loose', 'font' => 'serif']),
+                'is_default' => 0
+            ]
+        ];
+        $stmtTpl = $db->prepare("REPLACE INTO templates (id, name, description, layout_type, config_json, is_default) VALUES (?, ?, ?, ?, ?, ?)");
+        foreach ($defaultTpls as $t) {
+            $stmtTpl->execute([$t['id'], $t['name'], $t['description'], $t['layout_type'], $t['config_json'], $t['is_default']]);
         }
     }
 } catch (Exception $e) {

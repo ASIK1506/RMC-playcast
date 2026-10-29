@@ -47,7 +47,63 @@ CREATE TABLE IF NOT EXISTS `live_state` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 5. Seed Initial Worship Songs
+-- 5. Scripture Verses Table (Full 66 Books - 31,102 verses)
+CREATE TABLE IF NOT EXISTS `bible_verses` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `book_id` INT NOT NULL,
+  `book_name` VARCHAR(64) NOT NULL,
+  `book_tamil` VARCHAR(64) NOT NULL,
+  `chapter` INT NOT NULL,
+  `verse` INT NOT NULL,
+  `verse_text` LONGTEXT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_bk_ch` (`book_id`, `chapter`),
+  INDEX `idx_bk_ch_vs` (`book_id`, `chapter`, `verse`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 6. Background Themes Table (Gradients, solid colors, video motion loops, transparent)
+CREATE TABLE IF NOT EXISTS `backgrounds` (
+  `id` VARCHAR(128) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `type` VARCHAR(32) NOT NULL,
+  `gradient_from` VARCHAR(32) DEFAULT NULL,
+  `gradient_to` VARCHAR(32) DEFAULT NULL,
+  `color` VARCHAR(32) DEFAULT NULL,
+  `image_url` TEXT DEFAULT NULL,
+  `video_url` TEXT DEFAULT NULL,
+  `is_default` TINYINT(1) DEFAULT 0,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 7. Presentation Templates Table (Fullscreen, lower-third, frosted box, trendy, minimal)
+CREATE TABLE IF NOT EXISTS `templates` (
+  `id` VARCHAR(128) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255) DEFAULT NULL,
+  `layout_type` VARCHAR(64) NOT NULL,
+  `config_json` LONGTEXT NOT NULL,
+  `is_default` TINYINT(1) DEFAULT 0,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 8. Media Assets Table (Images, motion video loops, audio tracks)
+CREATE TABLE IF NOT EXISTS `media` (
+  `id` VARCHAR(128) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `type` VARCHAR(32) NOT NULL,
+  `file_url` TEXT NOT NULL,
+  `file_path` TEXT NOT NULL,
+  `file_size` INT DEFAULT 0,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 9. Seed Initial Worship Songs
 REPLACE INTO `songs` (`id`, `title`, `tamil_title`, `author`, `song_key`, `sections_json`) VALUES
 (
   'song-ag',
@@ -73,5 +129,22 @@ REPLACE INTO `songs` (`id`, `title`, `tamil_title`, `author`, `song_key`, `secti
   'D',
   '[{"tag":"Verse 1","tamilText":"கிறிஸ்துவுக்குள் மட்டுமே என் நம்பிக்கை உள்ளது,\\nஅவரே என் ஒளி, என் பலன், என் பாடல்;","englishText":"In Christ alone my hope is found, He is my light, my strength, my song;\\nThis Cornerstone, this solid Ground, firm through the fiercest drought and storm."},{"tag":"Chorus","tamilText":"என் பயங்கள் நீங்கின, கிறிஸ்து என் இரட்சகர்,\\nஅவருடைய அன்பில் நான் நிலைத்திருப்பேன்.","englishText":"No guilt in life, no fear in death, this is the power of Christ in me;\\nFrom life’s first cry to final breath, Jesus commands my destiny."}]'
 );
+
+-- 10. Seed Initial Background Themes
+REPLACE INTO `backgrounds` (`id`, `name`, `type`, `gradient_from`, `gradient_to`, `color`, `is_default`) VALUES
+('bg-charcoal', 'Charcoal Dark', 'gradient', '#080811', '#1a1829', NULL, 1),
+('bg-royal-purple', 'Royal Purple', 'gradient', '#120b22', '#43135c', NULL, 0),
+('bg-midnight-blue', 'Midnight Blue', 'gradient', '#061325', '#0f3156', NULL, 0),
+('bg-deep-crimson', 'Deep Crimson', 'gradient', '#200810', '#4f1425', NULL, 0),
+('bg-emerald', 'Emerald Green', 'gradient', '#071d18', '#124337', NULL, 0),
+('bg-obs-transparent', 'OBS Transparent Key', 'transparent', NULL, NULL, 'transparent', 0);
+
+-- 11. Seed Initial Presentation Templates
+REPLACE INTO `templates` (`id`, `name`, `description`, `layout_type`, `config_json`, `is_default`) VALUES
+('fullscreen', 'Fullscreen Sanctuary', 'Standard clean centered presentation with bilingual stacking', 'fullscreen', '{"align":"center","style":"standard","bilingual":true}', 1),
+('lower-third', 'OBS Lower-Third Banner', 'Broadcast overlay for church cameras with alpha channel', 'lower-third', '{"position":"bottom","alpha":true,"accentBar":true}', 0),
+('box', 'Frosted Glass Box', 'Modern frosted glass backdrop for scripture & prayer', 'box', '{"backdropBlur":"md","card":true}', 0),
+('trendy', 'Trendy Accent Modern', 'Contemporary youth worship layout with accent pill badges', 'trendy', '{"badges":true,"accentColor":"fuchsia"}', 0),
+('minimal', 'Minimalist Clean', 'Subtle typography-first layout with high legibility', 'minimal', '{"padding":"loose","font":"serif"}', 0);
 
 SET FOREIGN_KEY_CHECKS = 1;

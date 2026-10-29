@@ -107,3 +107,208 @@ export async function postLiveBroadcastState(state: any): Promise<boolean> {
     return false;
   }
 }
+
+// ----------------- BIBLE API -----------------
+export interface ApiBibleBook {
+  id: number;
+  name: string;
+  nameTamil: string;
+  chapters: number;
+  testament: 'old' | 'new';
+}
+
+export interface ApiBibleVerse {
+  verse: number;
+  text: string;
+}
+
+export async function fetchBibleBooks(): Promise<ApiBibleBook[]> {
+  try {
+    const res = await fetch(`${API_BASE}/bible/books`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json.data || [];
+  } catch (err) {
+    console.warn('Using local fallback for Bible books:', err);
+    return [];
+  }
+}
+
+export async function fetchBibleChapter(
+  bookId: number,
+  chapter: number
+): Promise<ApiBibleVerse[]> {
+  try {
+    const res = await fetch(
+      `${API_BASE}/bible/chapter?bookId=${bookId}&chapter=${chapter}`
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json.data || [];
+  } catch (err) {
+    console.warn('Failed to fetch chapter from backend:', err);
+    return [];
+  }
+}
+
+export async function searchBibleApi(query: string): Promise<
+  {
+    bookId: number;
+    book: string;
+    bookTamil: string;
+    chapter: number;
+    verse: number;
+    text: string;
+    reference: string;
+  }[]
+> {
+  try {
+    const res = await fetch(
+      `${API_BASE}/bible/search?q=${encodeURIComponent(query)}`
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json.data || [];
+  } catch (err) {
+    console.warn('Failed to search Bible from backend:', err);
+    return [];
+  }
+}
+
+// ----------------- BACKGROUNDS API -----------------
+export interface ApiBackground {
+  id: string;
+  name: string;
+  type: 'gradient' | 'solid' | 'transparent' | 'image' | 'video';
+  gradientFrom?: string | null;
+  gradientTo?: string | null;
+  color?: string | null;
+  imageUrl?: string | null;
+  videoUrl?: string | null;
+  isDefault?: boolean;
+}
+
+export async function fetchBackgrounds(): Promise<ApiBackground[]> {
+  try {
+    const res = await fetch(`${API_BASE}/backgrounds`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json.data || [];
+  } catch (err) {
+    console.warn('Failed to fetch backgrounds from backend:', err);
+    return [];
+  }
+}
+
+export async function saveBackground(bg: ApiBackground): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/backgrounds`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bg),
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('Failed to save background to backend:', err);
+    return false;
+  }
+}
+
+export async function deleteBackground(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/backgrounds?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('Failed to delete background:', err);
+    return false;
+  }
+}
+
+// ----------------- TEMPLATES API -----------------
+export interface ApiTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  layoutType: 'fullscreen' | 'lower-third' | 'box' | 'trendy' | 'minimal';
+  config?: any;
+  isDefault?: boolean;
+}
+
+export async function fetchTemplates(): Promise<ApiTemplate[]> {
+  try {
+    const res = await fetch(`${API_BASE}/templates`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json.data || [];
+  } catch (err) {
+    console.warn('Failed to fetch templates from backend:', err);
+    return [];
+  }
+}
+
+export async function saveTemplate(tpl: ApiTemplate): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/templates`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tpl),
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('Failed to save template to backend:', err);
+    return false;
+  }
+}
+
+// ----------------- MEDIA API -----------------
+export interface ApiMediaItem {
+  id: string;
+  name: string;
+  type: 'image' | 'video' | 'audio';
+  url: string;
+  size: number;
+  createdAt?: string;
+}
+
+export async function fetchMedia(): Promise<ApiMediaItem[]> {
+  try {
+    const res = await fetch(`${API_BASE}/media`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json.data || [];
+  } catch (err) {
+    console.warn('Failed to fetch media from backend:', err);
+    return [];
+  }
+}
+
+export async function uploadMedia(file: File): Promise<ApiMediaItem | null> {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch(`${API_BASE}/media/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!res.ok) throw new Error(`Upload failed HTTP ${res.status}`);
+    const json = await res.json();
+    return json.data || null;
+  } catch (err) {
+    console.error('Failed to upload media to backend:', err);
+    return null;
+  }
+}
+
+export async function deleteMedia(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/media?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('Failed to delete media:', err);
+    return false;
+  }
+}

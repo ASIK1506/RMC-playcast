@@ -24,3 +24,6 @@ Thumbs.db
 # Temporary files
 scratch/
 *.tmp
+*.db
+*.sqlite
+playcast-backend-milesweb.zip

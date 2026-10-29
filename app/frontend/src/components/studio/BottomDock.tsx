@@ -14,10 +14,21 @@ import {
   ChevronUp,
   ChevronDown,
   Sparkles,
+  Upload,
 } from 'lucide-react';
 import type { WorshipSong, PlayCastSlide, ServiceTimer } from '@/types/playcast';
 import type { DisplaySettings } from '@/lib/sync';
 import { bibleBooks, getChapterVerses } from '@/data/tamil-bible';
+import {
+  fetchBibleChapter,
+  fetchBackgrounds,
+  fetchTemplates,
+  fetchMedia,
+  uploadMedia,
+  type ApiBackground,
+  type ApiTemplate,
+  type ApiMediaItem,
+} from '@/lib/api';
 import { Button } from '@/components/ui/button';
 
 interface BottomDockProps {
@@ -65,7 +76,46 @@ export const BottomDock: React.FC<BottomDockProps> = ({
   const [verseSearchQuery, setVerseSearchQuery] = useState('');
 
   const currentBook = bibleBooks.find((b) => b.id === selectedBookId) || bibleBooks[0];
-  const chapterVerses = getChapterVerses(selectedBookId, selectedChapter);
+  const [chapterVerses, setChapterVerses] = useState<{ verse: number; text: string }[]>(() =>
+    getChapterVerses(selectedBookId, selectedChapter)
+  );
+
+  // Dynamic Scripture syncing from MilesWeb MySQL Database
+  useEffect(() => {
+    let isCurrent = true;
+    fetchBibleChapter(selectedBookId, selectedChapter)
+      .then((verses) => {
+        if (isCurrent && verses && verses.length > 0) {
+          setChapterVerses(verses);
+        } else if (isCurrent) {
+          setChapterVerses(getChapterVerses(selectedBookId, selectedChapter));
+        }
+      })
+      .catch(() => {
+        if (isCurrent) setChapterVerses(getChapterVerses(selectedBookId, selectedChapter));
+      });
+    return () => {
+      isCurrent = false;
+    };
+  }, [selectedBookId, selectedChapter]);
+
+  // Database-backed Backgrounds, Templates, and Media
+  const [dbBackgrounds, setDbBackgrounds] = useState<ApiBackground[]>([]);
+  const [dbTemplates, setDbTemplates] = useState<ApiTemplate[]>([]);
+  const [dbMedia, setDbMedia] = useState<ApiMediaItem[]>([]);
+  const [isUploadingMedia, setIsUploadingMedia] = useState(false);
+
+  useEffect(() => {
+    fetchBackgrounds().then((bgs) => {
+      if (bgs && bgs.length > 0) setDbBackgrounds(bgs);
+    });
+    fetchTemplates().then((tpls) => {
+      if (tpls && tpls.length > 0) setDbTemplates(tpls);
+    });
+    fetchMedia().then((media) => {
+      if (media) setDbMedia(media);
+    });
+  }, []);
 
   // 2. Lyrics Library State
   const [songSearchQuery, setSongSearchQuery] = useState('');
@@ -202,11 +252,50 @@ export const BottomDock: React.FC<BottomDockProps> = ({
     },
   ];
 
-  const isBgActive = (bg: (typeof backgroundPresets)[0]) => {
+  const activeBackgrounds = dbBackgrounds.length > 0
+    ? dbBackgrounds.map((b) => ({
+        name: b.name,
+        type: (b.type === 'video' ? 'gradient' : b.type) as 'gradient' | 'solid' | 'transparent',
+        gradientFrom: b.gradientFrom || undefined,
+        gradientTo: b.gradientTo || undefined,
+        color: b.color || undefined,
+      }))
+    : backgroundPresets;
+
+  const isBgActive = (bg: { type: string; gradientFrom?: string; color?: string }) => {
     if (bg.type === 'transparent') return settings.backgroundType === 'transparent';
     if (bg.type === 'solid') return settings.backgroundType === 'solid';
     return settings.backgroundType === bg.type && settings.gradientFrom === bg.gradientFrom;
   };
+
+  const activeTemplates = dbTemplates.length > 0
+    ? dbTemplates.map((t) => ({
+        id: t.layoutType as 'fullscreen' | 'lower-third' | 'box' | 'trendy' | 'minimal',
+        name: t.name,
+        desc: t.description || '',
+      }))
+    : [
+        {
+          id: 'fullscreen' as const,
+          name: 'Fullscreen Sanctuary',
+          desc: 'Standard clean centered presentation with bilingual stacking',
+        },
+        {
+          id: 'lower-third' as const,
+          name: 'OBS Lower-Third Banner',
+          desc: 'Broadcast overlay for church cameras with alpha channel',
+        },
+        {
+          id: 'box' as const,
+          name: 'Frosted Glass Box',
+          desc: 'Modern frosted glass backdrop for scripture & prayer',
+        },
+        {
+          id: 'trendy' as const,
+          name: 'Trendy Accent Modern',
+          desc: 'Contemporary youth worship layout with accent pill badges',
+        },
+      ];
 
   const filteredSongs = songLibrary.filter((song) => {
     if (!songSearchQuery.trim()) return true;
@@ -467,17 +556,39 @@ export const BottomDock: React.FC<BottomDockProps> = ({
 
           {/* TAB 3: MEDIA & BACKGROUNDS */}
           {activeTab === 'media' && (
-            <div className="h-full space-y-2 min-w-0">
+            <div className="h-full space-y-3 min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Select Slide Background Theme
+                  Slide Background Themes ({activeBackgrounds.length})
                 </span>
-                <span className="text-[10px] text-fuchsia-400">
-                  Updates active slides and live broadcast instantly
-                </span>
+                <div className="flex items-center gap-2">
+                  <label className="cursor-pointer bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-[10px] font-semibold px-2.5 py-1 rounded flex items-center gap-1.5 transition-all shadow-sm">
+                    <Upload className="w-3 h-3" />
+                    <span>{isUploadingMedia ? 'Uploading...' : 'Upload Cloud Media'}</span>
+                    <input
+                      type="file"
+                      accept="image/*,video/*,audio/*"
+                      className="hidden"
+                      disabled={isUploadingMedia}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setIsUploadingMedia(true);
+                        const res = await uploadMedia(file);
+                        setIsUploadingMedia(false);
+                        if (res) {
+                          setDbMedia((prev) => [res, ...prev]);
+                        }
+                      }}
+                    />
+                  </label>
+                  <span className="text-[10px] text-fuchsia-400">
+                    Live Broadcast Synced
+                  </span>
+                </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 min-w-0">
-                {backgroundPresets.map((bg) => {
+                {activeBackgrounds.map((bg) => {
                   const active = isBgActive(bg);
                   return (
                     <div
@@ -512,6 +623,33 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                   );
                 })}
               </div>
+
+              {dbMedia.length > 0 && (
+                <div className="pt-2 border-t border-white/5">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                    Uploaded Cloud Media ({dbMedia.length})
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
+                    {dbMedia.map((m) => (
+                      <div
+                        key={m.id}
+                        onClick={() =>
+                          onApplyBackground({
+                            type: 'solid',
+                            color: '#000000',
+                          })
+                        }
+                        className="p-2 rounded-lg bg-slate-900 border border-white/10 hover:border-fuchsia-500/50 cursor-pointer text-left truncate text-[11px] text-slate-300 hover:text-white"
+                      >
+                        <div className="font-medium truncate">{m.name}</div>
+                        <div className="text-[9px] text-slate-500 uppercase mt-0.5">
+                          {m.type} • {(m.size / 1024).toFixed(0)} KB
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -520,35 +658,14 @@ export const BottomDock: React.FC<BottomDockProps> = ({
             <div className="h-full space-y-2 min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Presentation Template Styles
+                  Presentation Template Styles ({activeTemplates.length})
                 </span>
                 <span className="text-[10px] text-fuchsia-400">
                   Switches layout format in real-time
                 </span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 min-w-0">
-                {[
-                  {
-                    id: 'fullscreen' as const,
-                    name: 'Fullscreen Sanctuary',
-                    desc: 'Standard clean centered presentation with bilingual stacking',
-                  },
-                  {
-                    id: 'lower-third' as const,
-                    name: 'OBS Lower-Third Banner',
-                    desc: 'Broadcast overlay for church cameras with alpha channel',
-                  },
-                  {
-                    id: 'box' as const,
-                    name: 'Frosted Glass Box',
-                    desc: 'Modern frosted glass backdrop for scripture & prayer',
-                  },
-                  {
-                    id: 'trendy' as const,
-                    name: 'Trendy Accent Modern',
-                    desc: 'Contemporary youth worship layout with accent pill badges',
-                  },
-                ].map((tpl) => {
+                {activeTemplates.map((tpl) => {
                   const active = settings.templateId === tpl.id;
                   return (
                     <div
