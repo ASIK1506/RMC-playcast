@@ -44,28 +44,51 @@ $sqlitePath = $dataDir . '/playcast.db';
 
 $db = null;
 $activeDriver = 'none';
+$mysqlError = null;
+$mysqlAttempted = false;
 
 // 3. Connect to Database (MySQL with SQLite Fallback)
-if ($dbDriver === 'mysql' && !empty($dbPass) && $dbPass !== 'YOUR_MYSQL_PASSWORD_HERE') {
-    try {
-        $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$dbName};charset=utf8mb4";
-        $db = new PDO($dsn, $dbUser, $dbPass, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
-        ]);
-        $activeDriver = 'mysql';
-    } catch (PDOException $e) {
-        if (!$fallbackSqlite) {
-            header('Content-Type: application/json; charset=utf-8');
-            http_response_code(500);
-            echo json_encode([
-                'error' => 'MySQL connection failed: ' . $e->getMessage(),
-                'hint' => 'Check your DB_USER, DB_NAME, and DB_PASS in .env file.'
-            ]);
-            exit;
+$shouldTryMysql = ($dbDriver === 'mysql' || (!empty($dbPass) && $dbPass !== 'YOUR_MYSQL_PASSWORD_HERE'));
+
+if ($shouldTryMysql) {
+    $mysqlAttempted = true;
+    $dbNamesToTry = array_unique(array_filter([
+        $dbName,
+        strtolower($dbName),
+        'velloreh1_Playcast',
+        'velloreh1_playcast'
+    ]));
+    $hostsToTry = array_unique(array_filter([$dbHost, 'localhost', '127.0.0.1']));
+
+    foreach ($hostsToTry as $hostCandidate) {
+        foreach ($dbNamesToTry as $nameCandidate) {
+            try {
+                $dsn = "mysql:host={$hostCandidate};port={$dbPort};dbname={$nameCandidate};charset=utf8mb4";
+                $db = new PDO($dsn, $dbUser, $dbPass, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
+                ]);
+                $activeDriver = 'mysql';
+                $dbName = $nameCandidate;
+                $dbHost = $hostCandidate;
+                $mysqlError = null;
+                break 2;
+            } catch (PDOException $e) {
+                $mysqlError = $e->getMessage();
+            }
         }
+    }
+
+    if (!$db && !$fallbackSqlite) {
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(500);
+        echo json_encode([
+            'error' => 'MySQL connection failed: ' . $mysqlError,
+            'hint' => 'Check your DB_USER, DB_NAME, and DB_PASS in .env file.'
+        ]);
+        exit;
     }
 }
 

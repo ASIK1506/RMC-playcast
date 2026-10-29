@@ -27,8 +27,8 @@ try {
         $stmt = $db->query("SELECT COUNT(*) FROM songs");
         $sampleSongs = (int) $stmt->fetchColumn();
 
-        // Check tables
-        $tables = ['services', 'songs', 'settings', 'live_state'];
+        // Check all 8 tables
+        $tables = ['services', 'songs', 'settings', 'live_state', 'bible_verses', 'backgrounds', 'templates', 'media'];
         foreach ($tables as $t) {
             try {
                 $count = $db->query("SELECT COUNT(*) FROM `{$t}`")->fetchColumn();
@@ -122,6 +122,19 @@ try {
                 <?php endif; ?>
             </span>
         </div>
+
+        <?php if (!empty($mysqlError)): ?>
+        <div style="background: #450a0a; border: 1px solid #991b1b; border-radius: 8px; padding: 12px; margin-top: 14px;">
+            <div style="color: #f87171; font-weight: bold; font-size: 13px; margin-bottom: 4px;">⚠️ MySQL Connection Issue</div>
+            <div style="color: #fca5a5; font-size: 12px; font-family: monospace; word-break: break-all;"><?php echo htmlspecialchars($mysqlError); ?></div>
+            <div style="color: #94a3b8; font-size: 12px; margin-top: 8px;">
+                <strong>Troubleshooting tips:</strong><br>
+                1. In cPanel &gt; MySQL Databases, ensure user <code>velloreh1_Playcast</code> is added to database <code>velloreh1_Playcast</code> with <strong>ALL PRIVILEGES</strong>.<br>
+                2. Check case sensitivity: Linux MySQL database names are usually all lowercase (e.g., <code>velloreh1_playcast</code>).<br>
+                3. Ensure password in <code>.env</code> matches your cPanel MySQL user password.
+            </div>
+        </div>
+        <?php endif; ?>
 
         <div style="margin-top: 18px;">
             <div class="label" style="margin-bottom: 6px;">Database Tables Verification:</div>

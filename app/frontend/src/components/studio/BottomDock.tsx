@@ -15,6 +15,7 @@ import {
   ChevronDown,
   Sparkles,
   Upload,
+  X,
 } from 'lucide-react';
 import type { WorshipSong, PlayCastSlide, ServiceTimer } from '@/types/playcast';
 import type { DisplaySettings } from '@/lib/sync';
@@ -25,6 +26,7 @@ import {
   fetchTemplates,
   fetchMedia,
   uploadMedia,
+  saveSong,
   type ApiBackground,
   type ApiTemplate,
   type ApiMediaItem,
@@ -44,6 +46,7 @@ interface BottomDockProps {
     reference: string;
   }) => void;
   onAddSongToService: (song: WorshipSong) => void;
+  onSaveSongToLibrary?: (song: WorshipSong) => void;
   onApplyBackground: (bg: {
     type: 'gradient' | 'solid' | 'transparent';
     gradientFrom?: string;
@@ -62,6 +65,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({
   onUpdateTimer,
   onAddScriptureToService,
   onAddSongToService,
+  onSaveSongToLibrary,
   onApplyBackground,
   onApplyTemplate,
 }) => {
@@ -119,6 +123,60 @@ export const BottomDock: React.FC<BottomDockProps> = ({
 
   // 2. Lyrics Library State
   const [songSearchQuery, setSongSearchQuery] = useState('');
+  const [isNewSongModalOpen, setIsNewSongModalOpen] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newTamilTitle, setNewTamilTitle] = useState('');
+  const [newAuthor, setNewAuthor] = useState('');
+  const [newKey, setNewKey] = useState('G');
+  const [newLyrics, setNewLyrics] = useState('');
+  const [isSavingSong, setIsSavingSong] = useState(false);
+
+  const handleCreateSong = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTitle.trim()) return;
+    setIsSavingSong(true);
+
+    const rawParts = newLyrics.split(/\n\s*\n/).filter((p) => p.trim().length > 0);
+    const sections = rawParts.length > 0
+      ? rawParts.map((part, idx) => ({
+          tag: idx === 0 ? 'Verse 1' : idx === 1 ? 'Chorus' : `Verse ${idx}`,
+          tamilText: part.trim(),
+          englishText: part.trim(),
+        }))
+      : [
+          {
+            tag: 'Verse 1',
+            tamilText: newTamilTitle || newTitle,
+            englishText: newTitle,
+          },
+        ];
+
+    const songId = `song-${Date.now()}`;
+    const newSong: WorshipSong = {
+      id: songId,
+      title: newTitle.trim(),
+      tamilTitle: newTamilTitle.trim() || undefined,
+      author: newAuthor.trim() || undefined,
+      key: newKey.trim() || undefined,
+      sections,
+    };
+
+    try {
+      await saveSong(newSong);
+      if (onSaveSongToLibrary) {
+        onSaveSongToLibrary(newSong);
+      }
+      setIsNewSongModalOpen(false);
+      setNewTitle('');
+      setNewTamilTitle('');
+      setNewAuthor('');
+      setNewLyrics('');
+    } catch (err) {
+      console.error('Failed to save song:', err);
+    } finally {
+      setIsSavingSong(false);
+    }
+  };
 
   // 3. Timers State & Engine
   const [countdownDuration, setCountdownDuration] = useState(300); // 5 min
@@ -503,9 +561,17 @@ export const BottomDock: React.FC<BottomDockProps> = ({
           {activeTab === 'lyrics' && (
             <div className="h-full flex flex-col gap-2 min-w-0">
               <div className="flex items-center justify-between gap-3 min-w-0">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground shrink-0">
-                  Worship Songs ({filteredSongs.length})
-                </span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                    Worship Songs ({filteredSongs.length})
+                  </span>
+                  <button
+                    onClick={() => setIsNewSongModalOpen(true)}
+                    className="flex items-center gap-1 text-[10px] font-semibold bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-2 py-0.5 rounded cursor-pointer transition-colors shadow-sm"
+                  >
+                    <Plus className="w-3 h-3" /> Add Song
+                  </button>
+                </div>
                 <div className="relative flex-1 max-w-sm">
                   <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <input
@@ -876,6 +942,123 @@ export const BottomDock: React.FC<BottomDockProps> = ({
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* NEW SONG MODAL */}
+      {isNewSongModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl p-6 w-full max-w-lg shadow-2xl relative text-left">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+              <div>
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <Music className="w-4 h-4 text-fuchsia-400" />
+                  Add Worship Song to Database
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Stores permanently in your MilesWeb MySQL database
+                </p>
+              </div>
+              <button
+                onClick={() => setIsNewSongModalOpen(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateSong} className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                    English Title *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    placeholder="e.g. Way Maker"
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-fuchsia-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                    Tamil Title (தமிழ்)
+                  </label>
+                  <input
+                    type="text"
+                    value={newTamilTitle}
+                    onChange={(e) => setNewTamilTitle(e.target.value)}
+                    placeholder="e.g. வழி உண்டாக்குபவர்"
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-fuchsia-500 font-['Noto_Sans_Tamil']"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                    Song Key
+                  </label>
+                  <select
+                    value={newKey}
+                    onChange={(e) => setNewKey(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-fuchsia-500"
+                  >
+                    {['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B', 'Am', 'Em', 'Dm'].map((k) => (
+                      <option key={k} value={k}>Key of {k}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                    Author / Composer
+                  </label>
+                  <input
+                    type="text"
+                    value={newAuthor}
+                    onChange={(e) => setNewAuthor(e.target.value)}
+                    placeholder="e.g. Sinach"
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-fuchsia-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                  Lyrics / Verses (Separate sections with an empty line)
+                </label>
+                <textarea
+                  rows={6}
+                  value={newLyrics}
+                  onChange={(e) => setNewLyrics(e.target.value)}
+                  placeholder="You are here, moving in our midst...&#10;&#10;Way maker, miracle worker, promise keeper..."
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-fuchsia-500 font-mono leading-relaxed resize-none"
+                />
+                <span className="text-[10px] text-muted-foreground block mt-1">
+                  Double line breaks automatically split the song into Verse 1, Chorus, Verse 2, etc.
+                </span>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setIsNewSongModalOpen(false)}
+                  className="px-3 py-1.5 rounded-lg border border-white/10 text-xs text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSavingSong || !newTitle.trim()}
+                  className="px-4 py-1.5 rounded-lg bg-fuchsia-600 hover:bg-fuchsia-500 text-xs font-semibold text-white transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shadow-md shadow-fuchsia-600/30"
+                >
+                  {isSavingSong ? 'Saving...' : 'Save & Persist to Database'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

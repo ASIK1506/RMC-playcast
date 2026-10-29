@@ -91,6 +91,10 @@ export default function PlayCastStudio() {
     });
   }, []);
 
+  const handleSaveSongToLibrary = (song: WorshipSong) => {
+    setSongLibrary((prev) => [song, ...prev.filter((s) => s.id !== song.id)]);
+  };
+
   // Save sections on change to localStorage AND PHP backend
   useEffect(() => {
     try {
@@ -632,6 +636,7 @@ export default function PlayCastStudio() {
             onUpdateTimer={handleUpdateTimer}
             onAddScriptureToService={handleAddScriptureToService}
             onAddSongToService={handleAddSongToService}
+            onSaveSongToLibrary={handleSaveSongToLibrary}
             onApplyBackground={handleApplyBackground}
             onApplyTemplate={handleApplyTemplate}
           />

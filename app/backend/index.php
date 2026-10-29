@@ -49,6 +49,10 @@ if ($endpoint === 'health' || $endpoint === '') {
         'version' => '1.0.0',
         'php_version' => PHP_VERSION,
         'database' => $activeDriver ?? 'connected',
+        'mysql_attempted' => $mysqlAttempted ?? false,
+        'mysql_error' => $mysqlError ?? null,
+        'db_name' => $dbName ?? null,
+        'db_user' => $dbUser ?? null,
         'host' => $_SERVER['HTTP_HOST'] ?? 'unknown',
         'timestamp' => time()
     ]);
