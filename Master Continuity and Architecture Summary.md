@@ -100,7 +100,7 @@
 
 ## 6. Frontend Routes & Output Views
 
-- **`/login`** — Modern split-screen login page matching SaaS showcase reference with anti-AI-slop design: fit-to-screen without page scrollbars, left side with full-frame hardware-accelerated looping video showcase window (`/dashboard-preview.webm` with instant image poster fallback) preserving natural aspect ratio without text overlap or vertical cropping, feature pills, and subtle backdrop; right side with sleek sign-in form, show/hide password toggle, and session persistence.
+- **`/login`** — Modern split-screen login page matching SaaS showcase reference with anti-AI-slop design: fit-to-screen without page scrollbars, left side with dashboard mockup, feature pills, and subtle backdrop; right side with sleek sign-in form, show/hide password toggle, and session persistence.
 - **`/`** — Protected main PlayCast Studio:
   - **Show Mode:** Dual preview/program monitors, quick blanking, church personalities & lower-third overlay controller (custom positions & timing), live broadcast toggles.
   - **Edit Mode:** Slide matrix editor, slide splitting, lyric adjustments, typography styling, song presenter info.
