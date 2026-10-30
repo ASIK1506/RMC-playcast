@@ -119,6 +119,7 @@
 ## 7. Key File Structure & Locations
 
 ### Frontend (`app/frontend/`)
+- `index.html` — Configured with `RMC Church PlayCast` title, description, favicon, OpenGraph metadata, and Twitter Card sharing the official logo (`/logo.png`).
 - `src/App.tsx` — Routing configuration wrapped with `AuthProvider` and `RouteGuards`.
 - `src/context/AuthContext.tsx` — React authentication state provider and session manager.
 - `src/components/auth/RouteGuards.tsx` — `ProtectedRoute` and `AdminRoute` guards.
