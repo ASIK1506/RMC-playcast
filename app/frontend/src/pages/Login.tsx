@@ -62,46 +62,41 @@ export default function Login() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center w-full h-screen bg-[#07090e]">
-        <div className="w-10 h-10 border-4 border-fuchsia-500 border-t-transparent rounded-full animate-spin" />
+      <div className="flex items-center justify-center w-full h-screen bg-[#06080d]">
+        <div className="w-9 h-9 border-3 border-fuchsia-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#07090e] text-white selection:bg-fuchsia-600 selection:text-white overflow-x-hidden">
+    <div className="w-full h-screen min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row bg-[#06080d] text-white selection:bg-fuchsia-600 selection:text-white overflow-y-auto lg:overflow-hidden">
       {/* =========================================================================
-          LEFT COLUMN: Visual Representation & Software Showcase
+          LEFT COLUMN: Software Showcase & Dashboard Visual (Fit-To-Screen)
           ========================================================================= */}
-      <div className="relative w-full lg:w-[56%] xl:w-[58%] min-h-[460px] lg:min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-12 xl:p-16 overflow-hidden bg-gradient-to-br from-[#12072b] via-[#0d0722] to-[#07090e] border-b lg:border-b-0 lg:border-r border-white/10">
-        {/* Ambient atmospheric glow orbs */}
+      <div className="relative w-full lg:w-[56%] xl:w-[58%] h-auto lg:h-full flex flex-col justify-between p-6 sm:p-8 lg:p-8 xl:p-10 bg-gradient-to-br from-[#12072b] via-[#0c061e] to-[#06080d] border-b lg:border-b-0 lg:border-r border-white/10 shrink-0 lg:shrink">
+        {/* Ambient atmospheric lighting */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-fuchsia-600/15 blur-[140px]" />
-          <div className="absolute top-1/3 -right-40 w-[550px] h-[550px] rounded-full bg-indigo-600/15 blur-[150px]" />
-          <div className="absolute -bottom-32 left-1/4 w-[500px] h-[500px] rounded-full bg-purple-700/10 blur-[130px]" />
-          {/* Subtle grid texture overlay */}
+          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-fuchsia-600/12 blur-[120px]" />
+          <div className="absolute top-1/2 -right-32 w-96 h-96 rounded-full bg-indigo-600/12 blur-[120px]" />
           <div
-            className="absolute inset-0 opacity-[0.03]"
+            className="absolute inset-0 opacity-[0.02]"
             style={{
-              backgroundImage:
-                'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
-              backgroundSize: '32px 32px',
+              backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+              backgroundSize: '28px 28px',
             }}
           />
         </div>
 
-        {/* Top: Pill Badge & Hero Headline */}
-        <div className="relative z-10 max-w-xl">
-          {/* Category Pill Tag */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-fuchsia-500/30 bg-fuchsia-950/40 backdrop-blur-md shadow-sm mb-4">
-            <span className="w-2 h-2 rounded-full bg-fuchsia-400 animate-pulse" />
-            <span className="text-[11px] font-bold tracking-widest uppercase text-fuchsia-300">
+        {/* Top: Category Tag & Headline */}
+        <div className="relative z-10 shrink-0">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-fuchsia-500/30 bg-fuchsia-950/40 backdrop-blur-md shadow-sm mb-2.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse" />
+            <span className="text-[10px] font-bold tracking-widest uppercase text-fuchsia-300">
               CHURCH PRESENTATION & OBS STUDIO
             </span>
           </div>
 
-          {/* Hero Headline */}
-          <h1 className="text-3xl sm:text-4xl lg:text-4xl xl:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
+          <h1 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-extrabold text-white tracking-tight leading-tight">
             Run your whole service{' '}
             <span className="bg-gradient-to-r from-fuchsia-400 via-purple-300 to-indigo-300 text-transparent bg-clip-text">
               from one screen.
@@ -109,53 +104,46 @@ export default function Login() {
           </h1>
         </div>
 
-        {/* Center: Framed Software Preview Window */}
-        <div className="relative z-10 my-6 lg:my-8 w-full max-w-2xl">
-          <div className="group relative rounded-2xl border border-white/15 bg-slate-950/90 shadow-2xl shadow-purple-950/60 overflow-hidden transition-all duration-500 hover:border-fuchsia-500/40 hover:shadow-fuchsia-950/40">
-            {/* macOS / Window Titlebar Header */}
-            <div className="h-7 bg-slate-900/90 border-b border-white/10 px-3.5 flex items-center justify-between select-none">
+        {/* Center: Scaled Window Mockup (Contained within available space, no overflow) */}
+        <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center my-3 sm:my-4">
+          <div className="w-full max-w-xl max-h-full rounded-xl border border-white/15 bg-slate-950/90 shadow-2xl shadow-purple-950/50 overflow-hidden flex flex-col group">
+            {/* macOS Chrome Header */}
+            <div className="h-6 bg-slate-900/90 border-b border-white/10 px-3 flex items-center justify-between select-none shrink-0">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                <span className="w-2 h-2 rounded-full bg-rose-500/80" />
+                <span className="w-2 h-2 rounded-full bg-amber-500/80" />
+                <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
               </div>
-              <div className="text-[10px] font-medium text-slate-400 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
-                <span>RMC PlayCast Studio — Live Worship & Broadcast Console</span>
+              <div className="text-[9px] font-medium text-slate-400 flex items-center gap-1">
+                <span className="w-1 h-1 rounded-full bg-fuchsia-400" />
+                <span>RMC PlayCast Studio — Live Console</span>
               </div>
-              <div className="w-10" />
+              <div className="w-8" />
             </div>
 
-            {/* Dashboard Screenshot Mockup */}
-            <div className="relative w-full aspect-[16/9] bg-slate-950 overflow-hidden">
+            {/* Dashboard Mockup Image */}
+            <div className="relative w-full aspect-[16/9] max-h-[38vh] bg-slate-950 overflow-hidden">
               <img
                 src="/dashboard-preview.jpg"
                 alt="RMC PlayCast Church Presentation Dashboard"
-                className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.015]"
-                onError={(e) => {
-                  // Fallback visual canvas if image not available
-                  (e.currentTarget as HTMLElement).style.display = 'none';
-                }}
+                className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.01]"
               />
-
-              {/* Subtle glass reflection highlight */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-white/[0.04] pointer-events-none" />
-              <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-b-2xl pointer-events-none" />
+              <div className="absolute inset-0 ring-1 ring-inset ring-white/10 pointer-events-none" />
             </div>
           </div>
         </div>
 
         {/* Bottom Feature Badges */}
-        <div className="relative z-10 flex flex-wrap items-center gap-2 sm:gap-2.5 pt-2">
+        <div className="relative z-10 flex flex-wrap items-center gap-2 shrink-0">
           {[
-            { label: 'Lyrics & Scripture', icon: <Layers className="w-3.5 h-3.5 text-fuchsia-400" /> },
-            { label: 'Live Overlays', icon: <Sparkles className="w-3.5 h-3.5 text-indigo-400" /> },
-            { label: 'OBS Outputs', icon: <Tv className="w-3.5 h-3.5 text-rose-400" /> },
-            { label: 'Stage Display', icon: <MonitorPlay className="w-3.5 h-3.5 text-emerald-400" /> },
+            { label: 'Lyrics & Scripture', icon: <Layers className="w-3 h-3 text-fuchsia-400" /> },
+            { label: 'Live Overlays', icon: <Sparkles className="w-3 h-3 text-indigo-400" /> },
+            { label: 'OBS Outputs', icon: <Tv className="w-3 h-3 text-rose-400" /> },
+            { label: 'Stage Display', icon: <MonitorPlay className="w-3 h-3 text-emerald-400" /> },
           ].map((pill) => (
             <div
               key={pill.label}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/10 bg-slate-900/70 backdrop-blur-md text-xs font-semibold text-slate-300 shadow-sm transition-colors hover:border-fuchsia-500/30 hover:text-white"
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-slate-900/70 backdrop-blur-md text-[11px] font-semibold text-slate-300 shadow-sm"
             >
               {pill.icon}
               <span>{pill.label}</span>
@@ -165,49 +153,49 @@ export default function Login() {
       </div>
 
       {/* =========================================================================
-          RIGHT COLUMN: Login Form Card
+          RIGHT COLUMN: Login Form (Fit-To-Screen, Compact & Clean)
           ========================================================================= */}
-      <div className="w-full lg:w-[44%] xl:w-[42%] flex flex-col justify-between p-6 sm:p-10 lg:p-12 xl:p-16 bg-[#07090e]">
-        {/* Top Spacer for symmetrical alignment */}
-        <div className="hidden lg:block" />
+      <div className="w-full lg:w-[44%] xl:w-[42%] h-auto lg:h-full flex flex-col justify-between p-6 sm:p-8 lg:p-8 xl:p-12 bg-[#06080d] shrink-0 lg:shrink">
+        {/* Top Spacer */}
+        <div className="hidden lg:block shrink-0" />
 
-        {/* Main Login Form Container */}
-        <div className="w-full max-w-sm sm:max-w-md mx-auto my-auto">
-          {/* Logo & Product Name */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-fuchsia-500/30">
-              <Radio className="w-5 h-5 text-white" />
+        {/* Main Form Box */}
+        <div className="w-full max-w-sm mx-auto my-auto py-4">
+          {/* Logo */}
+          <div className="flex items-center gap-2.5 mb-6">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-fuchsia-500/25">
+              <Radio className="w-4.5 h-4.5 text-white" />
             </div>
-            <span className="text-xl font-extrabold text-white tracking-tight">
+            <span className="text-lg font-extrabold text-white tracking-tight">
               RMC PlayCast
             </span>
           </div>
 
-          {/* Welcome Heading */}
-          <div className="mb-8">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          {/* Heading */}
+          <div className="mb-6">
+            <h2 className="text-2xl font-extrabold text-white tracking-tight">
               Welcome back
             </h2>
-            <p className="text-sm text-slate-400 mt-1.5">
+            <p className="text-xs text-slate-400 mt-1">
               Sign in to your workspace to continue.
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Error Banner */}
             {error && (
-              <div className="flex items-start gap-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-xl px-4 py-3 text-xs sm:text-sm animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="flex items-start gap-2.5 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-lg px-3.5 py-2.5 text-xs animate-in fade-in slide-in-from-top-1">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-400" />
                 <span>{error}</span>
               </div>
             )}
 
-            {/* Username / Email Field */}
-            <div className="space-y-2">
+            {/* Username / Email */}
+            <div className="space-y-1.5">
               <label
                 htmlFor="login-username"
-                className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider"
+                className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider"
               >
                 Username or Email
               </label>
@@ -220,15 +208,15 @@ export default function Login() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="admin"
                 disabled={isSubmitting}
-                className="w-full bg-[#0d111a] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500/60 transition-all disabled:opacity-50"
+                className="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3.5 py-2.5 text-white placeholder:text-slate-600 text-xs focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all disabled:opacity-50"
               />
             </div>
 
-            {/* Password Field */}
-            <div className="space-y-2">
+            {/* Password */}
+            <div className="space-y-1.5">
               <label
                 htmlFor="login-password"
-                className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider"
+                className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider"
               >
                 Password
               </label>
@@ -241,32 +229,32 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   disabled={isSubmitting}
-                  className="w-full bg-[#0d111a] border border-white/10 rounded-xl px-4 py-3.5 pr-12 text-white placeholder:text-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500/60 transition-all disabled:opacity-50"
+                  className="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3.5 py-2.5 pr-10 text-white placeholder:text-slate-600 text-xs focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all disabled:opacity-50"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   tabIndex={-1}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors cursor-pointer"
                   title={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
+                    <EyeOff className="w-3.5 h-3.5" />
                   ) : (
-                    <Eye className="w-4 h-4" />
+                    <Eye className="w-3.5 h-3.5" />
                   )}
                 </button>
               </div>
             </div>
 
             {/* Options Row: Keep Signed In + Forgot Password */}
-            <div className="flex items-center justify-between text-xs pt-1 select-none">
-              <label className="flex items-center gap-2 text-slate-400 hover:text-slate-300 cursor-pointer">
+            <div className="flex items-center justify-between text-xs pt-0.5 select-none">
+              <label className="flex items-center gap-1.5 text-slate-400 hover:text-slate-300 cursor-pointer text-[11px]">
                 <input
                   type="checkbox"
                   checked={keepSignedIn}
                   onChange={(e) => setKeepSignedIn(e.target.checked)}
-                  className="w-4 h-4 rounded border-white/20 bg-[#0d111a] text-fuchsia-600 focus:ring-fuchsia-500 focus:ring-offset-0 cursor-pointer accent-fuchsia-600"
+                  className="w-3.5 h-3.5 rounded border-white/20 bg-[#0a0d14] text-fuchsia-600 focus:ring-0 cursor-pointer accent-fuchsia-600"
                 />
                 <span>Keep me signed in</span>
               </label>
@@ -274,7 +262,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setIsForgotPasswordOpen(true)}
-                className="text-slate-400 hover:text-fuchsia-400 transition-colors cursor-pointer font-medium"
+                className="text-slate-400 hover:text-fuchsia-400 transition-colors cursor-pointer font-medium text-[11px]"
               >
                 Forgot password?
               </button>
@@ -284,17 +272,17 @@ export default function Login() {
             <button
               type="submit"
               disabled={isSubmitting || !username.trim() || !password}
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600 hover:from-fuchsia-500 hover:to-indigo-500 text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-fuchsia-600/25 hover:shadow-fuchsia-600/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none cursor-pointer mt-2 text-sm"
+              className="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600 hover:from-fuchsia-500 hover:to-indigo-500 text-white font-bold py-2.5 px-4 rounded-lg transition-all duration-150 shadow-md shadow-fuchsia-600/25 hover:shadow-fuchsia-600/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none cursor-pointer mt-1 text-xs"
             >
               {isSubmitting ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   <span>Signing in…</span>
                 </>
               ) : (
                 <>
                   <span>Sign in</span>
-                  <ArrowRight className="w-4 h-4 ml-0.5" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </>
               )}
             </button>
@@ -302,8 +290,8 @@ export default function Login() {
         </div>
 
         {/* Footer */}
-        <div className="pt-8 text-center">
-          <p className="text-slate-500 text-xs">
+        <div className="pt-4 text-center shrink-0">
+          <p className="text-slate-600 text-[11px]">
             RMC PlayCast &copy; {new Date().getFullYear()} — SRI Infy LLC. All rights reserved.
           </p>
         </div>
@@ -313,14 +301,14 @@ export default function Login() {
       <Dialog open={isForgotPasswordOpen} onOpenChange={setIsForgotPasswordOpen}>
         <DialogContent className="max-w-md bg-slate-950 border border-white/10 text-slate-200 p-6">
           <DialogHeader className="space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-1">
-              <ShieldAlert className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-1">
+              <ShieldAlert className="w-4.5 h-4.5" />
             </div>
-            <DialogTitle className="text-base font-bold text-white">
+            <DialogTitle className="text-sm font-bold text-white">
               Password Reset Assistance
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-3 text-xs text-slate-300 pt-2">
+          <div className="space-y-2.5 text-xs text-slate-300 pt-1">
             <p>
               For security, church operator account credentials and password resets are
               managed centrally by your organization&apos;s Super Administrator.
@@ -333,11 +321,11 @@ export default function Login() {
               </p>
             </div>
           </div>
-          <div className="pt-4 flex justify-end">
+          <div className="pt-3 flex justify-end">
             <Button
               size="sm"
               onClick={() => setIsForgotPasswordOpen(false)}
-              className="bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-xs"
+              className="bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-xs h-8"
             >
               Got it
             </Button>
