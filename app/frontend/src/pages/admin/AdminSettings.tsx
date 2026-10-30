@@ -18,7 +18,7 @@ import {
   Server,
   Lock,
   Radio,
-  Infinity,
+  Infinity as InfinityIcon,
 } from 'lucide-react';
 
 export default function AdminSettings() {
@@ -239,7 +239,7 @@ export default function AdminSettings() {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1.5 font-semibold text-sm">
-                        <Infinity className="w-4 h-4 text-fuchsia-400" />
+                        <InfinityIcon className="w-4 h-4 text-fuchsia-400" />
                         <span>Unlimited Accounts</span>
                       </div>
                       <input

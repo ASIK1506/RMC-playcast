@@ -18,6 +18,7 @@ import {
   Shield,
   LogOut,
   User as UserIcon,
+  UserCheck,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';

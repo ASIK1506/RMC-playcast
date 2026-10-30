@@ -39,6 +39,36 @@ export const SlideEditorWorkspace: React.FC<SlideEditorWorkspaceProps> = ({
   onGoLiveSlide,
   settings,
 }) => {
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Form State for current slide
+  const activeSlide = item?.slides?.[activeSlideIndex] || item?.slides?.[0];
+
+  const [label, setLabel] = useState(activeSlide?.label || 'Verse 1');
+  const [title, setTitle] = useState(activeSlide?.title || item?.title || '');
+  const [reference, setReference] = useState(activeSlide?.reference || '');
+  const [textTamil, setTextTamil] = useState(activeSlide?.textTamil || '');
+  const [textEnglish, setTextEnglish] = useState(activeSlide?.textEnglish || '');
+  const [presenterName, setPresenterName] = useState(item?.presenterInfo?.name || '');
+  const [presenterRole, setPresenterRole] = useState(item?.presenterInfo?.role || '');
+
+  // Sync form when active slide changes
+  useEffect(() => {
+    if (activeSlide) {
+      setLabel(activeSlide.label || `Slide ${activeSlideIndex + 1}`);
+      setTitle(activeSlide.title || item?.title || '');
+      setReference(activeSlide.reference || '');
+      setTextTamil(activeSlide.textTamil || '');
+      setTextEnglish(activeSlide.textEnglish || '');
+    }
+  }, [activeSlideIndex, item, activeSlide]);
+
+  useEffect(() => {
+    setPresenterName(item?.presenterInfo?.name || '');
+    setPresenterRole(item?.presenterInfo?.role || '');
+  }, [item]);
+
   if (!item || !item.slides || item.slides.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 bg-slate-950 text-slate-400">
@@ -54,36 +84,6 @@ export const SlideEditorWorkspace: React.FC<SlideEditorWorkspaceProps> = ({
       </div>
     );
   }
-
-  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-
-  // Form State for current slide
-  const activeSlide = item.slides[activeSlideIndex] || item.slides[0];
-
-  const [label, setLabel] = useState(activeSlide?.label || 'Verse 1');
-  const [title, setTitle] = useState(activeSlide?.title || item.title || '');
-  const [reference, setReference] = useState(activeSlide?.reference || '');
-  const [textTamil, setTextTamil] = useState(activeSlide?.textTamil || '');
-  const [textEnglish, setTextEnglish] = useState(activeSlide?.textEnglish || '');
-  const [presenterName, setPresenterName] = useState(item.presenterInfo?.name || '');
-  const [presenterRole, setPresenterRole] = useState(item.presenterInfo?.role || '');
-
-  // Sync form when active slide changes
-  useEffect(() => {
-    if (activeSlide) {
-      setLabel(activeSlide.label || `Slide ${activeSlideIndex + 1}`);
-      setTitle(activeSlide.title || item.title || '');
-      setReference(activeSlide.reference || '');
-      setTextTamil(activeSlide.textTamil || '');
-      setTextEnglish(activeSlide.textEnglish || '');
-    }
-  }, [activeSlideIndex, item]);
-
-  useEffect(() => {
-    setPresenterName(item.presenterInfo?.name || '');
-    setPresenterRole(item.presenterInfo?.role || '');
-  }, [item]);
 
   // Apply changes to parent
   const handleSaveCurrentSlide = () => {

@@ -17,6 +17,26 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({
   mode = 'live',
   isTransitioning = false,
 }) => {
+  // Auto-hide timing effect for overlay
+  const [overlayVisible, setOverlayVisible] = React.useState(!!overlay?.active);
+
+  React.useEffect(() => {
+    if (!overlay?.active) {
+      setOverlayVisible(false);
+      return;
+    }
+
+    setOverlayVisible(true);
+
+    if (overlay.timingMode === 'auto-hide') {
+      const duration = (overlay.autoHideSeconds || 8) * 1000;
+      const timer = setTimeout(() => {
+        setOverlayVisible(false);
+      }, duration);
+      return () => clearTimeout(timer);
+    }
+  }, [overlay?.active, overlay?.activatedAt, overlay?.timingMode, overlay?.autoHideSeconds]);
+
   if (!slide) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center bg-black/40 text-muted-foreground select-none">
@@ -45,26 +65,6 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({
   const fontColor = settings?.fontColor || '#ffffff';
   const textAlign = settings?.textAlign || 'center';
   const isObs = mode === 'obs';
-
-  // Auto-hide timing effect for overlay
-  const [overlayVisible, setOverlayVisible] = React.useState(!!overlay?.active);
-
-  React.useEffect(() => {
-    if (!overlay?.active) {
-      setOverlayVisible(false);
-      return;
-    }
-
-    setOverlayVisible(true);
-
-    if (overlay.timingMode === 'auto-hide') {
-      const duration = (overlay.autoHideSeconds || 8) * 1000;
-      const timer = setTimeout(() => {
-        setOverlayVisible(false);
-      }, duration);
-      return () => clearTimeout(timer);
-    }
-  }, [overlay?.active, overlay?.activatedAt, overlay?.timingMode, overlay?.autoHideSeconds]);
 
   const getOverlayPositionClass = (pos?: string) => {
     if (pos === 'bottom-center') {
