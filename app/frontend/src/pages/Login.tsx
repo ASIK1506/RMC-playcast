@@ -121,13 +121,24 @@ export default function Login() {
               <div className="w-8" />
             </div>
 
-            {/* Dashboard Mockup Image */}
+            {/* Dashboard Mockup Video Loop */}
             <div className="relative w-full aspect-[16/9] max-h-[38vh] bg-slate-950 overflow-hidden">
-              <img
-                src="/dashboard-preview.jpg"
-                alt="RMC PlayCast Church Presentation Dashboard"
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                poster="/dashboard-preview.jpg"
                 className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.01]"
-              />
+              >
+                <source src="/dashboard-preview.webm" type="video/webm" />
+                <img
+                  src="/dashboard-preview.jpg"
+                  alt="RMC PlayCast Church Presentation Dashboard"
+                  className="w-full h-full object-cover object-top"
+                />
+              </video>
               <div className="absolute inset-0 ring-1 ring-inset ring-white/10 pointer-events-none" />
             </div>
           </div>
