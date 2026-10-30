@@ -66,6 +66,8 @@ export const SlideEditorWorkspace: React.FC<SlideEditorWorkspaceProps> = ({
   const [reference, setReference] = useState(activeSlide?.reference || '');
   const [textTamil, setTextTamil] = useState(activeSlide?.textTamil || '');
   const [textEnglish, setTextEnglish] = useState(activeSlide?.textEnglish || '');
+  const [presenterName, setPresenterName] = useState(item.presenterInfo?.name || '');
+  const [presenterRole, setPresenterRole] = useState(item.presenterInfo?.role || '');
 
   // Sync form when active slide changes
   useEffect(() => {
@@ -77,6 +79,11 @@ export const SlideEditorWorkspace: React.FC<SlideEditorWorkspaceProps> = ({
       setTextEnglish(activeSlide.textEnglish || '');
     }
   }, [activeSlideIndex, item]);
+
+  useEffect(() => {
+    setPresenterName(item.presenterInfo?.name || '');
+    setPresenterRole(item.presenterInfo?.role || '');
+  }, [item]);
 
   // Apply changes to parent
   const handleSaveCurrentSlide = () => {
@@ -90,8 +97,14 @@ export const SlideEditorWorkspace: React.FC<SlideEditorWorkspaceProps> = ({
       textEnglish,
     };
 
-    const updatedItem = {
+    const updatedItem: ServiceItem = {
       ...item,
+      presenterInfo: presenterName.trim()
+        ? {
+            name: presenterName.trim(),
+            role: presenterRole.trim() || 'Worship Leader',
+          }
+        : undefined,
       slides: updatedSlides,
     };
 
@@ -482,6 +495,43 @@ export const SlideEditorWorkspace: React.FC<SlideEditorWorkspaceProps> = ({
               placeholder="e.g. John 3:16 / John Newton"
               className="h-8 text-xs bg-slate-950 border-white/10 text-white"
             />
+          </div>
+
+          {/* Presenter / Worship Leader Lower-Third Info */}
+          <div className="pt-2 border-t border-white/10 space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-fuchsia-300">
+                Presenter / Leader Lower-Third
+              </label>
+              <span className="text-[10px] text-muted-foreground">Optional Tag</span>
+            </div>
+            <div className="space-y-2 bg-slate-950/60 p-2.5 rounded-lg border border-white/5">
+              <div>
+                <label className="text-[10px] font-semibold text-slate-400 block mb-1">
+                  Leader / Speaker Name
+                </label>
+                <Input
+                  value={presenterName}
+                  onChange={(e) => setPresenterName(e.target.value)}
+                  placeholder="e.g. Bro. Daniel / Sis. Sarah"
+                  className="h-7 text-xs bg-slate-900 border-white/10 text-white"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-semibold text-slate-400 block mb-1">
+                  Role or Title
+                </label>
+                <Input
+                  value={presenterRole}
+                  onChange={(e) => setPresenterRole(e.target.value)}
+                  placeholder="e.g. Worship Leader / Scripture Reader"
+                  className="h-7 text-xs bg-slate-900 border-white/10 text-white"
+                />
+              </div>
+              <p className="text-[9px] text-slate-500">
+                When this item is selected in Show mode, these details pre-load for the Lower-Third overlay.
+              </p>
+            </div>
           </div>
 
           {/* Quick Apply Button */}

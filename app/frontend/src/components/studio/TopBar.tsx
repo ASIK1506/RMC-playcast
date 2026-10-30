@@ -44,6 +44,7 @@ interface TopBarProps {
   activeMode: 'show' | 'edit' | 'stage';
   onModeChange: (mode: 'show' | 'edit' | 'stage') => void;
   onOpenSettings: () => void;
+  onOpenLowerThird?: () => void;
   onStopLive?: () => void;
   onGoLive?: () => void;
 }
@@ -55,6 +56,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   activeMode,
   onModeChange,
   onOpenSettings,
+  onOpenLowerThird,
   onStopLive,
   onGoLive,
 }) => {
@@ -354,6 +356,20 @@ export const TopBar: React.FC<TopBarProps> = ({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* Lower Thirds & Personalities Modal Trigger */}
+        {onOpenLowerThird && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onOpenLowerThird}
+            className="h-8 text-xs font-semibold border-white/10 bg-slate-900 hover:bg-slate-800 text-slate-200 cursor-pointer hidden sm:flex items-center gap-1.5"
+            title="Church Personalities & Lower-Third Overlays"
+          >
+            <UserCheck className="w-3.5 h-3.5 text-fuchsia-400" />
+            <span>Lower Thirds</span>
+          </Button>
+        )}
 
         {/* Settings Button */}
         <Button

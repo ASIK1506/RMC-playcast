@@ -11,6 +11,11 @@ import {
   Radio,
   SlidersHorizontal,
   Tv,
+  Settings,
+  Sparkles,
+  Shield,
+  Music,
+  BookOpen,
 } from 'lucide-react';
 import type { PlayCastSlide, ScreenOverlay } from '@/types/playcast';
 import type { DisplaySettings } from '@/lib/sync';
@@ -34,6 +39,8 @@ interface LiveDualMonitorsProps {
   onNextSlide: () => void;
   onToggleSpeakerOverlay: () => void;
   onToggleTickerOverlay: () => void;
+  onOpenLowerThirdModal?: () => void;
+  onQuickSelectPersonality?: (name: string, role: string, category: string) => void;
   onChangeTransition: (trans: 'fade' | 'slide' | 'none') => void;
 }
 
@@ -54,6 +61,8 @@ export const LiveDualMonitors: React.FC<LiveDualMonitorsProps> = ({
   onNextSlide,
   onToggleSpeakerOverlay,
   onToggleTickerOverlay,
+  onOpenLowerThirdModal,
+  onQuickSelectPersonality,
   onChangeTransition,
 }) => {
   if (isCollapsed) {
@@ -304,70 +313,167 @@ export const LiveDualMonitors: React.FC<LiveDualMonitorsProps> = ({
       </div>
 
       {/* 3. SCREEN OVERLAYS TRAY */}
-      <div className="bg-slate-900/60 border border-white/10 rounded-xl p-3 space-y-2">
-        <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-          Live Screen Overlays
+      <div className="bg-slate-900/60 border border-white/10 rounded-xl p-3 space-y-2.5">
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+            <Radio className="w-3 h-3 text-fuchsia-400" />
+            Live Screen Overlays
+          </span>
+          {onOpenLowerThirdModal && (
+            <button
+              onClick={onOpenLowerThirdModal}
+              className="text-[10px] text-fuchsia-300 hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded bg-fuchsia-950/40 border border-fuchsia-500/30 hover:border-fuchsia-400 cursor-pointer transition-all"
+              title="Open Lower-Third & Personalities Configuration"
+            >
+              <Settings className="w-2.5 h-2.5" />
+              <span>Configure</span>
+            </button>
+          )}
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          {/* Speaker Lower-Third Toggle */}
-          <button
-            onClick={onToggleSpeakerOverlay}
-            className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer flex flex-col justify-between ${
-              overlay?.active && overlay.type === 'speaker'
-                ? 'bg-fuchsia-950/50 border-fuchsia-500 text-white shadow-sm'
-                : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <div className="flex items-center justify-between w-full mb-1">
-              <UserCheck className="w-3.5 h-3.5 text-fuchsia-400" />
+        {/* Church Personality / Member Lower-Third Card */}
+        <div
+          onClick={onToggleSpeakerOverlay}
+          className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between group relative ${
+            overlay?.active && overlay.type === 'speaker'
+              ? 'bg-fuchsia-950/60 border-fuchsia-500 text-white shadow-lg shadow-fuchsia-500/20 ring-1 ring-fuchsia-400'
+              : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20'
+          }`}
+        >
+          <div className="flex items-center justify-between w-full mb-1.5">
+            <div className="flex items-center gap-1.5">
+              <UserCheck className="w-4 h-4 text-fuchsia-400" />
+              <span className="text-xs font-bold text-white">Member Lower-Third</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {onOpenLowerThirdModal && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenLowerThirdModal();
+                  }}
+                  className="p-1 rounded hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                  title="Configure Name, Position & Timing"
+                >
+                  <Settings className="w-3 h-3" />
+                </button>
+              )}
               <span
-                className={`text-[9px] font-bold px-1 rounded ${
+                className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full ${
                   overlay?.active && overlay.type === 'speaker'
-                    ? 'bg-fuchsia-500 text-white'
+                    ? 'bg-fuchsia-500 text-white animate-pulse'
                     : 'bg-slate-800 text-slate-500'
                 }`}
               >
-                {overlay?.active && overlay.type === 'speaker' ? 'ON' : 'OFF'}
+                {overlay?.active && overlay.type === 'speaker' ? 'LIVE ON' : 'OFF'}
               </span>
             </div>
-            <div className="font-semibold text-xs text-white truncate">
-              Speaker Name
-            </div>
-            <div className="text-[9px] text-muted-foreground truncate">
-              Pastor David Samuel
-            </div>
-          </button>
+          </div>
 
-          {/* Announcement Ticker Toggle */}
-          <button
-            onClick={onToggleTickerOverlay}
-            className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer flex flex-col justify-between ${
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-xs text-white truncate">
+                {overlay?.name || 'Pastor David Samuel'}
+              </span>
+              {overlay?.category && (
+                <span className="text-[8px] font-bold px-1 rounded bg-fuchsia-500/25 text-fuchsia-300 border border-fuchsia-500/30 uppercase truncate">
+                  {overlay.category}
+                </span>
+              )}
+            </div>
+            <div className="text-[10px] text-muted-foreground truncate mt-0.5">
+              {overlay?.title || overlay?.subtitle || 'Senior Pastor'}
+            </div>
+          </div>
+
+          <div className="mt-2 pt-1.5 border-t border-white/5 flex items-center justify-between text-[9px] text-slate-400">
+            <span className="capitalize">
+              📍 {overlay?.position || 'bottom-left'}
+            </span>
+            <span>
+              ⏱️ {overlay?.timingMode === 'auto-hide' ? `${overlay.autoHideSeconds || 8}s Auto-hide` : 'Ongoing'}
+            </span>
+          </div>
+        </div>
+
+        {/* Quick Personality Chips */}
+        <div className="space-y-1">
+          <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider block">
+            Quick Personalities (1-Click Switch):
+          </span>
+          <div className="grid grid-cols-2 gap-1.5">
+            {[
+              {
+                label: 'Pastor David',
+                role: 'Senior Pastor',
+                cat: 'Pastor',
+                icon: <Sparkles className="w-2.5 h-2.5 text-amber-400" />,
+              },
+              {
+                label: 'Dr. John Wesley',
+                role: 'Board Member',
+                cat: 'Board Member',
+                icon: <Shield className="w-2.5 h-2.5 text-indigo-400" />,
+              },
+              {
+                label: 'Sis. Rebecca',
+                role: 'Worship Leader',
+                cat: 'Worship Leader',
+                icon: <Music className="w-2.5 h-2.5 text-fuchsia-400" />,
+              },
+              {
+                label: 'Bro. Daniel',
+                role: 'Scripture Reader',
+                cat: 'Scripture Reader',
+                icon: <BookOpen className="w-2.5 h-2.5 text-emerald-400" />,
+              },
+            ].map((chip) => (
+              <button
+                key={chip.label}
+                onClick={() => {
+                  onQuickSelectPersonality?.(chip.label, chip.role, chip.cat);
+                }}
+                className="flex items-center gap-1.5 p-1 px-2 rounded-lg bg-slate-900/90 border border-white/5 hover:border-fuchsia-500/40 text-[10px] text-slate-300 hover:text-white truncate text-left transition-all cursor-pointer"
+                title={`Switch to ${chip.label} (${chip.role})`}
+              >
+                {chip.icon}
+                <div className="truncate">
+                  <div className="font-medium truncate">{chip.label}</div>
+                  <div className="text-[8px] text-slate-500 truncate">{chip.role}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Announcement Ticker Toggle */}
+        <button
+          onClick={onToggleTickerOverlay}
+          className={`p-2 rounded-lg border text-left transition-all cursor-pointer flex items-center justify-between w-full ${
+            overlay?.active && overlay.type === 'ticker'
+              ? 'bg-fuchsia-950/50 border-fuchsia-500 text-white shadow-sm'
+              : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <Megaphone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <div className="truncate">
+              <div className="font-semibold text-xs text-white">News Ticker Tape</div>
+              <div className="text-[9px] text-muted-foreground truncate">
+                Bottom scrolling announcement
+              </div>
+            </div>
+          </div>
+          <span
+            className={`text-[9px] font-bold px-1.5 py-0.2 rounded shrink-0 ${
               overlay?.active && overlay.type === 'ticker'
-                ? 'bg-fuchsia-950/50 border-fuchsia-500 text-white shadow-sm'
-                : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-slate-200'
+                ? 'bg-amber-500 text-slate-950'
+                : 'bg-slate-800 text-slate-500'
             }`}
           >
-            <div className="flex items-center justify-between w-full mb-1">
-              <Megaphone className="w-3.5 h-3.5 text-amber-400" />
-              <span
-                className={`text-[9px] font-bold px-1 rounded ${
-                  overlay?.active && overlay.type === 'ticker'
-                    ? 'bg-amber-500 text-slate-950'
-                    : 'bg-slate-800 text-slate-500'
-                }`}
-              >
-                {overlay?.active && overlay.type === 'ticker' ? 'ON' : 'OFF'}
-              </span>
-            </div>
-            <div className="font-semibold text-xs text-white truncate">
-              News Ticker
-            </div>
-            <div className="text-[9px] text-muted-foreground truncate">
-              Bottom ticker tape
-            </div>
-          </button>
-        </div>
+            {overlay?.active && overlay.type === 'ticker' ? 'ON' : 'OFF'}
+          </span>
+        </button>
       </div>
     </aside>
   );

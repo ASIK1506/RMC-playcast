@@ -22,6 +22,7 @@ import { LiveDualMonitors } from '@/components/studio/LiveDualMonitors';
 import { BottomDock } from '@/components/studio/BottomDock';
 import { SlideEditorWorkspace } from '@/components/studio/SlideEditorWorkspace';
 import { StageWorkspace } from '@/components/studio/StageWorkspace';
+import { LowerThirdModal } from '@/components/studio/LowerThirdModal';
 import { DisplaySettings } from '@/components/DisplaySettings';
 import {
   Dialog,
@@ -72,14 +73,27 @@ export default function PlayCastStudio() {
   const [activeTimer, setActiveTimer] = useState<ServiceTimer | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSideCollapsed, setIsSideCollapsed] = useState(false);
+  const [isLowerThirdModalOpen, setIsLowerThirdModalOpen] = useState(false);
 
   // Overlays (Speaker Lower-Third & Announcement Ticker)
-  const [overlay, setOverlay] = useState<ScreenOverlay | null>({
-    id: 'ov-speaker',
-    type: 'speaker',
-    name: 'Pastor David Samuel',
-    title: 'Senior Pastor',
-    active: false,
+  const [overlay, setOverlay] = useState<ScreenOverlay | null>(() => {
+    try {
+      const saved = localStorage.getItem('playcast-active-overlay');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // ignore
+    }
+    return {
+      id: 'ov-speaker',
+      type: 'speaker',
+      name: 'Pastor David Samuel',
+      title: 'Senior Pastor',
+      category: 'Pastor',
+      position: 'bottom-left',
+      timingMode: 'persistent',
+      autoHideSeconds: 8,
+      active: false,
+    };
   });
 
   // Load worship songs from PHP backend on mount
@@ -284,18 +298,60 @@ export default function PlayCastStudio() {
     }
   };
 
-  // Overlay Toggles
+  // Overlay Toggles & Church Personalities
   const handleToggleSpeakerOverlay = () => {
     const nextActive = !(overlay?.active && overlay.type === 'speaker');
     const newOverlay: ScreenOverlay = {
-      id: 'ov-speaker',
+      id: overlay?.id || 'ov-speaker',
       type: 'speaker',
-      name: 'Pastor David Samuel',
-      title: 'Senior Pastor',
+      name: overlay?.name || 'Pastor David Samuel',
+      title: overlay?.title || 'Senior Pastor',
+      category: overlay?.category || 'Pastor',
+      position: overlay?.position || 'bottom-left',
+      timingMode: overlay?.timingMode || 'persistent',
+      autoHideSeconds: overlay?.autoHideSeconds || 8,
       active: nextActive,
+      activatedAt: nextActive ? Date.now() : undefined,
     };
     setOverlay(newOverlay);
+    try {
+      localStorage.setItem('playcast-active-overlay', JSON.stringify(newOverlay));
+    } catch {
+      // ignore
+    }
     broadcastCurrentState({ activeOverlay: newOverlay });
+  };
+
+  const handleApplyLowerThirdOverlay = (newOverlay: ScreenOverlay) => {
+    setOverlay(newOverlay);
+    try {
+      localStorage.setItem('playcast-active-overlay', JSON.stringify(newOverlay));
+    } catch {
+      // ignore
+    }
+    broadcastCurrentState({ activeOverlay: newOverlay });
+  };
+
+  const handleQuickSelectPersonality = (name: string, role: string, category: string) => {
+    const updated: ScreenOverlay = {
+      id: 'ov-speaker',
+      type: 'speaker',
+      name,
+      title: role,
+      category,
+      position: overlay?.position || 'bottom-left',
+      timingMode: overlay?.timingMode || 'persistent',
+      autoHideSeconds: overlay?.autoHideSeconds || 8,
+      active: true,
+      activatedAt: Date.now(),
+    };
+    setOverlay(updated);
+    try {
+      localStorage.setItem('playcast-active-overlay', JSON.stringify(updated));
+    } catch {
+      // ignore
+    }
+    broadcastCurrentState({ activeOverlay: updated });
   };
 
   const handleToggleTickerOverlay = () => {
@@ -538,6 +594,7 @@ export default function PlayCastStudio() {
         activeMode={activeMode}
         onModeChange={setActiveMode}
         onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenLowerThird={() => setIsLowerThirdModalOpen(true)}
         onStopLive={handleStop}
         onGoLive={handleGoLiveStaged}
       />
@@ -622,6 +679,8 @@ export default function PlayCastStudio() {
               onNextSlide={handleNextSlide}
               onToggleSpeakerOverlay={handleToggleSpeakerOverlay}
               onToggleTickerOverlay={handleToggleTickerOverlay}
+              onOpenLowerThirdModal={() => setIsLowerThirdModalOpen(true)}
+              onQuickSelectPersonality={handleQuickSelectPersonality}
               onChangeTransition={(trans) =>
                 setSettings((prev) => ({ ...prev, transition: trans }))
               }
@@ -679,6 +738,15 @@ export default function PlayCastStudio() {
           onClose={() => setActiveMode('show')}
         />
       )}
+
+      {/* Church Personalities & Lower-Third Modal */}
+      <LowerThirdModal
+        isOpen={isLowerThirdModalOpen}
+        onClose={() => setIsLowerThirdModalOpen(false)}
+        currentOverlay={overlay}
+        onApplyOverlay={handleApplyLowerThirdOverlay}
+        onToggleActive={handleToggleSpeakerOverlay}
+      />
 
       {/* Settings Dialog */}
       <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>

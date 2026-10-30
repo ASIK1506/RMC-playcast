@@ -21,6 +21,12 @@ export interface PlayCastSlide {
   };
 }
 
+export interface PresenterInfo {
+  name: string;
+  role: string;
+  autoShow?: boolean;
+}
+
 export interface ServiceItem {
   id: string;
   title: string;
@@ -28,6 +34,7 @@ export interface ServiceItem {
   category: 'Welcome' | 'Worship' | 'Scripture' | 'Sermon' | 'Prayer' | 'Announcements';
   arrangement: string; // "Default", "Shorter", "Custom"
   slides: PlayCastSlide[];
+  presenterInfo?: PresenterInfo;
 }
 
 export interface ServiceSection {
@@ -42,11 +49,23 @@ export interface WorshipSong {
   tamilTitle?: string;
   author?: string;
   key?: string;
+  presenterInfo?: PresenterInfo;
   sections: {
     tag: string; // "Verse 1", "Chorus", etc.
     tamilText?: string;
     englishText?: string;
   }[];
+}
+
+export type OverlayPosition = 'bottom-left' | 'bottom-center' | 'bottom-right' | 'top-left' | 'full-bottom';
+export type OverlayTimingMode = 'persistent' | 'auto-hide';
+
+export interface ChurchMemberPreset {
+  id: string;
+  name: string;
+  role: string;
+  category: 'Pastor' | 'Board Member' | 'Worship Leader' | 'Scripture Reader' | 'Elder' | 'Guest' | 'General';
+  notes?: string;
 }
 
 export interface ScreenOverlay {
@@ -55,9 +74,14 @@ export interface ScreenOverlay {
   name?: string;
   title?: string;
   subtitle?: string;
+  position?: OverlayPosition;
+  timingMode?: OverlayTimingMode;
+  autoHideSeconds?: number;
+  category?: string;
   tickerText?: string;
   quickSlideText?: string;
   active: boolean;
+  activatedAt?: number;
 }
 
 export interface ServiceTimer {

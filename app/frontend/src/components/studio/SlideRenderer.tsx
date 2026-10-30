@@ -46,6 +46,45 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({
   const textAlign = settings?.textAlign || 'center';
   const isObs = mode === 'obs';
 
+  // Auto-hide timing effect for overlay
+  const [overlayVisible, setOverlayVisible] = React.useState(!!overlay?.active);
+
+  React.useEffect(() => {
+    if (!overlay?.active) {
+      setOverlayVisible(false);
+      return;
+    }
+
+    setOverlayVisible(true);
+
+    if (overlay.timingMode === 'auto-hide') {
+      const duration = (overlay.autoHideSeconds || 8) * 1000;
+      const timer = setTimeout(() => {
+        setOverlayVisible(false);
+      }, duration);
+      return () => clearTimeout(timer);
+    }
+  }, [overlay?.active, overlay?.activatedAt, overlay?.timingMode, overlay?.autoHideSeconds]);
+
+  const getOverlayPositionClass = (pos?: string) => {
+    if (pos === 'bottom-center') {
+      return isThumbnailOrPreview
+        ? 'bottom-1.5 left-1/2 -translate-x-1/2 max-w-[90%]'
+        : 'bottom-8 left-1/2 -translate-x-1/2 max-w-2xl';
+    }
+    if (pos === 'bottom-right') {
+      return isThumbnailOrPreview ? 'bottom-1.5 right-2' : 'bottom-8 right-10';
+    }
+    if (pos === 'top-left') {
+      return isThumbnailOrPreview ? 'top-1.5 left-2' : 'top-8 left-10';
+    }
+    if (pos === 'full-bottom') {
+      return 'bottom-0 left-0 right-0 w-full';
+    }
+    // Default bottom-left
+    return isThumbnailOrPreview ? 'bottom-1.5 left-2' : 'bottom-8 left-10';
+  };
+
   // Compute background
   const getBackgroundStyle = (): React.CSSProperties => {
     // In OBS mode, Lower-Third and overlay templates MUST have a transparent canvas so camera video passes through
@@ -313,20 +352,99 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({
         )}
       </div>
 
-      {/* LOWER-THIRD OVERLAY (Speaker Name) */}
-      {overlay?.active && overlay.type === 'speaker' && (
-        <div className="absolute bottom-6 left-8 z-30 animate-in fade-in slide-in-from-left duration-300">
-          <div className="bg-slate-950/90 backdrop-blur-md border border-fuchsia-500/40 rounded-lg p-3.5 pl-5 pr-8 shadow-2xl flex items-center gap-3">
-            <div className="w-1.5 h-10 rounded bg-gradient-to-b from-fuchsia-500 to-indigo-500" />
-            <div>
-              <div className="text-base font-bold text-white leading-tight">
-                {overlay.name || 'Speaker'}
-              </div>
-              <div className="text-xs text-fuchsia-300 font-medium">
-                {overlay.title || 'Guest Speaker'}
+      {/* LOWER-THIRD OVERLAY (Church Personalities / Speaker / Member Badge) */}
+      {overlayVisible && overlay?.active && overlay.type === 'speaker' && (
+        <div
+          className={`absolute z-30 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 ${getOverlayPositionClass(
+            overlay.position
+          )}`}
+        >
+          {overlay.position === 'full-bottom' ? (
+            <div
+              className={`w-full bg-slate-950/92 backdrop-blur-md border-t border-fuchsia-500/40 shadow-2xl flex items-center justify-between ${
+                isThumbnailOrPreview ? 'px-3 py-1.5' : 'px-8 sm:px-12 py-3.5'
+              }`}
+            >
+              <div className="flex items-center gap-2 sm:gap-3.5">
+                <div
+                  className={`${
+                    isThumbnailOrPreview ? 'w-1 h-4' : 'w-1.5 h-8'
+                  } rounded-full bg-gradient-to-b from-fuchsia-500 to-indigo-500 shrink-0`}
+                />
+                <div>
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <span
+                      className={`font-bold text-white leading-tight ${
+                        isThumbnailOrPreview ? 'text-[10px]' : 'text-lg'
+                      }`}
+                    >
+                      {overlay.name || 'Member'}
+                    </span>
+                    {overlay.category && (
+                      <span
+                        className={`rounded font-semibold uppercase tracking-wider bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30 shrink-0 ${
+                          isThumbnailOrPreview
+                            ? 'text-[7px] px-1'
+                            : 'text-[10px] px-2 py-0.5'
+                        }`}
+                      >
+                        {overlay.category}
+                      </span>
+                    )}
+                  </div>
+                  <div
+                    className={`text-slate-300 font-medium ${
+                      isThumbnailOrPreview ? 'text-[8px]' : 'text-xs mt-0.5'
+                    }`}
+                  >
+                    {overlay.title || overlay.subtitle || ''}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            /* Boxed badge (Bottom-Left, Center, Right, Top-Left) */
+            <div
+              className={`bg-slate-950/92 backdrop-blur-md border border-fuchsia-500/40 rounded-xl shadow-2xl flex items-center gap-2.5 sm:gap-3.5 ${
+                isThumbnailOrPreview ? 'p-1.5 pl-2 pr-3' : 'p-3.5 pl-5 pr-8'
+              }`}
+            >
+              <div
+                className={`${
+                  isThumbnailOrPreview ? 'w-1 h-5' : 'w-1.5 h-10'
+                } rounded-full bg-gradient-to-b from-fuchsia-500 to-indigo-500 shrink-0`}
+              />
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span
+                    className={`font-bold text-white leading-tight truncate ${
+                      isThumbnailOrPreview ? 'text-[10px]' : 'text-lg'
+                    }`}
+                  >
+                    {overlay.name || 'Member'}
+                  </span>
+                  {overlay.category && (
+                    <span
+                      className={`rounded font-semibold uppercase tracking-wider bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30 shrink-0 ${
+                        isThumbnailOrPreview
+                          ? 'text-[7px] px-1'
+                          : 'text-[10px] px-2 py-0.5'
+                      }`}
+                    >
+                      {overlay.category}
+                    </span>
+                  )}
+                </div>
+                <div
+                  className={`text-fuchsia-300/90 font-medium truncate ${
+                    isThumbnailOrPreview ? 'text-[8px]' : 'text-xs mt-0.5'
+                  }`}
+                >
+                  {overlay.title || overlay.subtitle || ''}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
