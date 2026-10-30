@@ -8,6 +8,9 @@
     RewriteEngine On
     RewriteBase /
 
+    # Ensure Authorization header is passed to PHP under FastCGI / PHP-FPM
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
     # Handle CORS Preflight OPTIONS requests
     RewriteCond %{REQUEST_METHOD} OPTIONS
     RewriteRule ^(.*)$ index.php [QSA,L]
@@ -34,8 +37,15 @@
 
 # 3. Global CORS Headers (Allows OBS Studio & Web Frontends to Connect)
 <IfModule mod_headers.c>
-    Header always set Access-Control-Allow-Origin "*"
-    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    # Dynamic origin reflection: if client sends Origin, mirror it back & allow credentials
+    SetEnvIfNoCase Origin "^(https?://.+)$" CORS_ORIGIN=$1
+    Header always set Access-Control-Allow-Origin "%{CORS_ORIGIN}e" env=CORS_ORIGIN
+    Header always set Access-Control-Allow-Credentials "true" env=CORS_ORIGIN
+    
+    # Fallback to wildcard if no Origin header was sent
+    Header always set Access-Control-Allow-Origin "*" env=!CORS_ORIGIN
+
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
     Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Origin"
     Header always set Access-Control-Max-Age "86400"
 </IfModule>

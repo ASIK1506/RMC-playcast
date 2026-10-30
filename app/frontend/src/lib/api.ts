@@ -376,7 +376,6 @@ export async function apiLogin(username: string, password: string): Promise<Logi
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
     body: JSON.stringify({ username, password }),
   });
   const json = await res.json();
@@ -391,7 +390,6 @@ export async function apiLogout(): Promise<void> {
     await fetch(`${API_BASE}/auth/logout`, {
       method: 'POST',
       headers: getAuthHeaders(),
-      credentials: 'include',
     });
   } catch {
     // ignore network errors on logout
@@ -405,7 +403,6 @@ export async function apiGetMe(): Promise<{ success: boolean; user?: AuthUser }>
   try {
     const res = await fetch(`${API_BASE}/auth/me`, {
       headers: getAuthHeaders(),
-      credentials: 'include',
     });
     if (!res.ok) {
       if (res.status === 401) setAuthToken(null);
@@ -421,7 +418,6 @@ export async function apiChangePassword(currentPassword: string, newPassword: st
   const res = await fetch(`${API_BASE}/auth/change-password`, {
     method: 'POST',
     headers: getAuthHeaders(),
-    credentials: 'include',
     body: JSON.stringify({ currentPassword, newPassword }),
   });
   return await res.json();
@@ -458,7 +454,6 @@ export interface AdminUser {
 export async function apiAdminDashboard(): Promise<{ success: boolean; data?: AdminDashboardData }> {
   const res = await fetch(`${API_BASE}/admin/dashboard`, {
     headers: getAuthHeaders(),
-    credentials: 'include',
   });
   if (!res.ok) {
     if (res.status === 401) setAuthToken(null);
@@ -476,7 +471,6 @@ export async function apiAdminGetUsers(params?: { q?: string; status?: string; p
   const qs = searchParams.toString();
   const res = await fetch(`${API_BASE}/admin/users${qs ? `?${qs}` : ''}`, {
     headers: getAuthHeaders(),
-    credentials: 'include',
   });
   if (!res.ok) return { success: false };
   return await res.json();
@@ -486,7 +480,6 @@ export async function apiAdminCreateUser(data: { name: string; username: string;
   const res = await fetch(`${API_BASE}/admin/users`, {
     method: 'POST',
     headers: getAuthHeaders(),
-    credentials: 'include',
     body: JSON.stringify(data),
   });
   return await res.json();
@@ -496,7 +489,6 @@ export async function apiAdminUpdateUser(userId: string, data: { name?: string; 
   const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
     method: 'PUT',
     headers: getAuthHeaders(),
-    credentials: 'include',
     body: JSON.stringify(data),
   });
   return await res.json();
@@ -506,7 +498,6 @@ export async function apiAdminDeleteUser(userId: string): Promise<{ success: boo
   const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
     method: 'DELETE',
     headers: getAuthHeaders(),
-    credentials: 'include',
   });
   return await res.json();
 }
@@ -515,7 +506,6 @@ export async function apiAdminSetUserStatus(userId: string, status: 'ACTIVE' | '
   const res = await fetch(`${API_BASE}/admin/users/${userId}/status`, {
     method: 'PATCH',
     headers: getAuthHeaders(),
-    credentials: 'include',
     body: JSON.stringify({ status }),
   });
   return await res.json();
@@ -525,7 +515,6 @@ export async function apiAdminResetPassword(userId: string, newPassword: string,
   const res = await fetch(`${API_BASE}/admin/users/${userId}/reset-password`, {
     method: 'POST',
     headers: getAuthHeaders(),
-    credentials: 'include',
     body: JSON.stringify({ newPassword, mustChangePassword }),
   });
   return await res.json();
@@ -535,7 +524,6 @@ export async function apiAdminRevokeSessions(userId: string): Promise<{ success:
   const res = await fetch(`${API_BASE}/admin/users/${userId}/revoke-sessions`, {
     method: 'POST',
     headers: getAuthHeaders(),
-    credentials: 'include',
   });
   return await res.json();
 }
@@ -543,7 +531,6 @@ export async function apiAdminRevokeSessions(userId: string): Promise<{ success:
 export async function apiAdminGetSettings(): Promise<{ success: boolean; data?: { max_users: number; license_tier: string }; capacity?: { allowed: boolean; current: number; max: number; unlimited: boolean; tier: string } }> {
   const res = await fetch(`${API_BASE}/admin/settings`, {
     headers: getAuthHeaders(),
-    credentials: 'include',
   });
   if (!res.ok) return { success: false };
   return await res.json();
@@ -553,7 +540,6 @@ export async function apiAdminUpdateSettings(data: { max_users: number; license_
   const res = await fetch(`${API_BASE}/admin/settings`, {
     method: 'PUT',
     headers: getAuthHeaders(),
-    credentials: 'include',
     body: JSON.stringify(data),
   });
   return await res.json();
