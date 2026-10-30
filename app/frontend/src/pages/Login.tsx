@@ -87,42 +87,25 @@ export default function Login() {
           />
         </div>
 
-        {/* Top: Category Tag & Headline */}
-        <div className="relative z-10 shrink-0">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-fuchsia-500/30 bg-fuchsia-950/40 backdrop-blur-md shadow-sm mb-2.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse" />
-            <span className="text-[10px] font-bold tracking-widest uppercase text-fuchsia-300">
-              CHURCH PRESENTATION & OBS STUDIO
-            </span>
-          </div>
-
-          <h1 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-extrabold text-white tracking-tight leading-tight">
-            Run your whole service{' '}
-            <span className="bg-gradient-to-r from-fuchsia-400 via-purple-300 to-indigo-300 text-transparent bg-clip-text">
-              from one screen.
-            </span>
-          </h1>
-        </div>
-
-        {/* Center: Scaled Window Mockup (Contained within available space, no overflow) */}
-        <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center my-3 sm:my-4">
-          <div className="w-full max-w-xl max-h-full rounded-xl border border-white/15 bg-slate-950/90 shadow-2xl shadow-purple-950/50 overflow-hidden flex flex-col group">
+        {/* Center: Scaled Window Mockup with Looping Software Video */}
+        <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center my-auto py-2 sm:py-4">
+          <div className="w-full max-w-2xl xl:max-w-3xl rounded-xl border border-white/15 bg-slate-950/90 shadow-2xl shadow-purple-950/50 overflow-hidden flex flex-col group">
             {/* macOS Chrome Header */}
-            <div className="h-6 bg-slate-900/90 border-b border-white/10 px-3 flex items-center justify-between select-none shrink-0">
+            <div className="h-6 sm:h-7 bg-slate-900/90 border-b border-white/10 px-3 sm:px-3.5 flex items-center justify-between select-none shrink-0">
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-rose-500/80" />
-                <span className="w-2 h-2 rounded-full bg-amber-500/80" />
-                <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
+                <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-rose-500/80" />
+                <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-amber-500/80" />
+                <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-emerald-500/80" />
               </div>
-              <div className="text-[9px] font-medium text-slate-400 flex items-center gap-1">
-                <span className="w-1 h-1 rounded-full bg-fuchsia-400" />
+              <div className="text-[9px] sm:text-[10px] font-medium text-slate-400 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse" />
                 <span>RMC PlayCast Studio — Live Console</span>
               </div>
               <div className="w-8" />
             </div>
 
-            {/* Dashboard Mockup Video Loop */}
-            <div className="relative w-full aspect-[16/9] max-h-[38vh] bg-slate-950 overflow-hidden">
+            {/* Dashboard Mockup Video Loop - Full Frame & Aspect Ratio Preserved */}
+            <div className="relative w-full bg-slate-950 overflow-hidden flex items-center justify-center">
               <video
                 autoPlay
                 loop
@@ -130,13 +113,13 @@ export default function Login() {
                 playsInline
                 preload="auto"
                 poster="/dashboard-preview.jpg"
-                className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.01]"
+                className="w-full h-auto max-h-[62vh] block object-contain transition-transform duration-500 group-hover:scale-[1.005]"
               >
                 <source src="/dashboard-preview.webm" type="video/webm" />
                 <img
                   src="/dashboard-preview.jpg"
                   alt="RMC PlayCast Church Presentation Dashboard"
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-auto max-h-[62vh] block object-contain"
                 />
               </video>
               <div className="absolute inset-0 ring-1 ring-inset ring-white/10 pointer-events-none" />
