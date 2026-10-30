@@ -131,10 +131,11 @@
 ### Backend (`app/backend/` & `deploy/api.sriinfyllc.com/`)
 - `config.php` — Database connection loader and automatic schema self-migration.
 - `auth.php` — Authentication middleware, session token hashing, role verification, and capacity checks.
-- `index.php` — REST API router and route controller.
+- `index.php` — REST API router with dynamic origin reflection and OPTIONS preflight handling.
 - `cli_bootstrap_admin.php` — CLI utility for administrative provisioning.
 - `schema.sql` — Complete MySQL DDL schema.
 - `test_db.php` — Diagnostic verification script.
+- `.htaccess` — Configured with FastCGI Authorization passthrough and dynamic CORS origin reflection.
 - `playcast-backend-milesweb.zip` — Ready-to-deploy zip bundle for MilesWeb cPanel.
 
 ### Root Configuration
