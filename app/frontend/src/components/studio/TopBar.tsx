@@ -15,7 +15,12 @@ import {
   Play,
   Calendar,
   Sparkles,
+  Shield,
+  LogOut,
+  User as UserIcon,
 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -53,6 +58,14 @@ export const TopBar: React.FC<TopBarProps> = ({
   onStopLive,
   onGoLive,
 }) => {
+  const { user, isSuperAdmin, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login', { replace: true });
+  };
+
   const [copiedUrl, setCopiedUrl] = React.useState<string | null>(null);
   const [serviceInput, setServiceInput] = React.useState(activeService);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
@@ -352,6 +365,67 @@ export const TopBar: React.FC<TopBarProps> = ({
         >
           <Sliders className="w-4 h-4" />
         </Button>
+
+        {/* User Account / Admin Menu */}
+        {user && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="flex items-center gap-2 pl-2 pr-2.5 py-1 rounded-lg bg-slate-900 border border-white/10 hover:border-fuchsia-500/50 hover:bg-slate-800 transition cursor-pointer text-xs"
+                title={`${user.name} (${user.role})`}
+              >
+                <div
+                  className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-[11px] ${
+                    isSuperAdmin
+                      ? 'bg-gradient-to-br from-fuchsia-600 to-indigo-600 text-white'
+                      : 'bg-slate-800 text-slate-200 border border-white/10'
+                  }`}
+                >
+                  {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                </div>
+                <span className="font-semibold text-slate-200 hidden sm:inline-block max-w-[100px] truncate">
+                  {user.name || user.username}
+                </span>
+                {isSuperAdmin && (
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-fuchsia-400 bg-fuchsia-950/80 px-1 py-0.2 rounded border border-fuchsia-500/30 hidden md:inline-block">
+                    Admin
+                  </span>
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 bg-slate-950 border-white/15 text-slate-200">
+              <div className="p-3 border-b border-white/10">
+                <p className="text-xs font-bold text-white truncate">{user.name}</p>
+                <p className="text-[11px] text-slate-400 truncate">@{user.username}</p>
+                <div className="mt-1">
+                  <span className="text-[10px] font-semibold text-fuchsia-400 bg-fuchsia-950/60 px-1.5 py-0.5 rounded border border-fuchsia-500/30">
+                    {isSuperAdmin ? 'Super Administrator' : 'Operator'}
+                  </span>
+                </div>
+              </div>
+
+              {isSuperAdmin && (
+                <DropdownMenuItem
+                  onClick={() => navigate('/admin')}
+                  className="flex items-center gap-2 py-2 cursor-pointer text-xs hover:text-white"
+                >
+                  <Shield className="w-4 h-4 text-fuchsia-400" />
+                  <span>Admin Panel</span>
+                </DropdownMenuItem>
+              )}
+
+              <DropdownMenuSeparator className="bg-white/10" />
+
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="flex items-center gap-2 py-2 cursor-pointer text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Log Out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </header>
   );

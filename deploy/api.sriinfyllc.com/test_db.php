@@ -27,8 +27,8 @@ try {
         $stmt = $db->query("SELECT COUNT(*) FROM songs");
         $sampleSongs = (int) $stmt->fetchColumn();
 
-        // Check all 8 tables
-        $tables = ['services', 'songs', 'settings', 'live_state', 'bible_verses', 'backgrounds', 'templates', 'media'];
+        // Check all 11 tables (including SaaS user and session tables)
+        $tables = ['services', 'songs', 'settings', 'live_state', 'bible_verses', 'backgrounds', 'templates', 'media', 'users', 'user_sessions', 'audit_logs'];
         foreach ($tables as $t) {
             try {
                 $count = $db->query("SELECT COUNT(*) FROM `{$t}`")->fetchColumn();

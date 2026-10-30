@@ -147,4 +147,65 @@ REPLACE INTO `templates` (`id`, `name`, `description`, `layout_type`, `config_js
 ('trendy', 'Trendy Accent Modern', 'Contemporary youth worship layout with accent pill badges', 'trendy', '{"badges":true,"accentColor":"fuchsia"}', 0),
 ('minimal', 'Minimalist Clean', 'Subtle typography-first layout with high legibility', 'minimal', '{"padding":"loose","font":"serif"}', 0);
 
+-- 12. Users Table (Centrally Managed SaaS Accounts)
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` VARCHAR(64) NOT NULL,
+  `username` VARCHAR(64) NOT NULL,
+  `email` VARCHAR(191) NOT NULL,
+  `name` VARCHAR(128) NOT NULL,
+  `phone` VARCHAR(32) DEFAULT NULL,
+  `password_hash` VARCHAR(255) NOT NULL,
+  `role` VARCHAR(32) NOT NULL DEFAULT 'USER',
+  `status` VARCHAR(32) NOT NULL DEFAULT 'ACTIVE',
+  `must_change_password` TINYINT(1) DEFAULT 0,
+  `expires_at` DATETIME DEFAULT NULL,
+  `notes` TEXT DEFAULT NULL,
+  `created_by` VARCHAR(64) DEFAULT NULL,
+  `last_login_at` DATETIME DEFAULT NULL,
+  `last_login_ip` VARCHAR(64) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_u_username` (`username`),
+  UNIQUE KEY `idx_u_email` (`email`),
+  INDEX `idx_u_status` (`status`),
+  INDEX `idx_u_role` (`role`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 13. Server-Managed Sessions Table
+CREATE TABLE IF NOT EXISTS `user_sessions` (
+  `id` VARCHAR(64) NOT NULL,
+  `user_id` VARCHAR(64) NOT NULL,
+  `token_hash` VARCHAR(64) NOT NULL,
+  `ip_address` VARCHAR(64) DEFAULT NULL,
+  `user_agent` TEXT DEFAULT NULL,
+  `expires_at` DATETIME NOT NULL,
+  `last_activity_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_us_token` (`token_hash`),
+  INDEX `idx_us_user` (`user_id`),
+  INDEX `idx_us_exp` (`expires_at`),
+  CONSTRAINT `fk_us_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 14. Audit Logs Table
+CREATE TABLE IF NOT EXISTS `audit_logs` (
+  `id` BIGINT AUTO_INCREMENT NOT NULL,
+  `user_id` VARCHAR(64) DEFAULT NULL,
+  `username` VARCHAR(64) DEFAULT NULL,
+  `action` VARCHAR(64) NOT NULL,
+  `details_json` LONGTEXT DEFAULT NULL,
+  `ip_address` VARCHAR(64) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `idx_al_act` (`action`),
+  INDEX `idx_al_uid` (`user_id`),
+  INDEX `idx_al_time` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 15. Default License Configuration
+REPLACE INTO `settings` (`setting_key`, `value_json`) VALUES
+('system_license', '{"max_users":0,"license_tier":"Enterprise Unlimited"}');
+
 SET FOREIGN_KEY_CHECKS = 1;

@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/app/frontend/dist/index.html"
+      "destination": "/index.html"
     }
   ]
 }

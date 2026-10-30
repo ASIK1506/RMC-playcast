@@ -197,6 +197,63 @@ try {
             `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        // 9. Users Table (Centrally Managed SaaS Accounts)
+        $db->exec("CREATE TABLE IF NOT EXISTS `users` (
+            `id` VARCHAR(64) NOT NULL,
+            `username` VARCHAR(64) NOT NULL,
+            `email` VARCHAR(191) NOT NULL,
+            `name` VARCHAR(128) NOT NULL,
+            `phone` VARCHAR(32) DEFAULT NULL,
+            `password_hash` VARCHAR(255) NOT NULL,
+            `role` VARCHAR(32) NOT NULL DEFAULT 'USER',
+            `status` VARCHAR(32) NOT NULL DEFAULT 'ACTIVE',
+            `must_change_password` TINYINT(1) DEFAULT 0,
+            `expires_at` DATETIME DEFAULT NULL,
+            `notes` TEXT DEFAULT NULL,
+            `created_by` VARCHAR(64) DEFAULT NULL,
+            `last_login_at` DATETIME DEFAULT NULL,
+            `last_login_ip` VARCHAR(64) DEFAULT NULL,
+            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `idx_u_username` (`username`),
+            UNIQUE KEY `idx_u_email` (`email`),
+            INDEX `idx_u_status` (`status`),
+            INDEX `idx_u_role` (`role`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        // 10. Server-Managed Sessions Table (Tokens hashed with SHA-256)
+        $db->exec("CREATE TABLE IF NOT EXISTS `user_sessions` (
+            `id` VARCHAR(64) NOT NULL,
+            `user_id` VARCHAR(64) NOT NULL,
+            `token_hash` VARCHAR(64) NOT NULL,
+            `ip_address` VARCHAR(64) DEFAULT NULL,
+            `user_agent` TEXT DEFAULT NULL,
+            `expires_at` DATETIME NOT NULL,
+            `last_activity_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `idx_us_token` (`token_hash`),
+            INDEX `idx_us_user` (`user_id`),
+            INDEX `idx_us_exp` (`expires_at`),
+            CONSTRAINT `fk_us_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        // 11. Security & Administrative Audit Logs Table
+        $db->exec("CREATE TABLE IF NOT EXISTS `audit_logs` (
+            `id` BIGINT AUTO_INCREMENT NOT NULL,
+            `user_id` VARCHAR(64) DEFAULT NULL,
+            `username` VARCHAR(64) DEFAULT NULL,
+            `action` VARCHAR(64) NOT NULL,
+            `details_json` LONGTEXT DEFAULT NULL,
+            `ip_address` VARCHAR(64) DEFAULT NULL,
+            `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            INDEX `idx_al_act` (`action`),
+            INDEX `idx_al_uid` (`user_id`),
+            INDEX `idx_al_time` (`created_at`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
     } else {
         $db->exec("CREATE TABLE IF NOT EXISTS services (
             id TEXT PRIMARY KEY,
@@ -276,6 +333,49 @@ try {
             file_size INTEGER DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        // SQLite Users Table
+        $db->exec("CREATE TABLE IF NOT EXISTS users (
+            id TEXT PRIMARY KEY,
+            username TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            phone TEXT,
+            password_hash TEXT NOT NULL,
+            role TEXT NOT NULL DEFAULT 'USER',
+            status TEXT NOT NULL DEFAULT 'ACTIVE',
+            must_change_password INTEGER DEFAULT 0,
+            expires_at DATETIME,
+            notes TEXT,
+            created_by TEXT,
+            last_login_at DATETIME,
+            last_login_ip TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        // SQLite User Sessions Table
+        $db->exec("CREATE TABLE IF NOT EXISTS user_sessions (
+            id TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL,
+            token_hash TEXT UNIQUE NOT NULL,
+            ip_address TEXT,
+            user_agent TEXT,
+            expires_at DATETIME NOT NULL,
+            last_activity_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        // SQLite Audit Logs Table
+        $db->exec("CREATE TABLE IF NOT EXISTS audit_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT,
+            username TEXT,
+            action TEXT NOT NULL,
+            details_json TEXT,
+            ip_address TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )");
     }
 
@@ -437,6 +537,39 @@ try {
         foreach ($defaultTpls as $t) {
             $stmtTpl->execute([$t['id'], $t['name'], $t['description'], $t['layout_type'], $t['config_json'], $t['is_default']]);
         }
+    }
+
+    // 4. Seed initial Super Administrator if users table is empty
+    $userCount = (int) $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
+    if ($userCount === 0) {
+        $initUser = getenv('INITIAL_ADMIN_USER') ?: 'admin';
+        $initPass = getenv('INITIAL_ADMIN_PASS') ?: 'Admin@PlayCast2026!';
+        $initEmail = getenv('INITIAL_ADMIN_EMAIL') ?: 'admin@playcast.local';
+        $initName = getenv('INITIAL_ADMIN_NAME') ?: 'Super Administrator';
+
+        $hash = password_hash($initPass, PASSWORD_BCRYPT);
+        $adminId = 'usr-admin-initial';
+
+        $stmtAdmin = $db->prepare("INSERT INTO users (id, username, email, name, password_hash, role, status, must_change_password) VALUES (?, ?, ?, ?, ?, 'SUPER_ADMIN', 'ACTIVE', 0)");
+        $stmtAdmin->execute([$adminId, $initUser, $initEmail, $initName, $hash]);
+
+        try {
+            $stmtAudit = $db->prepare("INSERT INTO audit_logs (user_id, username, action, details_json, ip_address) VALUES (?, ?, 'SYSTEM_BOOTSTRAP', ?, '127.0.0.1')");
+            $stmtAudit->execute([$adminId, $initUser, json_encode(['note' => 'Initial Super Administrator account provisioned'])]);
+        } catch (Exception $ae) {}
+    }
+
+    // 5. Seed default system_license capacity setting if missing
+    $licenseStmt = $db->prepare("SELECT value_json FROM settings WHERE setting_key = 'system_license'");
+    $licenseStmt->execute();
+    if (!$licenseStmt->fetch()) {
+        $defaultLicense = json_encode([
+            'max_users' => 0, // 0 = unlimited capacity
+            'license_tier' => 'Enterprise Unlimited',
+            'configured_at' => date('Y-m-d H:i:s')
+        ]);
+        $initLic = $db->prepare("INSERT INTO settings (setting_key, value_json) VALUES ('system_license', ?)");
+        $initLic->execute([$defaultLicense]);
     }
 } catch (Exception $e) {
     header('Content-Type: application/json; charset=utf-8');

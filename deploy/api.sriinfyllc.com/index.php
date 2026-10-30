@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/auth.php';
 
 // 3. Normalize Request URI
 $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
@@ -57,6 +58,541 @@ if ($endpoint === 'health' || $endpoint === '') {
         'timestamp' => time()
     ]);
     exit;
+}
+
+// ==================== AUTHENTICATION ROUTES ====================
+
+// A1. Login (/api/auth/login)
+if ($endpoint === 'auth/login' && $method === 'POST') {
+    $input = getJsonInput();
+    $login = trim($input['username'] ?? $input['email'] ?? '');
+    $password = (string)($input['password'] ?? '');
+
+    if (empty($login) || empty($password)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Username/email and password are required']);
+        exit;
+    }
+
+    $loginLower = strtolower($login);
+    $stmt = $db->prepare("SELECT * FROM users WHERE LOWER(username) = ? OR LOWER(email) = ? LIMIT 1");
+    $stmt->execute([$loginLower, $loginLower]);
+    $user = $stmt->fetch();
+
+    if (!$user || !password_verify($password, $user['password_hash'])) {
+        logAudit($db, null, $login, 'LOGIN_FAILED', ['reason' => 'Invalid credentials']);
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'Invalid username or password']);
+        exit;
+    }
+
+    $now = date('Y-m-d H:i:s');
+
+    // Check account status
+    if ($user['status'] === 'DISABLED') {
+        logAudit($db, $user['id'], $user['username'], 'LOGIN_BLOCKED', ['reason' => 'Account disabled']);
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Your account has been deactivated. Please contact your administrator.']);
+        exit;
+    }
+
+    if ($user['status'] === 'EXPIRED' || (!empty($user['expires_at']) && $user['expires_at'] < $now)) {
+        $db->prepare("UPDATE users SET status = 'EXPIRED' WHERE id = ?")->execute([$user['id']]);
+        logAudit($db, $user['id'], $user['username'], 'LOGIN_BLOCKED', ['reason' => 'Account expired']);
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Your account has expired. Please contact your administrator to renew access.']);
+        exit;
+    }
+
+    // Provision secure session
+    $session = createSession($db, $user['id']);
+
+    // Update last login
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+    $db->prepare("UPDATE users SET last_login_at = CURRENT_TIMESTAMP, last_login_ip = ? WHERE id = ?")->execute([$ip, $user['id']]);
+
+    logAudit($db, $user['id'], $user['username'], 'LOGIN_SUCCESS');
+
+    echo json_encode([
+        'success' => true,
+        'token' => $session['token'],
+        'expiresAt' => $session['expiresAt'],
+        'user' => [
+            'id' => $user['id'],
+            'username' => $user['username'],
+            'email' => $user['email'],
+            'name' => $user['name'],
+            'phone' => $user['phone'],
+            'role' => $user['role'],
+            'status' => $user['status'],
+            'mustChangePassword' => (bool)$user['must_change_password']
+        ]
+    ]);
+    exit;
+}
+
+// A2. Logout (/api/auth/logout)
+if ($endpoint === 'auth/logout' && $method === 'POST') {
+    revokeCurrentSession($db);
+    echo json_encode(['success' => true, 'message' => 'Logged out successfully']);
+    exit;
+}
+
+// A3. Current User Profile (/api/auth/me)
+if ($endpoint === 'auth/me' && $method === 'GET') {
+    $user = requireAuth($db);
+    echo json_encode(['success' => true, 'user' => $user]);
+    exit;
+}
+
+// A4. Change Password (/api/auth/change-password)
+if ($endpoint === 'auth/change-password' && $method === 'POST') {
+    $user = requireAuth($db);
+    $input = getJsonInput();
+    $currentPass = (string)($input['currentPassword'] ?? '');
+    $newPass = (string)($input['newPassword'] ?? '');
+
+    if (strlen($newPass) < 8) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'New password must be at least 8 characters long']);
+        exit;
+    }
+
+    // Verify current password from database
+    $stmt = $db->prepare("SELECT password_hash FROM users WHERE id = ?");
+    $stmt->execute([$user['id']]);
+    $currHash = $stmt->fetchColumn();
+
+    if (!$currHash || !password_verify($currentPass, $currHash)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Current password is incorrect']);
+        exit;
+    }
+
+    $newHash = password_hash($newPass, PASSWORD_BCRYPT);
+    $db->prepare("UPDATE users SET password_hash = ?, must_change_password = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$newHash, $user['id']]);
+
+    logAudit($db, $user['id'], $user['username'], 'PASSWORD_CHANGED');
+    echo json_encode(['success' => true, 'message' => 'Password updated successfully']);
+    exit;
+}
+
+// ==================== SUPER ADMIN ROUTES ====================
+
+// S1. Admin Dashboard (/api/admin/dashboard)
+if ($endpoint === 'admin/dashboard' && $method === 'GET') {
+    $admin = requireSuperAdmin($db);
+
+    $totalUsers = (int)$db->query("SELECT COUNT(*) FROM users")->fetchColumn();
+    $activeUsers = (int)$db->query("SELECT COUNT(*) FROM users WHERE status = 'ACTIVE'")->fetchColumn();
+    $disabledUsers = (int)$db->query("SELECT COUNT(*) FROM users WHERE status = 'DISABLED'")->fetchColumn();
+    $expiredUsers = (int)$db->query("SELECT COUNT(*) FROM users WHERE status = 'EXPIRED'")->fetchColumn();
+    $capacity = checkUserCapacity($db);
+
+    // Recent registered users
+    $stmtRecent = $db->query("SELECT id, username, email, name, role, status, created_at, last_login_at FROM users ORDER BY created_at DESC LIMIT 5");
+    $recentUsers = $stmtRecent->fetchAll();
+
+    // Recent audit logs
+    $stmtLogs = $db->query("SELECT id, user_id, username, action, details_json, ip_address, created_at FROM audit_logs ORDER BY created_at DESC LIMIT 15");
+    $recentLogs = array_map(function($l) {
+        return [
+            'id' => $l['id'],
+            'userId' => $l['user_id'],
+            'username' => $l['username'],
+            'action' => $l['action'],
+            'details' => json_decode($l['details_json'] ?? '{}', true),
+            'ipAddress' => $l['ip_address'],
+            'createdAt' => $l['created_at']
+        ];
+    }, $stmtLogs->fetchAll());
+
+    echo json_encode([
+        'success' => true,
+        'data' => [
+            'totalUsers' => $totalUsers,
+            'activeUsers' => $activeUsers,
+            'disabledUsers' => $disabledUsers,
+            'expiredUsers' => $expiredUsers,
+            'capacity' => $capacity,
+            'recentUsers' => $recentUsers,
+            'recentActivity' => $recentLogs
+        ]
+    ]);
+    exit;
+}
+
+// S2. List Users (/api/admin/users)
+if ($endpoint === 'admin/users' && $method === 'GET') {
+    $admin = requireSuperAdmin($db);
+
+    $search = trim($_GET['q'] ?? '');
+    $statusFilter = strtoupper(trim($_GET['status'] ?? 'ALL'));
+    $page = max(1, (int)($_GET['page'] ?? 1));
+    $limit = max(5, min(100, (int)($_GET['limit'] ?? 25)));
+    $offset = ($page - 1) * $limit;
+
+    $where = [];
+    $params = [];
+
+    if (!empty($search)) {
+        $where[] = "(LOWER(username) LIKE ? OR LOWER(name) LIKE ? OR LOWER(email) LIKE ?)";
+        $term = '%' . strtolower($search) . '%';
+        $params[] = $term;
+        $params[] = $term;
+        $params[] = $term;
+    }
+
+    if ($statusFilter !== 'ALL' && in_array($statusFilter, ['ACTIVE', 'DISABLED', 'EXPIRED'])) {
+        $where[] = "status = ?";
+        $params[] = $statusFilter;
+    }
+
+    $whereSql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
+    $countStmt = $db->prepare("SELECT COUNT(*) FROM users {$whereSql}");
+    $countStmt->execute($params);
+    $total = (int)$countStmt->fetchColumn();
+
+    $stmtUsers = $db->prepare("SELECT id, username, email, name, phone, role, status, must_change_password, expires_at, notes, created_by, last_login_at, created_at, updated_at FROM users {$whereSql} ORDER BY created_at DESC LIMIT {$limit} OFFSET {$offset}");
+    $stmtUsers->execute($params);
+    $users = $stmtUsers->fetchAll();
+
+    // Attach active session counts
+    $stmtSess = $db->query("SELECT user_id, COUNT(*) AS cnt FROM user_sessions GROUP BY user_id");
+    $sessCounts = $stmtSess ? $stmtSess->fetchAll(PDO::FETCH_KEY_PAIR) : [];
+
+    $formatted = array_map(function($u) use ($sessCounts) {
+        return [
+            'id' => $u['id'],
+            'username' => $u['username'],
+            'email' => $u['email'],
+            'name' => $u['name'],
+            'phone' => $u['phone'],
+            'role' => $u['role'],
+            'status' => $u['status'],
+            'mustChangePassword' => (bool)$u['must_change_password'],
+            'expiresAt' => $u['expires_at'],
+            'notes' => $u['notes'],
+            'activeSessions' => (int)($sessCounts[$u['id']] ?? 0),
+            'lastLoginAt' => $u['last_login_at'],
+            'createdAt' => $u['created_at']
+        ];
+    }, $users);
+
+    echo json_encode([
+        'success' => true,
+        'data' => $formatted,
+        'pagination' => [
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
+            'totalPages' => ceil($total / $limit)
+        ],
+        'capacity' => checkUserCapacity($db)
+    ]);
+    exit;
+}
+
+// S3. Create User with Capacity Enforcement (/api/admin/users)
+if ($endpoint === 'admin/users' && $method === 'POST') {
+    $admin = requireSuperAdmin($db);
+
+    // 1. Enforce Capacity
+    $cap = checkUserCapacity($db);
+    if (!$cap['allowed']) {
+        http_response_code(403);
+        echo json_encode([
+            'success' => false,
+            'error' => "Account capacity limit reached ({$cap['current']}/{$cap['max']} licenses used). Please upgrade license capacity in Admin Settings.",
+            'capacity' => $cap
+        ]);
+        exit;
+    }
+
+    $input = getJsonInput();
+    $name = trim($input['name'] ?? '');
+    $username = strtolower(trim($input['username'] ?? ''));
+    $email = strtolower(trim($input['email'] ?? ''));
+    $phone = trim($input['phone'] ?? '');
+    $password = (string)($input['password'] ?? '');
+    $status = in_array(strtoupper($input['status'] ?? ''), ['ACTIVE', 'DISABLED']) ? strtoupper($input['status']) : 'ACTIVE';
+    $expiresAt = !empty($input['expiresAt']) ? date('Y-m-d H:i:s', strtotime($input['expiresAt'])) : null;
+    $notes = trim($input['notes'] ?? '');
+
+    if (empty($name) || empty($username) || empty($email)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Full name, username, and email are required']);
+        exit;
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Please provide a valid email address']);
+        exit;
+    }
+
+    if (!preg_match('/^[a-z0-9_.-]{3,32}$/', $username)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Username must be 3-32 characters and contain only letters, numbers, dots, and underscores']);
+        exit;
+    }
+
+    // Auto-generate temporary password if none provided
+    $mustChange = false;
+    if (empty($password)) {
+        $password = bin2hex(random_bytes(4)) . '@RMC2026';
+        $mustChange = true;
+    } elseif (strlen($password) < 6) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Password must be at least 6 characters']);
+        exit;
+    }
+
+    // Uniqueness checks
+    $chk = $db->prepare("SELECT id, username, email FROM users WHERE username = ? OR email = ? LIMIT 1");
+    $chk->execute([$username, $email]);
+    $conflict = $chk->fetch();
+
+    if ($conflict) {
+        http_response_code(409);
+        $field = ($conflict['username'] === $username) ? 'Username' : 'Email';
+        echo json_encode(['success' => false, 'error' => "{$field} is already registered to another account"]);
+        exit;
+    }
+
+    $userId = 'usr-' . bin2hex(random_bytes(8));
+    $hash = password_hash($password, PASSWORD_BCRYPT);
+
+    $stmtInsert = $db->prepare("INSERT INTO users (id, username, email, name, phone, password_hash, role, status, must_change_password, expires_at, notes, created_by, created_at) VALUES (?, ?, ?, ?, ?, ?, 'USER', ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)");
+    $stmtInsert->execute([
+        $userId,
+        $username,
+        $email,
+        $name,
+        $phone ?: null,
+        $hash,
+        $status,
+        $mustChange ? 1 : 0,
+        $expiresAt,
+        $notes ?: null,
+        $admin['id']
+    ]);
+
+    logAudit($db, $admin['id'], $admin['username'], 'USER_CREATED', [
+        'new_user_id' => $userId,
+        'new_username' => $username,
+        'email' => $email
+    ]);
+
+    http_response_code(201);
+    echo json_encode([
+        'success' => true,
+        'message' => 'User account created successfully',
+        'temporaryPassword' => $mustChange ? $password : null,
+        'data' => [
+            'id' => $userId,
+            'username' => $username,
+            'email' => $email,
+            'name' => $name,
+            'role' => 'USER',
+            'status' => $status,
+            'expiresAt' => $expiresAt
+        ]
+    ]);
+    exit;
+}
+
+// S4. Single User Operations (/api/admin/users/{id} and subroutes)
+if (preg_match('#^admin/users/([^/]+)(?:/(status|reset-password|revoke-sessions))?$#', $endpoint, $matches)) {
+    $admin = requireSuperAdmin($db);
+    $targetId = $matches[1];
+    $action = $matches[2] ?? '';
+
+    // Verify target user exists
+    $stmtTarget = $db->prepare("SELECT * FROM users WHERE id = ?");
+    $stmtTarget->execute([$targetId]);
+    $targetUser = $stmtTarget->fetch();
+
+    if (!$targetUser) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'User not found']);
+        exit;
+    }
+
+    // Sub-action: Toggle Status (Activate / Deactivate)
+    if ($action === 'status' && $method === 'PATCH') {
+        if ($targetId === $admin['id']) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'You cannot change the status of your own Super Administrator account']);
+            exit;
+        }
+
+        $input = getJsonInput();
+        $newStatus = strtoupper($input['status'] ?? '');
+        if (!in_array($newStatus, ['ACTIVE', 'DISABLED'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Invalid status. Must be ACTIVE or DISABLED']);
+            exit;
+        }
+
+        $db->prepare("UPDATE users SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$newStatus, $targetId]);
+
+        // If disabled, revoke all active sessions immediately
+        if ($newStatus === 'DISABLED') {
+            revokeAllUserSessions($db, $targetId);
+        }
+
+        logAudit($db, $admin['id'], $admin['username'], 'USER_STATUS_CHANGED', ['target_id' => $targetId, 'new_status' => $newStatus]);
+        echo json_encode(['success' => true, 'message' => "User account set to {$newStatus}"]);
+        exit;
+    }
+
+    // Sub-action: Admin Reset Password
+    if ($action === 'reset-password' && $method === 'POST') {
+        $input = getJsonInput();
+        $newPass = (string)($input['newPassword'] ?? '');
+        $mustChange = !empty($input['mustChangePassword']) ? 1 : 0;
+
+        if (strlen($newPass) < 6) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Password must be at least 6 characters']);
+            exit;
+        }
+
+        $newHash = password_hash($newPass, PASSWORD_BCRYPT);
+        $db->prepare("UPDATE users SET password_hash = ?, must_change_password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")->execute([$newHash, $mustChange, $targetId]);
+
+        // Invalidate all active sessions for this user
+        revokeAllUserSessions($db, $targetId);
+
+        logAudit($db, $admin['id'], $admin['username'], 'ADMIN_PASSWORD_RESET', ['target_id' => $targetId]);
+        echo json_encode(['success' => true, 'message' => 'Password has been reset and all active sessions revoked']);
+        exit;
+    }
+
+    // Sub-action: Revoke All Sessions
+    if ($action === 'revoke-sessions' && $method === 'POST') {
+        revokeAllUserSessions($db, $targetId);
+        logAudit($db, $admin['id'], $admin['username'], 'SESSIONS_REVOKED', ['target_id' => $targetId]);
+        echo json_encode(['success' => true, 'message' => 'All active sessions for this user have been terminated']);
+        exit;
+    }
+
+    // GET single user
+    if ($method === 'GET' && empty($action)) {
+        $sessCount = (int)$db->query("SELECT COUNT(*) FROM user_sessions WHERE user_id = " . $db->quote($targetId))->fetchColumn();
+
+        echo json_encode([
+            'success' => true,
+            'data' => [
+                'id' => $targetUser['id'],
+                'username' => $targetUser['username'],
+                'email' => $targetUser['email'],
+                'name' => $targetUser['name'],
+                'phone' => $targetUser['phone'],
+                'role' => $targetUser['role'],
+                'status' => $targetUser['status'],
+                'mustChangePassword' => (bool)$targetUser['must_change_password'],
+                'expiresAt' => $targetUser['expires_at'],
+                'notes' => $targetUser['notes'],
+                'activeSessions' => $sessCount,
+                'lastLoginAt' => $targetUser['last_login_at'],
+                'createdAt' => $targetUser['created_at'],
+                'updatedAt' => $targetUser['updated_at']
+            ]
+        ]);
+        exit;
+    }
+
+    // PUT update user details
+    if ($method === 'PUT' && empty($action)) {
+        $input = getJsonInput();
+        $name = trim($input['name'] ?? $targetUser['name']);
+        $email = strtolower(trim($input['email'] ?? $targetUser['email']));
+        $phone = trim($input['phone'] ?? $targetUser['phone']);
+        $notes = trim($input['notes'] ?? $targetUser['notes']);
+        $expiresAt = isset($input['expiresAt']) ? ($input['expiresAt'] ? date('Y-m-d H:i:s', strtotime($input['expiresAt'])) : null) : $targetUser['expires_at'];
+
+        if ($email !== $targetUser['email']) {
+            $chk = $db->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+            $chk->execute([$email, $targetId]);
+            if ($chk->fetch()) {
+                http_response_code(409);
+                echo json_encode(['success' => false, 'error' => 'Email address is already in use by another user']);
+                exit;
+            }
+        }
+
+        $stmtUp = $db->prepare("UPDATE users SET name = ?, email = ?, phone = ?, notes = ?, expires_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+        $stmtUp->execute([$name, $email, $phone ?: null, $notes ?: null, $expiresAt, $targetId]);
+
+        logAudit($db, $admin['id'], $admin['username'], 'USER_UPDATED', ['target_id' => $targetId]);
+        echo json_encode(['success' => true, 'message' => 'User profile updated successfully']);
+        exit;
+    }
+
+    // DELETE user
+    if ($method === 'DELETE' && empty($action)) {
+        if ($targetId === $admin['id']) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'You cannot delete your own Super Administrator account']);
+            exit;
+        }
+
+        // Revoke active sessions first
+        revokeAllUserSessions($db, $targetId);
+
+        // Delete user
+        $db->prepare("DELETE FROM users WHERE id = ?")->execute([$targetId]);
+
+        logAudit($db, $admin['id'], $admin['username'], 'USER_DELETED', ['target_id' => $targetId, 'target_username' => $targetUser['username']]);
+        echo json_encode(['success' => true, 'message' => 'User account deleted successfully']);
+        exit;
+    }
+}
+
+// S5. License & Capacity Settings (/api/admin/settings)
+if ($endpoint === 'admin/settings') {
+    $admin = requireSuperAdmin($db);
+
+    if ($method === 'GET') {
+        echo json_encode([
+            'success' => true,
+            'data' => getLicensePolicy($db),
+            'capacity' => checkUserCapacity($db)
+        ]);
+        exit;
+    }
+
+    if ($method === 'PUT') {
+        $input = getJsonInput();
+        $maxUsers = isset($input['max_users']) ? max(0, (int)$input['max_users']) : 0;
+        $tier = trim($input['license_tier'] ?? 'Enterprise Tier');
+
+        $licensePayload = json_encode([
+            'max_users' => $maxUsers,
+            'license_tier' => $tier,
+            'updated_by' => $admin['username'],
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        $stmtSave = $db->prepare("REPLACE INTO settings (setting_key, value_json, updated_at) VALUES ('system_license', ?, CURRENT_TIMESTAMP)");
+        $stmtSave->execute([$licensePayload]);
+
+        logAudit($db, $admin['id'], $admin['username'], 'LICENSE_UPDATED', ['max_users' => $maxUsers, 'tier' => $tier]);
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'License and user capacity settings updated successfully',
+            'data' => [
+                'max_users' => $maxUsers,
+                'license_tier' => $tier
+            ],
+            'capacity' => checkUserCapacity($db)
+        ]);
+        exit;
+    }
 }
 
 // 2. Worship Songs CRUD (/api/songs or /songs)

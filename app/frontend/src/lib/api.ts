@@ -312,3 +312,249 @@ export async function deleteMedia(id: string): Promise<boolean> {
     return false;
   }
 }
+
+// ==================== AUTHENTICATION API ====================
+
+export interface AuthUser {
+  id: string;
+  username: string;
+  email: string;
+  name: string;
+  phone?: string;
+  role: 'SUPER_ADMIN' | 'USER';
+  status: 'ACTIVE' | 'DISABLED' | 'EXPIRED';
+  mustChangePassword?: boolean;
+  expiresAt?: string | null;
+  lastLoginAt?: string | null;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  token?: string;
+  expiresAt?: string;
+  user?: AuthUser;
+  error?: string;
+}
+
+// Token management — stored in memory + localStorage for persistence across reloads
+let _authToken: string | null = null;
+
+export function getAuthToken(): string | null {
+  if (_authToken) return _authToken;
+  try {
+    _authToken = localStorage.getItem('playcast_auth_token');
+  } catch {
+    // ignore
+  }
+  return _authToken;
+}
+
+export function setAuthToken(token: string | null): void {
+  _authToken = token;
+  try {
+    if (token) {
+      localStorage.setItem('playcast_auth_token', token);
+    } else {
+      localStorage.removeItem('playcast_auth_token');
+    }
+  } catch {
+    // ignore
+  }
+}
+
+export function getAuthHeaders(): Record<string, string> {
+  const token = getAuthToken();
+  if (token) {
+    return { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+  }
+  return { 'Content-Type': 'application/json' };
+}
+
+// --- Auth Endpoints ---
+
+export async function apiLogin(username: string, password: string): Promise<LoginResponse> {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username, password }),
+  });
+  const json = await res.json();
+  if (json.success && json.token) {
+    setAuthToken(json.token);
+  }
+  return json;
+}
+
+export async function apiLogout(): Promise<void> {
+  try {
+    await fetch(`${API_BASE}/auth/logout`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+  } catch {
+    // ignore network errors on logout
+  }
+  setAuthToken(null);
+}
+
+export async function apiGetMe(): Promise<{ success: boolean; user?: AuthUser }> {
+  const token = getAuthToken();
+  if (!token) return { success: false };
+  try {
+    const res = await fetch(`${API_BASE}/auth/me`, {
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+    if (!res.ok) {
+      if (res.status === 401) setAuthToken(null);
+      return { success: false };
+    }
+    return await res.json();
+  } catch {
+    return { success: false };
+  }
+}
+
+export async function apiChangePassword(currentPassword: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+  const res = await fetch(`${API_BASE}/auth/change-password`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    credentials: 'include',
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+  return await res.json();
+}
+
+// ==================== ADMIN API ====================
+
+export interface AdminDashboardData {
+  totalUsers: number;
+  activeUsers: number;
+  disabledUsers: number;
+  expiredUsers: number;
+  capacity: { allowed: boolean; current: number; max: number; unlimited: boolean; tier: string };
+  recentUsers: Array<{ id: string; username: string; email: string; name: string; role: string; status: string; created_at: string; last_login_at: string | null }>;
+  recentActivity: Array<{ id: number; userId: string | null; username: string; action: string; details: Record<string, unknown>; ipAddress: string; createdAt: string }>;
+}
+
+export interface AdminUser {
+  id: string;
+  username: string;
+  email: string;
+  name: string;
+  phone?: string;
+  role: string;
+  status: string;
+  mustChangePassword: boolean;
+  expiresAt?: string | null;
+  notes?: string | null;
+  activeSessions: number;
+  lastLoginAt?: string | null;
+  createdAt: string;
+}
+
+export async function apiAdminDashboard(): Promise<{ success: boolean; data?: AdminDashboardData }> {
+  const res = await fetch(`${API_BASE}/admin/dashboard`, {
+    headers: getAuthHeaders(),
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    if (res.status === 401) setAuthToken(null);
+    return { success: false };
+  }
+  return await res.json();
+}
+
+export async function apiAdminGetUsers(params?: { q?: string; status?: string; page?: number; limit?: number }): Promise<{ success: boolean; data?: AdminUser[]; pagination?: { page: number; limit: number; total: number; totalPages: number }; capacity?: { allowed: boolean; current: number; max: number; unlimited: boolean; tier: string } }> {
+  const searchParams = new URLSearchParams();
+  if (params?.q) searchParams.set('q', params.q);
+  if (params?.status) searchParams.set('status', params.status);
+  if (params?.page) searchParams.set('page', String(params.page));
+  if (params?.limit) searchParams.set('limit', String(params.limit));
+  const qs = searchParams.toString();
+  const res = await fetch(`${API_BASE}/admin/users${qs ? `?${qs}` : ''}`, {
+    headers: getAuthHeaders(),
+    credentials: 'include',
+  });
+  if (!res.ok) return { success: false };
+  return await res.json();
+}
+
+export async function apiAdminCreateUser(data: { name: string; username: string; email: string; phone?: string; password?: string; status?: string; expiresAt?: string; notes?: string }): Promise<{ success: boolean; error?: string; temporaryPassword?: string | null; data?: { id: string; username: string; email: string; name: string; role: string; status: string; expiresAt?: string | null } }> {
+  const res = await fetch(`${API_BASE}/admin/users`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+  return await res.json();
+}
+
+export async function apiAdminUpdateUser(userId: string, data: { name?: string; email?: string; phone?: string; notes?: string; expiresAt?: string | null }): Promise<{ success: boolean; error?: string }> {
+  const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+    method: 'PUT',
+    headers: getAuthHeaders(),
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+  return await res.json();
+}
+
+export async function apiAdminDeleteUser(userId: string): Promise<{ success: boolean; error?: string }> {
+  const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+    credentials: 'include',
+  });
+  return await res.json();
+}
+
+export async function apiAdminSetUserStatus(userId: string, status: 'ACTIVE' | 'DISABLED'): Promise<{ success: boolean; error?: string }> {
+  const res = await fetch(`${API_BASE}/admin/users/${userId}/status`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+    credentials: 'include',
+    body: JSON.stringify({ status }),
+  });
+  return await res.json();
+}
+
+export async function apiAdminResetPassword(userId: string, newPassword: string, mustChangePassword = true): Promise<{ success: boolean; error?: string }> {
+  const res = await fetch(`${API_BASE}/admin/users/${userId}/reset-password`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    credentials: 'include',
+    body: JSON.stringify({ newPassword, mustChangePassword }),
+  });
+  return await res.json();
+}
+
+export async function apiAdminRevokeSessions(userId: string): Promise<{ success: boolean; error?: string }> {
+  const res = await fetch(`${API_BASE}/admin/users/${userId}/revoke-sessions`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    credentials: 'include',
+  });
+  return await res.json();
+}
+
+export async function apiAdminGetSettings(): Promise<{ success: boolean; data?: { max_users: number; license_tier: string }; capacity?: { allowed: boolean; current: number; max: number; unlimited: boolean; tier: string } }> {
+  const res = await fetch(`${API_BASE}/admin/settings`, {
+    headers: getAuthHeaders(),
+    credentials: 'include',
+  });
+  if (!res.ok) return { success: false };
+  return await res.json();
+}
+
+export async function apiAdminUpdateSettings(data: { max_users: number; license_tier: string }): Promise<{ success: boolean; error?: string }> {
+  const res = await fetch(`${API_BASE}/admin/settings`, {
+    method: 'PUT',
+    headers: getAuthHeaders(),
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+  return await res.json();
+}
