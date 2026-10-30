@@ -100,7 +100,7 @@
 
 ## 6. Frontend Routes & Output Views
 
-- **`/login`** — Dark fuchsia/slate login page with ambient glow effects and session rehydration.
+- **`/login`** — Modern split-screen login page matching SaaS showcase reference: left side with software dashboard mockup, feature pills, and glowing ambient background; right side with sleek sign-in form, show/hide password toggle, and session persistence.
 - **`/`** — Protected main PlayCast Studio:
   - **Show Mode:** Dual preview/program monitors, quick blanking, church personalities & lower-third overlay controller (custom positions & timing), live broadcast toggles.
   - **Edit Mode:** Slide matrix editor, slide splitting, lyric adjustments, typography styling, song presenter info.
