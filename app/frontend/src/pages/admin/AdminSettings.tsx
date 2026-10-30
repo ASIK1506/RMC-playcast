@@ -149,11 +149,11 @@ export default function AdminSettings() {
   };
 
   return (
-    <div className="p-8 max-w-5xl mx-auto space-y-8">
+    <div className="p-5 lg:p-8 max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">License & System Settings</h1>
-        <p className="text-sm text-slate-400 mt-1">
+      <div className="pb-4 border-b border-white/5">
+        <h1 className="text-xl font-extrabold text-white tracking-tight">License & System Settings</h1>
+        <p className="text-[13px] text-slate-500 mt-1">
           Configure church license capacity, manage security policies, and monitor system health.
         </p>
       </div>
@@ -162,14 +162,14 @@ export default function AdminSettings() {
         {/* Left Column: License & Capacity (2 spans) */}
         <div className="md:col-span-2 space-y-6">
           {/* License Configuration Box */}
-          <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-6 shadow-xl space-y-6">
+          <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-600 to-indigo-600 flex items-center justify-center">
-                <Users className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center">
+                <Users className="w-4 h-4 text-fuchsia-400" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-white">License Capacity Policy</h2>
-                <p className="text-xs text-slate-400">Control operator account limits and subscription tier</p>
+                <h2 className="text-sm font-bold text-white">License Capacity Policy</h2>
+                <p className="text-[11px] text-slate-500">Control operator account limits and subscription tier</p>
               </div>
             </div>
 
@@ -187,7 +187,7 @@ export default function AdminSettings() {
               </div>
             )}
 
-            <form onSubmit={handleSaveSettings} className="space-y-5">
+            <form onSubmit={handleSaveSettings} className="space-y-4">
               {/* License Tier */}
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-1.5">License Tier / Package Name</label>
@@ -196,7 +196,7 @@ export default function AdminSettings() {
                   value={licenseTier}
                   onChange={(e) => setLicenseTier(e.target.value)}
                   placeholder="e.g. Standard Church License, Multi-Campus Edition"
-                  className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500 transition"
+                  className="w-full px-3 py-2 bg-[#0a0d14] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-fuchsia-500/60 transition"
                 />
               </div>
 
@@ -208,10 +208,10 @@ export default function AdminSettings() {
                   {/* Fixed Limit Option */}
                   <label
                     onClick={() => setIsUnlimited(false)}
-                    className={`p-4 rounded-xl border transition cursor-pointer flex flex-col justify-between ${
+                    className={`p-3.5 rounded-lg border transition cursor-pointer flex flex-col justify-between ${
                       !isUnlimited
-                        ? 'bg-fuchsia-950/30 border-fuchsia-500/50 text-white'
-                        : 'bg-slate-950/40 border-white/5 text-slate-400 hover:border-white/20'
+                        ? 'bg-fuchsia-950/20 border-fuchsia-500/40 text-white'
+                        : 'bg-[#0a0d14] border-white/5 text-slate-400 hover:border-white/15'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -231,10 +231,10 @@ export default function AdminSettings() {
                   {/* Unlimited Option */}
                   <label
                     onClick={() => setIsUnlimited(true)}
-                    className={`p-4 rounded-xl border transition cursor-pointer flex flex-col justify-between ${
+                    className={`p-3.5 rounded-lg border transition cursor-pointer flex flex-col justify-between ${
                       isUnlimited
-                        ? 'bg-fuchsia-950/30 border-fuchsia-500/50 text-white'
-                        : 'bg-slate-950/40 border-white/5 text-slate-400 hover:border-white/20'
+                        ? 'bg-fuchsia-950/20 border-fuchsia-500/40 text-white'
+                        : 'bg-[#0a0d14] border-white/5 text-slate-400 hover:border-white/15'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -266,7 +266,7 @@ export default function AdminSettings() {
                           max="10000"
                           value={maxUsers}
                           onChange={(e) => setMaxUsers(parseInt(e.target.value) || 1)}
-                          className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500 transition font-mono"
+                          className="w-full px-3 py-2 bg-[#0a0d14] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-fuchsia-500/60 transition font-mono"
                         />
                       </div>
                       <div className="flex gap-2">
@@ -292,7 +292,7 @@ export default function AdminSettings() {
 
               {/* Live Capacity Feedback */}
               {capacity && (
-                <div className="p-4 rounded-xl bg-slate-950/70 border border-white/5 space-y-2">
+                <div className="p-3.5 rounded-lg bg-[#0a0d14] border border-white/5 space-y-2">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-slate-400">Current Usage:</span>
                     <span className="font-bold text-white">
@@ -302,7 +302,7 @@ export default function AdminSettings() {
                   {!capacity.unlimited && (
                     <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-fuchsia-500 to-indigo-500 transition-all duration-500"
+                        className="h-full bg-fuchsia-500 transition-all duration-500"
                         style={{ width: `${Math.min(100, (capacity.current / capacity.max) * 100)}%` }}
                       />
                     </div>
@@ -313,7 +313,7 @@ export default function AdminSettings() {
               <button
                 type="submit"
                 disabled={savingSettings || loading}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-fuchsia-600 to-indigo-600 hover:from-fuchsia-500 hover:to-indigo-500 text-white shadow-lg shadow-fuchsia-600/30 transition disabled:opacity-50 cursor-pointer w-full sm:w-auto"
+                className="flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-sm transition disabled:opacity-50 cursor-pointer w-full sm:w-auto"
               >
                 <Save className="w-4 h-4" />
                 <span>{savingSettings ? 'Saving Settings...' : 'Save License Policy'}</span>
@@ -322,14 +322,14 @@ export default function AdminSettings() {
           </div>
 
           {/* Change Super Admin Password */}
-          <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-6 shadow-xl space-y-6">
+          <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-950/60 border border-amber-500/30 flex items-center justify-center">
-                <Lock className="w-5 h-5 text-amber-400" />
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                <Lock className="w-4 h-4 text-amber-400" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-white">Change Super Admin Password</h2>
-                <p className="text-xs text-slate-400">Update master security credentials for @{user?.username || 'admin'}</p>
+                <h2 className="text-sm font-bold text-white">Change Super Admin Password</h2>
+                <p className="text-[11px] text-slate-500">Update master security credentials for @{user?.username || 'admin'}</p>
               </div>
             </div>
 
@@ -355,7 +355,7 @@ export default function AdminSettings() {
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-amber-500 transition"
+                  className="w-full px-3 py-2 bg-[#0a0d14] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-amber-500/60 transition"
                 />
               </div>
 
@@ -367,7 +367,7 @@ export default function AdminSettings() {
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-amber-500 transition"
+                    className="w-full px-3 py-2 bg-[#0a0d14] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-amber-500/60 transition"
                   />
                 </div>
 
@@ -378,7 +378,7 @@ export default function AdminSettings() {
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-slate-950/80 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-amber-500 transition"
+                    className="w-full px-3 py-2 bg-[#0a0d14] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-amber-500/60 transition"
                   />
                 </div>
               </div>
@@ -398,10 +398,10 @@ export default function AdminSettings() {
         {/* Right Column: System & Architecture Info (1 span) */}
         <div className="space-y-6">
           {/* Cloud Database Info */}
-          <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-6 shadow-xl space-y-4">
+          <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center">
-                <Database className="w-5 h-5 text-emerald-400" />
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                <Database className="w-4 h-4 text-emerald-400" />
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white">Cloud Database</h3>
@@ -432,9 +432,9 @@ export default function AdminSettings() {
           </div>
 
           {/* Architecture Guardrails Reminder */}
-          <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-6 shadow-xl space-y-3 text-xs">
-            <div className="flex items-center gap-2 text-fuchsia-300 font-bold uppercase tracking-wider">
-              <Shield className="w-4 h-4 text-fuchsia-400" />
+          <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-3 text-xs">
+            <div className="flex items-center gap-2 text-slate-300 font-bold uppercase tracking-wider text-[10px]">
+              <Shield className="w-3.5 h-3.5 text-fuchsia-400" />
               <span>SaaS Security Core</span>
             </div>
             <ul className="space-y-2 text-slate-400 leading-relaxed list-disc list-inside">

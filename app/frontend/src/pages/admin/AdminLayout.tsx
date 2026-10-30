@@ -1,7 +1,15 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { LayoutDashboard, Users, Settings, Radio, ArrowLeft, LogOut } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Users,
+  Settings,
+  Radio,
+  ArrowLeft,
+  LogOut,
+  Shield,
+} from 'lucide-react';
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
@@ -13,79 +21,94 @@ export default function AdminLayout() {
   };
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+    `flex items-center gap-2.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
       isActive
-        ? 'bg-fuchsia-600/20 text-fuchsia-300 border border-fuchsia-500/30'
-        : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+        ? 'bg-fuchsia-600/15 text-fuchsia-300 border border-fuchsia-500/30 shadow-sm'
+        : 'text-slate-400 hover:text-white hover:bg-white/5'
     }`;
 
   return (
-    <div className="flex h-screen bg-slate-950 text-white overflow-hidden">
+    <div className="flex h-screen bg-[#07090e] text-white selection:bg-fuchsia-600 selection:text-white overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900/60 border-r border-white/5 flex flex-col shrink-0">
+      <aside className="w-60 bg-[#0b0e15] border-r border-white/10 flex flex-col shrink-0">
         {/* Branding */}
-        <div className="p-5 border-b border-white/5">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 to-indigo-600 flex items-center justify-center shadow-md">
-              <Radio className="w-5 h-5 text-white" />
+        <div className="p-4 border-b border-white/10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600 flex items-center justify-center shadow-md shadow-fuchsia-500/20 shrink-0">
+                <Radio className="w-4 h-4 text-white" />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-xs font-bold text-white tracking-tight truncate">
+                  RMC PlayCast
+                </h2>
+                <p className="text-[10px] text-slate-500 font-medium">Administration</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-sm font-bold tracking-tight">RMC PlayCast</h2>
-              <p className="text-[10px] text-slate-500 font-medium">Admin Panel</p>
-            </div>
+            <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30 uppercase tracking-wider">
+              SAAS
+            </span>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-3 space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 p-2.5 space-y-1 overflow-y-auto">
+          <div className="px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-slate-500">
+            Control Center
+          </div>
           <NavLink to="/admin" end className={navLinkClass}>
-            <LayoutDashboard className="w-4 h-4" />
-            Dashboard
+            <LayoutDashboard className="w-3.5 h-3.5" />
+            <span>Dashboard</span>
           </NavLink>
           <NavLink to="/admin/users" className={navLinkClass}>
-            <Users className="w-4 h-4" />
-            User Management
+            <Users className="w-3.5 h-3.5" />
+            <span>User Management</span>
           </NavLink>
           <NavLink to="/admin/settings" className={navLinkClass}>
-            <Settings className="w-4 h-4" />
-            License & Settings
+            <Settings className="w-3.5 h-3.5" />
+            <span>License & System</span>
           </NavLink>
         </nav>
 
         {/* Bottom Actions */}
-        <div className="p-3 border-t border-white/5 space-y-1.5">
+        <div className="p-2.5 border-t border-white/10 space-y-1">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all w-full cursor-pointer"
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all w-full cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Studio
+            <ArrowLeft className="w-3.5 h-3.5 text-fuchsia-400" />
+            <span>Return to Studio</span>
           </button>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all w-full cursor-pointer"
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-lg text-xs font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all w-full cursor-pointer"
           >
-            <LogOut className="w-4 h-4" />
-            Logout
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
           </button>
         </div>
 
         {/* User Info */}
-        <div className="p-4 border-t border-white/5 bg-slate-900/40">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia-500 to-indigo-600 flex items-center justify-center text-xs font-bold">
+        <div className="p-3 border-t border-white/10 bg-black/20">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-fuchsia-500 to-indigo-600 flex items-center justify-center text-[11px] font-bold shadow-sm shrink-0">
               {user?.name?.charAt(0)?.toUpperCase() || 'A'}
             </div>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-white truncate">{user?.name || user?.username}</p>
-              <p className="text-[10px] text-fuchsia-400 font-medium">Super Administrator</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-white truncate">
+                {user?.name || user?.username || 'Super Admin'}
+              </p>
+              <p className="text-[9px] text-fuchsia-300/80 font-medium truncate flex items-center gap-1">
+                <Shield className="w-2.5 h-2.5" />
+                <span>Super Administrator</span>
+              </p>
             </div>
           </div>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto bg-[#07090e]">
         <Outlet />
       </main>
     </div>
