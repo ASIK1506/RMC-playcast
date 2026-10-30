@@ -670,3 +670,4 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
     </Dialog>
   );
 };
+
