@@ -105,7 +105,7 @@
   - **Show Mode:** Dual preview/program monitors, quick blanking, church personalities & lower-third overlay controller (custom positions & timing), live broadcast toggles.
   - **Edit Mode:** Slide matrix editor, slide splitting, lyric adjustments, typography styling, song presenter info.
   - **Stage Mode:** Stage workspace & confidence monitor configuration.
-  - **TopBar:** Service playlist renamer, mode switcher, live status badge, Lower Thirds modal shortcut, Output feeds dropdown, and User Account menu with avatar, Admin Panel shortcut, and instant Logout.
+  - **TopBar:** Service playlist renamer, mode switcher, live status badge, Lower Thirds modal shortcut (with resolved icon imports), Output feeds dropdown, and User Account menu with avatar, Admin Panel shortcut, and instant Logout.
 - **`/admin`** — Super Admin Dashboard with anti-AI-slop design (deep dark `#07090e`/`#0c0f16` palettes, crisp neutral borders, monoline icons, no synthetic gradient abuse): real-time license usage progress bars, account stat counters, and live audit event log.
 - **`/admin/users`** — User management table with clean typography and streamlined modals: create user modal, temporary password generation, profile edit, password reset, and session kill switch.
 - **`/admin/settings`** — License capacity configuration (fixed cap or unlimited policy), license tier editor, Super Admin password change, and cloud database diagnostics.
