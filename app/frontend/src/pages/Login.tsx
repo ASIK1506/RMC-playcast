@@ -329,7 +329,17 @@ export default function Login() {
         {/* Footer */}
         <div className="pt-4 pb-2 text-center shrink-0 relative z-10">
           <p className="text-slate-600 text-[11px]">
-            RMC PlayCast &copy; {new Date().getFullYear()} — BlueChip Computers LLP. All rights reserved.
+            RMC PlayCast &copy; {new Date().getFullYear()} —{' '}
+            <a
+              href="https://bluechipllp.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-600 hover:text-white hover:underline hover:underline-offset-2 hover:bg-white/5 px-1 py-0.5 -mx-1 rounded transition-all duration-200 cursor-pointer inline-block"
+              title="Visit BlueChip Computers LLP"
+            >
+              BlueChip Computers LLP
+            </a>
+            . All rights reserved.
           </p>
         </div>
       </div>
