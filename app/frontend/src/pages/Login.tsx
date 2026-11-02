@@ -69,11 +69,11 @@ export default function Login() {
   }
 
   return (
-    <div className="w-full h-screen min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row bg-[#06080d] text-white selection:bg-fuchsia-600 selection:text-white overflow-y-auto lg:overflow-hidden">
+    <div className="w-full min-h-screen min-h-[100dvh] lg:h-screen lg:max-h-screen flex flex-col lg:flex-row bg-[#06080d] text-white selection:bg-fuchsia-600 selection:text-white overflow-y-auto lg:overflow-hidden">
       {/* =========================================================================
           LEFT COLUMN: Software Showcase & Dashboard Visual (Fit-To-Screen)
           ========================================================================= */}
-      <div className="relative w-full lg:w-[56%] xl:w-[58%] h-auto lg:h-full flex flex-col justify-between p-6 sm:p-8 lg:p-8 xl:p-10 bg-gradient-to-br from-[#12072b] via-[#0c061e] to-[#06080d] border-b lg:border-b-0 lg:border-r border-white/10 shrink-0 lg:shrink">
+      <div className="hidden lg:flex relative w-full lg:w-[56%] xl:w-[58%] h-auto lg:h-full flex-col justify-between p-6 sm:p-8 lg:p-8 xl:p-10 bg-gradient-to-br from-[#12072b] via-[#0c061e] to-[#06080d] border-b lg:border-b-0 lg:border-r border-white/10 shrink-0 lg:shrink">
         {/* Ambient atmospheric lighting */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-fuchsia-600/12 blur-[120px]" />
@@ -164,30 +164,56 @@ export default function Login() {
       </div>
 
       {/* =========================================================================
-          RIGHT COLUMN: Login Form (Fit-To-Screen, Compact & Clean)
+          RIGHT COLUMN: Login Form (Responsive: Clean Centered on Mobile, Side by Side on Desktop)
           ========================================================================= */}
-      <div className="w-full lg:w-[44%] xl:w-[42%] h-auto lg:h-full flex flex-col justify-between p-6 sm:p-8 lg:p-8 xl:p-12 bg-[#06080d] shrink-0 lg:shrink">
+      <div className="w-full lg:w-[44%] xl:w-[42%] min-h-screen lg:min-h-0 lg:h-full flex flex-col justify-between p-6 sm:p-8 lg:p-8 xl:p-12 bg-[#06080d] shrink-0 lg:shrink relative overflow-hidden">
+        {/* Ambient atmospheric lighting on mobile */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden lg:hidden">
+          <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-fuchsia-600/10 blur-[100px]" />
+          <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-indigo-600/10 blur-[100px]" />
+          <div
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+              backgroundSize: '28px 28px',
+            }}
+          />
+        </div>
+
         {/* Top Spacer */}
         <div className="hidden lg:block shrink-0" />
 
         {/* Main Form Box */}
-        <div className="w-full max-w-sm mx-auto my-auto py-4">
-          {/* Logo */}
-          <div className="flex items-center gap-2.5 mb-6">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-fuchsia-500/25">
-              <Radio className="w-4.5 h-4.5 text-white" />
-            </div>
-            <span className="text-lg font-extrabold text-white tracking-tight">
-              RMC PlayCast
+        <div className="w-full max-w-sm mx-auto my-auto py-6 sm:py-4 relative z-10">
+          {/* Mobile Category Tag */}
+          <div className="lg:hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-fuchsia-500/30 bg-fuchsia-950/40 backdrop-blur-md shadow-sm mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse" />
+            <span className="text-[10px] font-bold tracking-widest uppercase text-fuchsia-300">
+              CHURCH PRESENTATION & OBS STUDIO
             </span>
+          </div>
+
+          {/* Logo & Brand Title */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-fuchsia-500/25 shrink-0">
+              <Radio className="w-5 h-5 sm:w-4.5 sm:h-4.5 text-white" />
+            </div>
+            <div>
+              <span className="text-xl sm:text-lg font-extrabold text-white tracking-tight block leading-tight">
+                RMC PlayCast
+              </span>
+              <span className="text-[11px] text-slate-400 font-medium block lg:hidden">
+                Live Broadcast Console
+              </span>
+            </div>
           </div>
 
           {/* Heading */}
           <div className="mb-6">
-            <h2 className="text-2xl font-extrabold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-2xl font-extrabold text-white tracking-tight">
               Welcome back
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-sm sm:text-xs text-slate-400 mt-1">
               Sign in to your workspace to continue.
             </p>
           </div>
@@ -219,7 +245,7 @@ export default function Login() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="admin"
                 disabled={isSubmitting}
-                className="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3.5 py-2.5 text-white placeholder:text-slate-600 text-xs focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all disabled:opacity-50"
+                className="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3.5 py-3 sm:py-2.5 text-white placeholder:text-slate-600 text-sm sm:text-xs focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all disabled:opacity-50"
               />
             </div>
 
@@ -240,19 +266,19 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   disabled={isSubmitting}
-                  className="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3.5 py-2.5 pr-10 text-white placeholder:text-slate-600 text-xs focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all disabled:opacity-50"
+                  className="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3.5 py-3 sm:py-2.5 pr-10 text-white placeholder:text-slate-600 text-sm sm:text-xs focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all disabled:opacity-50"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   tabIndex={-1}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
                   title={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
-                    <EyeOff className="w-3.5 h-3.5" />
+                    <EyeOff className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                   ) : (
-                    <Eye className="w-3.5 h-3.5" />
+                    <Eye className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                   )}
                 </button>
               </div>
@@ -260,12 +286,12 @@ export default function Login() {
 
             {/* Options Row: Keep Signed In + Forgot Password */}
             <div className="flex items-center justify-between text-xs pt-0.5 select-none">
-              <label className="flex items-center gap-1.5 text-slate-400 hover:text-slate-300 cursor-pointer text-[11px]">
+              <label className="flex items-center gap-1.5 text-slate-400 hover:text-slate-300 cursor-pointer text-xs sm:text-[11px]">
                 <input
                   type="checkbox"
                   checked={keepSignedIn}
                   onChange={(e) => setKeepSignedIn(e.target.checked)}
-                  className="w-3.5 h-3.5 rounded border-white/20 bg-[#0a0d14] text-fuchsia-600 focus:ring-0 cursor-pointer accent-fuchsia-600"
+                  className="w-4 h-4 sm:w-3.5 sm:h-3.5 rounded border-white/20 bg-[#0a0d14] text-fuchsia-600 focus:ring-0 cursor-pointer accent-fuchsia-600"
                 />
                 <span>Keep me signed in</span>
               </label>
@@ -273,7 +299,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setIsForgotPasswordOpen(true)}
-                className="text-slate-400 hover:text-fuchsia-400 transition-colors cursor-pointer font-medium text-[11px]"
+                className="text-slate-400 hover:text-fuchsia-400 transition-colors cursor-pointer font-medium text-xs sm:text-[11px]"
               >
                 Forgot password?
               </button>
@@ -283,17 +309,17 @@ export default function Login() {
             <button
               type="submit"
               disabled={isSubmitting || !username.trim() || !password}
-              className="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600 hover:from-fuchsia-500 hover:to-indigo-500 text-white font-bold py-2.5 px-4 rounded-lg transition-all duration-150 shadow-md shadow-fuchsia-600/25 hover:shadow-fuchsia-600/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none cursor-pointer mt-1 text-xs"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600 hover:from-fuchsia-500 hover:to-indigo-500 text-white font-bold py-3 sm:py-2.5 px-4 rounded-lg transition-all duration-150 shadow-md shadow-fuchsia-600/25 hover:shadow-fuchsia-600/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none cursor-pointer mt-1 text-sm sm:text-xs"
             >
               {isSubmitting ? (
                 <>
-                  <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 sm:w-3.5 sm:h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   <span>Signing in…</span>
                 </>
               ) : (
                 <>
                   <span>Sign in</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                 </>
               )}
             </button>
@@ -301,7 +327,7 @@ export default function Login() {
         </div>
 
         {/* Footer */}
-        <div className="pt-4 text-center shrink-0">
+        <div className="pt-4 pb-2 text-center shrink-0 relative z-10">
           <p className="text-slate-600 text-[11px]">
             RMC PlayCast &copy; {new Date().getFullYear()} — SRI Infy LLC. All rights reserved.
           </p>
