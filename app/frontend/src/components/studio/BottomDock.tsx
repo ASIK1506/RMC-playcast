@@ -32,6 +32,12 @@ import {
   type ApiMediaItem,
 } from '@/lib/api';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface BottomDockProps {
   songLibrary: WorshipSong[];
@@ -946,121 +952,120 @@ export const BottomDock: React.FC<BottomDockProps> = ({
       )}
 
       {/* NEW SONG MODAL */}
-      {isNewSongModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-white/10 rounded-2xl p-6 w-full max-w-lg shadow-2xl relative text-left">
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+      <Dialog open={isNewSongModalOpen} onOpenChange={setIsNewSongModalOpen}>
+        <DialogContent className="max-w-lg bg-slate-900 border border-white/10 text-slate-100 p-6 sm:rounded-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="border-b border-white/10 pb-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-fuchsia-600/10 border border-fuchsia-500/20 flex items-center justify-center text-fuchsia-400 shrink-0">
+                <Music className="w-4 h-4" />
+              </div>
               <div>
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Music className="w-4 h-4 text-fuchsia-400" />
-                  Add Worship Song to Database
-                </h3>
+                <DialogTitle className="text-base font-bold text-white">
+                  Add New Worship Song
+                </DialogTitle>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Stores permanently in your MilesWeb MySQL database
+                  Save lyrics and metadata permanently to your church song library
                 </p>
               </div>
-              <button
-                onClick={() => setIsNewSongModalOpen(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800 transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
             </div>
+          </DialogHeader>
 
-            <form onSubmit={handleCreateSong} className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[11px] font-semibold text-slate-300 block mb-1">
-                    English Title *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder="e.g. Way Maker"
-                    className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-fuchsia-500"
-                  />
-                </div>
-                <div>
-                  <label className="text-[11px] font-semibold text-slate-300 block mb-1">
-                    Tamil Title (தமிழ்)
-                  </label>
-                  <input
-                    type="text"
-                    value={newTamilTitle}
-                    onChange={(e) => setNewTamilTitle(e.target.value)}
-                    placeholder="e.g. வழி உண்டாக்குபவர்"
-                    className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-fuchsia-500 font-['Noto_Sans_Tamil']"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[11px] font-semibold text-slate-300 block mb-1">
-                    Song Key
-                  </label>
-                  <select
-                    value={newKey}
-                    onChange={(e) => setNewKey(e.target.value)}
-                    className="w-full bg-slate-950 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-fuchsia-500"
-                  >
-                    {['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B', 'Am', 'Em', 'Dm'].map((k) => (
-                      <option key={k} value={k}>Key of {k}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[11px] font-semibold text-slate-300 block mb-1">
-                    Author / Composer
-                  </label>
-                  <input
-                    type="text"
-                    value={newAuthor}
-                    onChange={(e) => setNewAuthor(e.target.value)}
-                    placeholder="e.g. Sinach"
-                    className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-fuchsia-500"
-                  />
-                </div>
-              </div>
-
+          <form onSubmit={handleCreateSong} className="space-y-3.5 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-[11px] font-semibold text-slate-300 block mb-1">
-                  Lyrics / Verses (Separate sections with an empty line)
+                  English Title *
                 </label>
-                <textarea
-                  rows={6}
-                  value={newLyrics}
-                  onChange={(e) => setNewLyrics(e.target.value)}
-                  placeholder="You are here, moving in our midst...&#10;&#10;Way maker, miracle worker, promise keeper..."
-                  className="w-full bg-slate-950 border border-white/10 rounded-lg p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-fuchsia-500 font-mono leading-relaxed resize-none"
+                <input
+                  type="text"
+                  required
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  placeholder="e.g. Way Maker"
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500"
                 />
-                <span className="text-[10px] text-muted-foreground block mt-1">
-                  Double line breaks automatically split the song into Verse 1, Chorus, Verse 2, etc.
-                </span>
               </div>
+              <div>
+                <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                  Tamil Title (தமிழ்)
+                </label>
+                <input
+                  type="text"
+                  value={newTamilTitle}
+                  onChange={(e) => setNewTamilTitle(e.target.value)}
+                  placeholder="e.g. வழி உண்டாக்குபவர்"
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 font-['Noto_Sans_Tamil']"
+                />
+              </div>
+            </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
-                <button
-                  type="button"
-                  onClick={() => setIsNewSongModalOpen(false)}
-                  className="px-3 py-1.5 rounded-lg border border-white/10 text-xs text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                  Song Key
+                </label>
+                <select
+                  value={newKey}
+                  onChange={(e) => setNewKey(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 cursor-pointer"
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSavingSong || !newTitle.trim()}
-                  className="px-4 py-1.5 rounded-lg bg-fuchsia-600 hover:bg-fuchsia-500 text-xs font-semibold text-white transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shadow-md shadow-fuchsia-600/30"
-                >
-                  {isSavingSong ? 'Saving...' : 'Save & Persist to Database'}
-                </button>
+                  {['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B', 'Am', 'Em', 'Dm'].map((k) => (
+                    <option key={k} value={k}>Key of {k}</option>
+                  ))}
+                </select>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+              <div>
+                <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                  Author / Composer
+                </label>
+                <input
+                  type="text"
+                  value={newAuthor}
+                  onChange={(e) => setNewAuthor(e.target.value)}
+                  placeholder="e.g. Sinach"
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                Lyrics / Verses (Separate sections with an empty line)
+              </label>
+              <textarea
+                rows={6}
+                value={newLyrics}
+                onChange={(e) => setNewLyrics(e.target.value)}
+                placeholder="You are here, moving in our midst...&#10;&#10;Way maker, miracle worker, promise keeper..."
+                className="w-full bg-slate-950 border border-white/10 rounded-lg p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 font-mono leading-relaxed resize-none"
+              />
+              <span className="text-[10px] text-muted-foreground block mt-1">
+                Double line breaks automatically split the song into Verse 1, Chorus, Verse 2, etc.
+              </span>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsNewSongModalOpen(false)}
+                className="border-white/10 text-xs text-slate-300 hover:text-white hover:bg-slate-800"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                disabled={isSavingSong || !newTitle.trim()}
+                className="bg-fuchsia-600 hover:bg-fuchsia-500 text-xs font-semibold text-white disabled:opacity-50 shadow-md shadow-fuchsia-600/30"
+              >
+                {isSavingSong ? 'Saving...' : 'Save Song'}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
