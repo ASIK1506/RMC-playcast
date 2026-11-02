@@ -329,7 +329,7 @@ export default function Login() {
         {/* Footer */}
         <div className="pt-4 pb-2 text-center shrink-0 relative z-10">
           <p className="text-slate-600 text-[11px]">
-            RMC PlayCast &copy; {new Date().getFullYear()} — SRI Infy LLC. All rights reserved.
+            RMC PlayCast &copy; {new Date().getFullYear()} — BlueChip Computers LLP. All rights reserved.
           </p>
         </div>
       </div>
