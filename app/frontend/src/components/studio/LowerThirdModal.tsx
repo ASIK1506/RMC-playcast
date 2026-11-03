@@ -215,24 +215,24 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl bg-slate-950 border border-white/10 text-slate-100 max-h-[90vh] overflow-y-auto p-5">
-        <DialogHeader className="border-b border-white/10 pb-3">
+      <DialogContent className="max-w-3xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 max-h-[90vh] overflow-y-auto p-5">
+        <DialogHeader className="border-b border-slate-200 dark:border-white/10 pb-3">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-base font-bold text-white flex items-center gap-2">
-              <UserCheck className="w-5 h-5 text-fuchsia-400" />
+            <DialogTitle className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <UserCheck className="w-5 h-5 text-fuchsia-500 dark:text-fuchsia-400" />
               Church Personalities & Lower-Third Overlays
             </DialogTitle>
             <div className="flex items-center gap-2">
               <span
                 className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
                   isLive
-                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse'
-                    : 'bg-slate-800 text-slate-400 border border-white/5'
+                    ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/40 animate-pulse'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/5'
                 }`}
               >
                 <span
                   className={`w-1.5 h-1.5 rounded-full ${
-                    isLive ? 'bg-rose-500' : 'bg-slate-500'
+                    isLive ? 'bg-rose-500' : 'bg-slate-400 dark:bg-slate-500'
                   }`}
                 />
                 {isLive ? 'ON SCREEN LIVE' : 'OVERLAY OFF'}
@@ -247,10 +247,10 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
 
         <div className="space-y-5 pt-3">
           {/* 1. LIVE PREVIEW BOX */}
-          <div className="rounded-xl border border-white/10 bg-slate-900/80 p-3.5 space-y-2">
+          <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-900/80 p-3.5 space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-300 flex items-center gap-1.5">
-                <Tv className="w-3.5 h-3.5 text-fuchsia-400" />
+              <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                <Tv className="w-3.5 h-3.5 text-fuchsia-500 dark:text-fuchsia-400" />
                 Live Screen Preview (Placement: {position})
               </span>
               <span className="text-[10px] text-muted-foreground">
@@ -328,7 +328,7 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
 
             {/* Quick Live Trigger Actions */}
             <div className="flex items-center justify-between pt-1">
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400">
                 Pushes directly over ongoing lyrics on Projector, OBS, and Stage.
               </span>
               <div className="flex items-center gap-2">
@@ -361,7 +361,7 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
           {/* 2. CUSTOMIZE ACTIVE DETAILS */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+              <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                 Member / Personality Name
               </label>
               <Input
@@ -370,12 +370,12 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                   setName(e.target.value);
                 }}
                 placeholder="e.g. Bro. Daniel / Pastor David"
-                className="h-8 text-xs bg-slate-900 border-white/10 text-white"
+                className="h-8 text-xs bg-white dark:bg-slate-900 border-slate-300 dark:border-white/10 text-slate-900 dark:text-white"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+              <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                 Role, Title or Action
               </label>
               <Input
@@ -384,12 +384,12 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                   setRole(e.target.value);
                 }}
                 placeholder="e.g. Worship Leader / Board Member"
-                className="h-8 text-xs bg-slate-900 border-white/10 text-white"
+                className="h-8 text-xs bg-white dark:bg-slate-900 border-slate-300 dark:border-white/10 text-slate-900 dark:text-white"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+              <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                 Category Badge
               </label>
               <select
@@ -397,7 +397,7 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                 onChange={(e) =>
                   setCategory(e.target.value as ChurchMemberPreset['category'])
                 }
-                className="h-8 w-full rounded-md border border-white/10 bg-slate-900 px-2 text-xs text-white"
+                className="h-8 w-full rounded-md border border-slate-300 dark:border-white/10 bg-white dark:bg-slate-900 px-2 text-xs text-slate-900 dark:text-white"
               >
                 <option value="Pastor">Pastor</option>
                 <option value="Board Member">Church Board Member</option>
@@ -413,9 +413,9 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
           {/* 3. SCREEN PLACEMENT & TIMING CONTROLS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
             {/* Screen Placement */}
-            <div className="bg-slate-900/60 border border-white/10 rounded-xl p-3 space-y-2">
-              <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Layout className="w-3.5 h-3.5 text-fuchsia-400" />
+            <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 rounded-xl p-3 space-y-2">
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                <Layout className="w-3.5 h-3.5 text-fuchsia-500 dark:text-fuchsia-400" />
                 Screen Placement / Position
               </span>
               <div className="grid grid-cols-3 gap-1.5">
@@ -433,8 +433,8 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                     }}
                     className={`text-[10px] font-medium p-2 rounded-lg border text-center transition-all cursor-pointer ${
                       position === pos.id
-                        ? 'bg-fuchsia-950/60 border-fuchsia-500 text-white shadow-sm ring-1 ring-fuchsia-500'
-                        : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
+                        ? 'bg-fuchsia-100 text-fuchsia-900 border-fuchsia-400 dark:bg-fuchsia-950/60 dark:border-fuchsia-500 dark:text-white shadow-sm ring-1 ring-fuchsia-400 dark:ring-fuchsia-500'
+                        : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300'
                     }`}
                   >
                     {pos.label}
@@ -444,9 +444,9 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
             </div>
 
             {/* Display Timing */}
-            <div className="bg-slate-900/60 border border-white/10 rounded-xl p-3 space-y-2">
-              <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-amber-400" />
+            <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 rounded-xl p-3 space-y-2">
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                 Display Duration Policy
               </span>
               <div className="grid grid-cols-2 gap-2">
@@ -454,8 +454,8 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                   onClick={() => setTimingMode('persistent')}
                   className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
                     timingMode === 'persistent'
-                      ? 'bg-fuchsia-950/60 border-fuchsia-500 text-white ring-1 ring-fuchsia-500'
-                      : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
+                      ? 'bg-fuchsia-100 text-fuchsia-900 border-fuchsia-400 dark:bg-fuchsia-950/60 dark:border-fuchsia-500 dark:text-white ring-1 ring-fuchsia-400 dark:ring-fuchsia-500'
+                      : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300'
                   }`}
                 >
                   <div className="text-[11px] font-semibold">📌 Ongoing Display</div>
@@ -468,8 +468,8 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                   onClick={() => setTimingMode('auto-hide')}
                   className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
                     timingMode === 'auto-hide'
-                      ? 'bg-fuchsia-950/60 border-fuchsia-500 text-white ring-1 ring-fuchsia-500'
-                      : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
+                      ? 'bg-fuchsia-100 text-fuchsia-900 border-fuchsia-400 dark:bg-fuchsia-950/60 dark:border-fuchsia-500 dark:text-white ring-1 ring-fuchsia-400 dark:ring-fuchsia-500'
+                      : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300'
                   }`}
                 >
                   <div className="text-[11px] font-semibold">⏱️ Auto-Hide</div>
@@ -481,7 +481,7 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
 
               {timingMode === 'auto-hide' && (
                 <div className="pt-1 flex items-center justify-between text-xs">
-                  <span className="text-[10px] text-slate-400">Auto-hide after:</span>
+                  <span className="text-[10px] text-slate-600 dark:text-slate-400">Auto-hide after:</span>
                   <div className="flex items-center gap-1">
                     {[5, 8, 10, 15].map((sec) => (
                       <button
@@ -490,7 +490,7 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                         className={`text-[10px] px-2 py-0.5 rounded font-semibold cursor-pointer ${
                           autoHideSeconds === sec
                             ? 'bg-amber-500 text-slate-950 font-bold'
-                            : 'bg-slate-800 text-slate-400 hover:text-white'
+                            : 'bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white'
                         }`}
                       >
                         {sec}s
@@ -503,11 +503,11 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
           </div>
 
           {/* 4. CHURCH DIRECTORY / SAVED PRESETS */}
-          <div className="space-y-2 pt-2 border-t border-white/10">
+          <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-white/10">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-fuchsia-400" />
+                <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-fuchsia-500 dark:text-fuchsia-400" />
                   Saved Church Members & Personalities ({presets.length})
                 </span>
                 <span className="text-[10px] text-muted-foreground block">
@@ -518,27 +518,27 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                 variant="outline"
                 size="sm"
                 onClick={() => setIsAddingPreset(!isAddingPreset)}
-                className="h-7 text-xs border-white/10 bg-slate-900 text-slate-300 hover:bg-slate-800 cursor-pointer"
+                className="h-7 text-xs border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer"
               >
-                <Plus className="w-3 h-3 mr-1 text-fuchsia-400" />
+                <Plus className="w-3 h-3 mr-1 text-fuchsia-500 dark:text-fuchsia-400" />
                 {isAddingPreset ? 'Cancel' : 'Add Personality'}
               </Button>
             </div>
 
             {/* Add Preset Form */}
             {isAddingPreset && (
-              <div className="bg-slate-900/90 border border-fuchsia-500/30 rounded-xl p-3 grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
+              <div className="bg-slate-50 dark:bg-slate-900/90 border border-fuchsia-500/30 rounded-xl p-3 grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
                 <Input
                   placeholder="Full Name"
                   value={newPresetName}
                   onChange={(e) => setNewPresetName(e.target.value)}
-                  className="h-8 text-xs bg-slate-950 border-white/10 text-white"
+                  className="h-8 text-xs bg-white dark:bg-slate-950 border-slate-300 dark:border-white/10 text-slate-900 dark:text-white"
                 />
                 <Input
                   placeholder="Title or Role (e.g. Board Member)"
                   value={newPresetRole}
                   onChange={(e) => setNewPresetRole(e.target.value)}
-                  className="h-8 text-xs bg-slate-950 border-white/10 text-white"
+                  className="h-8 text-xs bg-white dark:bg-slate-950 border-slate-300 dark:border-white/10 text-slate-900 dark:text-white"
                 />
                 <select
                   value={newPresetCategory}
@@ -547,7 +547,7 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                       e.target.value as ChurchMemberPreset['category']
                     )
                   }
-                  className="h-8 rounded-md border border-white/10 bg-slate-950 px-2 text-xs text-white"
+                  className="h-8 rounded-md border border-slate-300 dark:border-white/10 bg-white dark:bg-slate-950 px-2 text-xs text-slate-900 dark:text-white"
                 >
                   <option value="Pastor">Pastor</option>
                   <option value="Board Member">Board Member</option>
@@ -577,15 +577,15 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                     onClick={() => handleSelectPreset(p, false)}
                     className={`p-2.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between group relative ${
                       isSelected
-                        ? 'bg-fuchsia-950/40 border-fuchsia-400 ring-1 ring-fuchsia-400'
-                        : 'bg-slate-900/60 border-white/10 hover:border-white/20'
+                        ? 'bg-fuchsia-50 border-fuchsia-400 text-fuchsia-900 ring-1 ring-fuchsia-400 dark:bg-fuchsia-950/40 dark:border-fuchsia-400 dark:ring-fuchsia-400'
+                        : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
                     }`}
                   >
                     <div>
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-1.5">
                           {getCategoryIcon(p.category)}
-                          <span className="text-[10px] uppercase font-bold text-slate-400">
+                          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">
                             {p.category}
                           </span>
                         </div>
@@ -594,22 +594,22 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                             e.stopPropagation();
                             handleDeletePreset(p.id);
                           }}
-                          className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-rose-400 p-0.5 transition-opacity"
+                          className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-rose-500 p-0.5 transition-opacity"
                           title="Delete from presets"
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
                       </div>
-                      <div className="text-xs font-bold text-white truncate">
+                      <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
                         {p.name}
                       </div>
-                      <div className="text-[10px] text-fuchsia-300/80 truncate">
+                      <div className="text-[10px] text-fuchsia-700 dark:text-fuchsia-300/80 truncate">
                         {p.role}
                       </div>
                     </div>
 
-                    <div className="pt-2 mt-2 border-t border-white/5 flex items-center justify-between text-[10px]">
-                      <span className="text-slate-400">
+                    <div className="pt-2 mt-2 border-t border-slate-200 dark:border-white/5 flex items-center justify-between text-[10px]">
+                      <span className="text-slate-500 dark:text-slate-400">
                         {isSelected ? 'Loaded' : 'Click to Load'}
                       </span>
                       <Button
@@ -619,7 +619,7 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                           e.stopPropagation();
                           handleSelectPreset(p, true);
                         }}
-                        className="h-5 px-1.5 text-[9px] font-semibold text-fuchsia-300 hover:text-white hover:bg-fuchsia-600/30"
+                        className="h-5 px-1.5 text-[9px] font-semibold text-fuchsia-700 dark:text-fuchsia-300 hover:text-fuchsia-800 dark:hover:text-white hover:bg-fuchsia-100 dark:hover:bg-fuchsia-600/30"
                       >
                         Push Live →
                       </Button>
@@ -632,12 +632,12 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="border-t border-white/10 pt-3 mt-4 flex items-center justify-between">
+        <div className="border-t border-slate-200 dark:border-white/10 pt-3 mt-4 flex items-center justify-between">
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-xs text-slate-400 hover:text-white"
+            className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           >
             Close
           </Button>
@@ -650,7 +650,7 @@ export const LowerThirdModal: React.FC<LowerThirdModalProps> = ({
                 handleApplyChanges(false);
                 onClose();
               }}
-              className="text-xs border-white/15 bg-slate-900 text-slate-300 hover:bg-slate-800"
+              className="text-xs border-slate-200 dark:border-white/15 bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800"
             >
               Save Settings
             </Button>

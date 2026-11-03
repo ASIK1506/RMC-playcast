@@ -314,11 +314,11 @@ export default function AdminUsers() {
   return (
     <div className="p-5 lg:p-8 max-w-7xl mx-auto space-y-5">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-white/5">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-xl font-extrabold text-white tracking-tight">User Management</h1>
-            <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-white/5 text-slate-400 border border-white/10">
+            <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">User Management</h1>
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-200 text-slate-700 border border-slate-300 dark:bg-white/5 dark:text-slate-400 dark:border-white/10">
               {totalCount} Total
             </span>
           </div>
@@ -330,10 +330,10 @@ export default function AdminUsers() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => loadUsers()}
-            className="p-2 rounded-lg bg-[#0c0f16] border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition cursor-pointer"
+            className="p-2 rounded-lg bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition cursor-pointer shadow-sm"
             title="Refresh list"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-fuchsia-400' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-fuchsia-600 dark:text-fuchsia-400' : ''}`} />
           </button>
 
           <button
@@ -344,7 +344,7 @@ export default function AdminUsers() {
             disabled={capacity ? !capacity.allowed : false}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm cursor-pointer ${
               capacity && !capacity.allowed
-                ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-white/5'
+                ? 'bg-slate-200 text-slate-400 dark:bg-slate-800 dark:text-slate-500 cursor-not-allowed border border-slate-300 dark:border-white/5'
                 : 'bg-fuchsia-600 hover:bg-fuchsia-500 text-white'
             }`}
           >
@@ -356,18 +356,18 @@ export default function AdminUsers() {
 
       {/* Capacity Warning Banner if nearing or reached limit */}
       {capacity && (
-        <div className="p-3.5 rounded-xl bg-[#0c0f16] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-3.5 rounded-xl bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className={`w-3 h-3 rounded-full ${capacity.unlimited || capacity.allowed ? 'bg-emerald-400' : 'bg-rose-500 animate-pulse'}`} />
+            <div className={`w-3 h-3 rounded-full ${capacity.unlimited || capacity.allowed ? 'bg-emerald-500' : 'bg-rose-500 animate-pulse'}`} />
             <div>
-              <span className="text-sm font-semibold text-slate-200">
+              <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                 License Capacity: {capacity.unlimited ? 'Unlimited Accounts' : `${capacity.current} / ${capacity.max} Accounts Used`}
               </span>
-              <span className="text-xs text-slate-400 ml-2">({capacity.tier})</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 ml-2">({capacity.tier})</span>
             </div>
           </div>
           {!capacity.unlimited && (
-            <div className="w-full sm:w-48 bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div className="w-full sm:w-48 bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all duration-500 ${
                   capacity.current >= capacity.max ? 'bg-rose-500' : 'bg-fuchsia-500'
@@ -391,7 +391,7 @@ export default function AdminUsers() {
               setPage(1);
             }}
             placeholder="Search by name, username, or email..."
-            className="w-full pl-10 pr-4 py-2 bg-[#0c0f16] border border-white/10 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-fuchsia-500/60 transition"
+            className="w-full pl-10 pr-4 py-2 bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-lg text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-fuchsia-500 transition shadow-sm"
           />
         </div>
 
@@ -403,7 +403,7 @@ export default function AdminUsers() {
               setStatusFilter(e.target.value);
               setPage(1);
             }}
-            className="bg-[#0c0f16] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-fuchsia-500/60 transition cursor-pointer"
+            className="bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500 transition cursor-pointer shadow-sm"
           >
             <option value="ALL">All Statuses</option>
             <option value="ACTIVE">Active Only</option>
@@ -414,10 +414,10 @@ export default function AdminUsers() {
       </div>
 
       {/* Users Table */}
-      <div className="bg-[#0c0f16] border border-white/10 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-[#0a0d14] text-[10px] uppercase tracking-wider text-slate-500 border-b border-white/5">
+          <table className="w-full text-left text-sm text-slate-700 dark:text-slate-300">
+            <thead className="bg-slate-100/90 dark:bg-[#0a0d14] text-[10px] uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-white/5">
               <tr>
                 <th className="px-6 py-4">User</th>
                 <th className="px-6 py-4">Role</th>
@@ -428,7 +428,7 @@ export default function AdminUsers() {
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-slate-200 dark:divide-white/5">
               {loading && users.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-slate-400">
@@ -449,7 +449,7 @@ export default function AdminUsers() {
                   const isExpired = u.status === 'EXPIRED';
 
                   return (
-                    <tr key={u.id} className="hover:bg-slate-800/40 transition">
+                    <tr key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
                       {/* Name & Username */}
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
@@ -457,21 +457,21 @@ export default function AdminUsers() {
                             className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs ${
                               isSuperAdmin
                                 ? 'bg-fuchsia-600 text-white'
-                                : 'bg-slate-800 text-slate-300 border border-white/10'
+                                : 'bg-slate-100 text-slate-700 border border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-white/10'
                             }`}
                           >
                             {u.name.charAt(0).toUpperCase()}
                           </div>
                           <div className="min-w-0">
-                            <div className="font-semibold text-white truncate flex items-center gap-1.5">
+                            <div className="font-semibold text-slate-900 dark:text-white truncate flex items-center gap-1.5">
                               {u.name}
                               {u.mustChangePassword && (
-                                <span className="text-[10px] text-amber-400 bg-amber-950/60 border border-amber-500/30 px-1.5 py-0.2 rounded" title="Must change password on next login">
+                                <span className="text-[10px] text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-500/30 px-1.5 py-0.2 rounded" title="Must change password on next login">
                                   Temp Pass
                                 </span>
                               )}
                             </div>
-                            <div className="text-xs text-slate-400 truncate">
+                            <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
                               @{u.username} • {u.email}
                             </div>
                           </div>
@@ -483,8 +483,8 @@ export default function AdminUsers() {
                         <span
                           className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold ${
                             isSuperAdmin
-                              ? 'bg-fuchsia-950/60 text-fuchsia-300 border border-fuchsia-500/30'
-                              : 'bg-slate-800 text-slate-300 border border-white/5'
+                              ? 'bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-300 dark:bg-fuchsia-950/60 dark:text-fuchsia-300 dark:border-fuchsia-500/30'
+                              : 'bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-white/5'
                           }`}
                         >
                           {isSuperAdmin ? <Shield className="w-3 h-3" /> : <User className="w-3 h-3" />}
@@ -497,15 +497,15 @@ export default function AdminUsers() {
                         <span
                           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
                             isActive
-                              ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-500/30'
+                              ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
                               : isExpired
-                              ? 'bg-amber-950/60 text-amber-400 border border-amber-500/30'
-                              : 'bg-rose-950/60 text-rose-400 border border-rose-500/30'
+                              ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                              : 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30'
                           }`}
                         >
                           <span
                             className={`w-1.5 h-1.5 rounded-full ${
-                              isActive ? 'bg-emerald-400' : isExpired ? 'bg-amber-400' : 'bg-rose-400'
+                              isActive ? 'bg-emerald-500 dark:bg-emerald-400' : isExpired ? 'bg-amber-500 dark:bg-amber-400' : 'bg-rose-500 dark:bg-rose-400'
                             }`}
                           />
                           {u.status}
@@ -515,28 +515,28 @@ export default function AdminUsers() {
                       {/* Active Sessions */}
                       <td className="px-6 py-4">
                         {u.activeSessions > 0 ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-md border border-emerald-500/20">
                             {u.activeSessions} active
                           </span>
                         ) : (
-                          <span className="text-xs text-slate-500">None</span>
+                          <span className="text-xs text-slate-400 dark:text-slate-500">None</span>
                         )}
                       </td>
 
                       {/* Last Login */}
-                      <td className="px-6 py-4 text-xs text-slate-400">
+                      <td className="px-6 py-4 text-xs text-slate-500 dark:text-slate-400">
                         {u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString() : 'Never'}
                       </td>
 
                       {/* Expiration */}
-                      <td className="px-6 py-4 text-xs text-slate-400">
+                      <td className="px-6 py-4 text-xs text-slate-500 dark:text-slate-400">
                         {u.expiresAt ? (
                           <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-slate-500" />
+                            <Clock className="w-3 h-3 text-slate-400 dark:text-slate-500" />
                             {new Date(u.expiresAt).toLocaleDateString()}
                           </span>
                         ) : (
-                          <span className="text-slate-500">Permanent</span>
+                          <span className="text-slate-400 dark:text-slate-500">Permanent</span>
                         )}
                       </td>
 
@@ -545,7 +545,7 @@ export default function AdminUsers() {
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => openEditModal(u)}
-                            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition cursor-pointer"
+                            className="p-1.5 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition cursor-pointer"
                             title="Edit User"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -554,7 +554,7 @@ export default function AdminUsers() {
                           <div className="relative">
                             <button
                               onClick={() => setActiveMenuUserId(activeMenuUserId === u.id ? null : u.id)}
-                              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition cursor-pointer"
+                              className="p-1.5 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition cursor-pointer"
                             >
                               <MoreVertical className="w-4 h-4" />
                             </button>
@@ -562,22 +562,22 @@ export default function AdminUsers() {
                             {/* Dropdown Menu */}
                             {activeMenuUserId === u.id && (
                               <div
-                                className="absolute right-0 mt-1 w-48 bg-slate-950 border border-white/10 rounded-xl shadow-2xl z-30 py-1.5 text-left text-xs"
+                                className="absolute right-0 mt-1 w-48 bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl z-30 py-1.5 text-left text-xs"
                                 onMouseLeave={() => setActiveMenuUserId(null)}
                               >
                                 {!isSuperAdmin && (
                                   <button
                                     onClick={() => handleToggleStatus(u)}
-                                    className="w-full px-3.5 py-2 flex items-center gap-2 hover:bg-white/5 text-slate-200 transition cursor-pointer"
+                                    className="w-full px-3.5 py-2 flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 transition cursor-pointer"
                                   >
                                     {isActive ? (
                                       <>
-                                        <XCircle className="w-3.5 h-3.5 text-rose-400" />
+                                        <XCircle className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />
                                         <span>Deactivate Account</span>
                                       </>
                                     ) : (
                                       <>
-                                        <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                                        <CheckCircle className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
                                         <span>Activate Account</span>
                                       </>
                                     )}
@@ -586,28 +586,28 @@ export default function AdminUsers() {
 
                                 <button
                                   onClick={() => openResetPassModal(u)}
-                                  className="w-full px-3.5 py-2 flex items-center gap-2 hover:bg-white/5 text-slate-200 transition cursor-pointer"
+                                  className="w-full px-3.5 py-2 flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 transition cursor-pointer"
                                 >
-                                  <Key className="w-3.5 h-3.5 text-amber-400" />
+                                  <Key className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                                   <span>Reset Password</span>
                                 </button>
 
                                 {u.activeSessions > 0 && (
                                   <button
                                     onClick={() => handleRevokeSessions(u)}
-                                    className="w-full px-3.5 py-2 flex items-center gap-2 hover:bg-white/5 text-slate-200 transition cursor-pointer"
+                                    className="w-full px-3.5 py-2 flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 transition cursor-pointer"
                                   >
-                                    <LogOut className="w-3.5 h-3.5 text-indigo-400" />
+                                    <LogOut className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
                                     <span>Revoke All Sessions</span>
                                   </button>
                                 )}
 
                                 {!isSuperAdmin && (
                                   <>
-                                    <div className="border-t border-white/5 my-1" />
+                                    <div className="border-t border-slate-200 dark:border-white/5 my-1" />
                                     <button
                                       onClick={() => openDeleteModal(u)}
-                                      className="w-full px-3.5 py-2 flex items-center gap-2 hover:bg-red-500/10 text-rose-400 hover:text-rose-300 transition cursor-pointer"
+                                      className="w-full px-3.5 py-2 flex items-center gap-2 hover:bg-red-50 dark:hover:bg-red-500/10 text-rose-600 dark:text-rose-400 transition cursor-pointer"
                                     >
                                       <Trash2 className="w-3.5 h-3.5" />
                                       <span>Delete Account</span>
@@ -629,22 +629,22 @@ export default function AdminUsers() {
 
         {/* Pagination Footer */}
         {totalPages > 1 && (
-          <div className="px-6 py-4 bg-slate-900/80 border-t border-white/5 flex items-center justify-between">
-            <span className="text-xs text-slate-400">
+          <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900/80 border-t border-slate-200 dark:border-white/5 flex items-center justify-between">
+            <span className="text-xs text-slate-500 dark:text-slate-400">
               Page {page} of {totalPages} ({totalCount} total)
             </span>
             <div className="flex gap-2">
               <button
                 disabled={page <= 1}
                 onClick={() => setPage(page - 1)}
-                className="px-3 py-1.5 rounded-lg bg-slate-800 text-xs font-medium text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+                className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-transparent text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
               >
                 Previous
               </button>
               <button
                 disabled={page >= totalPages}
                 onClick={() => setPage(page + 1)}
-                className="px-3 py-1.5 rounded-lg bg-slate-800 text-xs font-medium text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+                className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-transparent text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
               >
                 Next
               </button>
@@ -656,21 +656,21 @@ export default function AdminUsers() {
       {/* ==================== CREATE USER MODAL ==================== */}
       {isCreateOpen && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-white/10 rounded-xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
-            <div className="p-5 border-b border-white/10 flex items-center justify-between">
+            <div className="p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center">
-                  <UserPlus className="w-4 h-4 text-fuchsia-400" />
+                  <UserPlus className="w-4 h-4 text-fuchsia-600 dark:text-fuchsia-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">Create User Account</h3>
-                  <p className="text-xs text-slate-400">Add an operator with individual login credentials</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Create User Account</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Add an operator with individual login credentials</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsCreateOpen(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer"
+                className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 rounded-lg cursor-pointer"
               >
                 ✕
               </button>
@@ -679,20 +679,20 @@ export default function AdminUsers() {
             {/* If Temporary Password Result Screen */}
             {tempPassResult ? (
               <div className="p-6 space-y-4">
-                <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0" />
+                <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-500/30 flex items-center gap-3">
+                  <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <div>
-                    <h4 className="text-sm font-bold text-emerald-300">Account Created Successfully</h4>
-                    <p className="text-xs text-emerald-400/80">
+                    <h4 className="text-sm font-bold text-emerald-800 dark:text-emerald-300">Account Created Successfully</h4>
+                    <p className="text-xs text-emerald-700 dark:text-emerald-400/80">
                       Share the temporary password below with the operator. They will be prompted to change it upon first login.
                     </p>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-900 border border-white/10 space-y-2">
-                  <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Temporary Password</span>
-                  <div className="flex items-center justify-between bg-black/40 p-3 rounded-lg border border-white/5">
-                    <code className="text-base font-mono font-bold text-fuchsia-300">{tempPassResult}</code>
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 space-y-2">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Temporary Password</span>
+                  <div className="flex items-center justify-between bg-white dark:bg-black/40 p-3 rounded-lg border border-slate-200 dark:border-white/5">
+                    <code className="text-base font-mono font-bold text-fuchsia-600 dark:text-fuchsia-300">{tempPassResult}</code>
                     <button
                       onClick={() => copyToClipboard(tempPassResult)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-xs font-semibold transition cursor-pointer"
@@ -708,7 +708,7 @@ export default function AdminUsers() {
                     setIsCreateOpen(false);
                     resetCreateForm();
                   }}
-                  className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold transition cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-sm font-semibold transition cursor-pointer"
                 >
                   Done
                 </button>
@@ -716,7 +716,7 @@ export default function AdminUsers() {
             ) : (
               <form onSubmit={handleCreateSubmit} className="p-6 space-y-4">
                 {formError && (
-                  <div className="p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+                  <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-500/40 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4 shrink-0" />
                     <span>{formError}</span>
                   </div>
@@ -725,72 +725,72 @@ export default function AdminUsers() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Full Name */}
                   <div>
-                    <label className="text-xs font-semibold text-slate-300 block mb-1">Full Name *</label>
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Full Name *</label>
                     <input
                       required
                       type="text"
                       value={createForm.name}
                       onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
                       placeholder="e.g. John Doe"
-                      className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                     />
                   </div>
 
                   {/* Username */}
                   <div>
-                    <label className="text-xs font-semibold text-slate-300 block mb-1">Username *</label>
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Username *</label>
                     <input
                       required
                       type="text"
                       value={createForm.username}
                       onChange={(e) => setCreateForm({ ...createForm, username: e.target.value.toLowerCase().replace(/[^a-z0-9_.-]/g, '') })}
                       placeholder="e.g. jdoe"
-                      className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                     />
                   </div>
                 </div>
 
                 {/* Email */}
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Email Address *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Email Address *</label>
                   <input
                     required
                     type="email"
                     value={createForm.email}
                     onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
                     placeholder="e.g. operator@church.org"
-                    className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                   />
                 </div>
 
                 {/* Optional Phone & Expiration */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-semibold text-slate-300 block mb-1">Phone Number (Optional)</label>
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Phone Number (Optional)</label>
                     <input
                       type="text"
                       value={createForm.phone}
                       onChange={(e) => setCreateForm({ ...createForm, phone: e.target.value })}
                       placeholder="+91 9876543210"
-                      className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-slate-300 block mb-1">Account Expiry (Optional)</label>
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Account Expiry (Optional)</label>
                     <input
                       type="date"
                       value={createForm.expiresAt}
                       onChange={(e) => setCreateForm({ ...createForm, expiresAt: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                     />
                   </div>
                 </div>
 
                 {/* Password (Optional - auto generated if empty) */}
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    Password <span className="text-slate-500 font-normal">(Leave empty to auto-generate temporary password)</span>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                    Password <span className="text-slate-400 font-normal">(Leave empty to auto-generate temporary password)</span>
                   </label>
                   <div className="relative">
                     <input
@@ -798,12 +798,12 @@ export default function AdminUsers() {
                       value={createForm.password}
                       onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
                       placeholder="Optional custom password (min. 6 chars)"
-                      className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500 pr-10"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500 pr-10"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -812,22 +812,22 @@ export default function AdminUsers() {
 
                 {/* Notes */}
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Admin Notes (Optional)</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Admin Notes (Optional)</label>
                   <input
                     type="text"
                     value={createForm.notes}
                     onChange={(e) => setCreateForm({ ...createForm, notes: e.target.value })}
                     placeholder="e.g. Media team member, youth pastor"
-                    className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                   />
                 </div>
 
                 {/* Footer Buttons */}
-                <div className="pt-2 flex items-center justify-end gap-3 border-t border-white/5">
+                <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-200 dark:border-white/5">
                   <button
                     type="button"
                     onClick={() => setIsCreateOpen(false)}
-                    className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                    className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -848,20 +848,20 @@ export default function AdminUsers() {
       {/* ==================== EDIT USER MODAL ==================== */}
       {isEditOpen && selectedUser && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-white/10 rounded-xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-5 border-b border-white/10 flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-                  <Edit2 className="w-4 h-4 text-fuchsia-400" />
+                <div className="w-9 h-9 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center">
+                  <Edit2 className="w-4 h-4 text-fuchsia-600 dark:text-fuchsia-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">Edit User Profile</h3>
-                  <p className="text-xs text-slate-400">@{selectedUser.username}</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Edit User Profile</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">@{selectedUser.username}</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsEditOpen(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer"
+                className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 rounded-lg cursor-pointer"
               >
                 ✕
               </button>
@@ -869,71 +869,71 @@ export default function AdminUsers() {
 
             <form onSubmit={handleEditSubmit} className="p-6 space-y-4">
               {formError && (
-                <div className="p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-500/40 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
                   <span>{formError}</span>
                 </div>
               )}
 
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Full Name *</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Full Name *</label>
                 <input
                   required
                   type="text"
                   value={editForm.name}
                   onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Email Address *</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Email Address *</label>
                 <input
                   required
                   type="email"
                   value={editForm.email}
                   onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Phone Number</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Phone Number</label>
                   <input
                     type="text"
                     value={editForm.phone}
                     onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Account Expiration</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Account Expiration</label>
                   <input
                     type="date"
                     value={editForm.expiresAt}
                     onChange={(e) => setEditForm({ ...editForm, expiresAt: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Notes</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Notes</label>
                 <input
                   type="text"
                   value={editForm.notes}
                   onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500"
                 />
               </div>
 
-              <div className="pt-2 flex items-center justify-end gap-3 border-t border-white/5">
+              <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-200 dark:border-white/5">
                 <button
                   type="button"
                   onClick={() => setIsEditOpen(false)}
-                  className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -953,20 +953,20 @@ export default function AdminUsers() {
       {/* ==================== RESET PASSWORD MODAL ==================== */}
       {isResetPassOpen && selectedUser && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-white/10 rounded-xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-5 border-b border-white/10 flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-                  <Key className="w-4 h-4 text-amber-400" />
+                  <Key className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">Reset Password</h3>
-                  <p className="text-xs text-slate-400">For {selectedUser.name} (@{selectedUser.username})</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Reset Password</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">For {selectedUser.name} (@{selectedUser.username})</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsResetPassOpen(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer"
+                className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 rounded-lg cursor-pointer"
               >
                 ✕
               </button>
@@ -974,43 +974,43 @@ export default function AdminUsers() {
 
             <form onSubmit={handleResetPassSubmit} className="p-6 space-y-4">
               {formError && (
-                <div className="p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-500/40 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
                   <span>{formError}</span>
                 </div>
               )}
 
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">New Password *</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">New Password *</label>
                 <input
                   required
                   type="password"
                   value={resetPassForm.password}
                   onChange={(e) => setResetPassForm({ ...resetPassForm, password: e.target.value })}
                   placeholder="Min 6 characters"
-                  className="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
                 />
               </div>
 
-              <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer select-none">
+              <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={resetPassForm.mustChange}
                   onChange={(e) => setResetPassForm({ ...resetPassForm, mustChange: e.target.checked })}
-                  className="rounded border-white/20 bg-slate-900 text-amber-500 focus:ring-0"
+                  className="rounded border-slate-300 dark:border-white/20 bg-white dark:bg-slate-900 text-amber-500 focus:ring-0"
                 />
                 Require user to change password on next sign-in
               </label>
 
-              <div className="p-3 rounded-xl bg-slate-900 border border-white/5 text-[11px] text-slate-400">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/5 text-[11px] text-slate-500 dark:text-slate-400">
                 Resetting password will immediately invalidate all currently active sessions on all devices for this account.
               </div>
 
-              <div className="pt-2 flex items-center justify-end gap-3 border-t border-white/5">
+              <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-200 dark:border-white/5">
                 <button
                   type="button"
                   onClick={() => setIsResetPassOpen(false)}
-                  className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -1030,30 +1030,30 @@ export default function AdminUsers() {
       {/* ==================== DELETE USER CONFIRMATION MODAL ==================== */}
       {isDeleteOpen && selectedUser && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-white/10 rounded-xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-5 border-b border-white/10 flex items-center gap-3">
+          <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 border-b border-slate-200 dark:border-white/10 flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
-                <Trash2 className="w-4 h-4 text-rose-400" />
+                <Trash2 className="w-4 h-4 text-rose-500 dark:text-rose-400" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Delete User Account</h3>
-                <p className="text-xs text-rose-400/80">Permanent Action</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Delete User Account</h3>
+                <p className="text-xs text-rose-600 dark:text-rose-400/80">Permanent Action</p>
               </div>
             </div>
 
             <div className="p-6 space-y-4">
-              <p className="text-sm text-slate-300">
-                Are you sure you want to permanently delete the account for <strong className="text-white">{selectedUser.name}</strong> (@{selectedUser.username})?
+              <p className="text-sm text-slate-700 dark:text-slate-300">
+                Are you sure you want to permanently delete the account for <strong className="text-slate-900 dark:text-white">{selectedUser.name}</strong> (@{selectedUser.username})?
               </p>
-              <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-500/20 text-xs text-rose-300/90">
+              <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-500/20 text-xs text-rose-700 dark:text-rose-300/90">
                 This will revoke all active sessions and permanently remove their user credentials. Songs and media created by the church remain intact.
               </div>
 
-              <div className="pt-2 flex items-center justify-end gap-3 border-t border-white/5">
+              <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-200 dark:border-white/5">
                 <button
                   type="button"
                   onClick={() => setIsDeleteOpen(false)}
-                  className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                 >
                   Cancel
                 </button>

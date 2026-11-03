@@ -20,6 +20,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function Login() {
   const { login, isAuthenticated, isLoading } = useAuth();
@@ -166,7 +167,7 @@ export default function Login() {
       {/* =========================================================================
           RIGHT COLUMN: Login Form (Responsive: Clean Centered on Mobile, Side by Side on Desktop)
           ========================================================================= */}
-      <div className="w-full lg:w-[44%] xl:w-[42%] min-h-screen lg:min-h-0 lg:h-full flex flex-col justify-between p-6 sm:p-8 lg:p-8 xl:p-12 bg-[#06080d] shrink-0 lg:shrink relative overflow-hidden">
+      <div className="w-full lg:w-[44%] xl:w-[42%] min-h-screen lg:min-h-0 lg:h-full flex flex-col justify-between p-6 sm:p-8 lg:p-8 xl:p-12 bg-slate-50 dark:bg-[#06080d] text-slate-900 dark:text-white shrink-0 lg:shrink relative overflow-hidden transition-colors">
         {/* Ambient atmospheric lighting on mobile */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden lg:hidden">
           <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-fuchsia-600/10 blur-[100px]" />
@@ -180,15 +181,17 @@ export default function Login() {
           />
         </div>
 
-        {/* Top Spacer */}
-        <div className="hidden lg:block shrink-0" />
+        {/* Top Header Row with Theme Toggle */}
+        <div className="flex items-center justify-end z-20 shrink-0">
+          <ThemeToggle variant="icon" />
+        </div>
 
         {/* Main Form Box */}
         <div className="w-full max-w-sm mx-auto my-auto py-6 sm:py-4 relative z-10">
           {/* Mobile Category Tag */}
-          <div className="lg:hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-fuchsia-500/30 bg-fuchsia-950/40 backdrop-blur-md shadow-sm mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse" />
-            <span className="text-[10px] font-bold tracking-widest uppercase text-fuchsia-300">
+          <div className="lg:hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-fuchsia-500/30 bg-fuchsia-100/80 dark:bg-fuchsia-950/40 backdrop-blur-md shadow-sm mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-600 dark:bg-fuchsia-400 animate-pulse" />
+            <span className="text-[10px] font-bold tracking-widest uppercase text-fuchsia-700 dark:text-fuchsia-300">
               CHURCH PRESENTATION & OBS STUDIO
             </span>
           </div>
@@ -199,10 +202,10 @@ export default function Login() {
               <Radio className="w-5 h-5 sm:w-4.5 sm:h-4.5 text-white" />
             </div>
             <div>
-              <span className="text-xl sm:text-lg font-extrabold text-white tracking-tight block leading-tight">
+              <span className="text-xl sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight block leading-tight">
                 RMC PlayCast
               </span>
-              <span className="text-[11px] text-slate-400 font-medium block lg:hidden">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium block lg:hidden">
                 Live Broadcast Console
               </span>
             </div>
@@ -210,10 +213,10 @@ export default function Login() {
 
           {/* Heading */}
           <div className="mb-6">
-            <h2 className="text-2xl sm:text-2xl font-extrabold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Welcome back
             </h2>
-            <p className="text-sm sm:text-xs text-slate-400 mt-1">
+            <p className="text-sm sm:text-xs text-slate-600 dark:text-slate-400 mt-1">
               Sign in to your workspace to continue.
             </p>
           </div>
@@ -222,8 +225,8 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Error Banner */}
             {error && (
-              <div className="flex items-start gap-2.5 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-lg px-3.5 py-2.5 text-xs animate-in fade-in slide-in-from-top-1">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-400" />
+              <div className="flex items-start gap-2.5 bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 rounded-lg px-3.5 py-2.5 text-xs animate-in fade-in slide-in-from-top-1">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-500 dark:text-rose-400" />
                 <span>{error}</span>
               </div>
             )}
@@ -232,7 +235,7 @@ export default function Login() {
             <div className="space-y-1.5">
               <label
                 htmlFor="login-username"
-                className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider"
+                className="block text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider"
               >
                 Username or Email
               </label>
@@ -245,7 +248,7 @@ export default function Login() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="admin"
                 disabled={isSubmitting}
-                className="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3.5 py-3 sm:py-2.5 text-white placeholder:text-slate-600 text-sm sm:text-xs focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all disabled:opacity-50"
+                className="w-full bg-white dark:bg-[#0a0d14] border border-slate-300 dark:border-white/10 rounded-lg px-3.5 py-3 sm:py-2.5 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 text-sm sm:text-xs focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all disabled:opacity-50 shadow-sm dark:shadow-none"
               />
             </div>
 
@@ -253,7 +256,7 @@ export default function Login() {
             <div className="space-y-1.5">
               <label
                 htmlFor="login-password"
-                className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider"
+                className="block text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider"
               >
                 Password
               </label>
@@ -266,13 +269,13 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   disabled={isSubmitting}
-                  className="w-full bg-[#0a0d14] border border-white/10 rounded-lg px-3.5 py-3 sm:py-2.5 pr-10 text-white placeholder:text-slate-600 text-sm sm:text-xs focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all disabled:opacity-50"
+                  className="w-full bg-white dark:bg-[#0a0d14] border border-slate-300 dark:border-white/10 rounded-lg px-3.5 py-3 sm:py-2.5 pr-10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 text-sm sm:text-xs focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all disabled:opacity-50 shadow-sm dark:shadow-none"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   tabIndex={-1}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer"
                   title={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
@@ -286,12 +289,12 @@ export default function Login() {
 
             {/* Options Row: Keep Signed In + Forgot Password */}
             <div className="flex items-center justify-between text-xs pt-0.5 select-none">
-              <label className="flex items-center gap-1.5 text-slate-400 hover:text-slate-300 cursor-pointer text-xs sm:text-[11px]">
+              <label className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-300 cursor-pointer text-xs sm:text-[11px]">
                 <input
                   type="checkbox"
                   checked={keepSignedIn}
                   onChange={(e) => setKeepSignedIn(e.target.checked)}
-                  className="w-4 h-4 sm:w-3.5 sm:h-3.5 rounded border-white/20 bg-[#0a0d14] text-fuchsia-600 focus:ring-0 cursor-pointer accent-fuchsia-600"
+                  className="w-4 h-4 sm:w-3.5 sm:h-3.5 rounded border-slate-300 dark:border-white/20 bg-white dark:bg-[#0a0d14] text-fuchsia-600 focus:ring-0 cursor-pointer accent-fuchsia-600"
                 />
                 <span>Keep me signed in</span>
               </label>
@@ -299,7 +302,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setIsForgotPasswordOpen(true)}
-                className="text-slate-400 hover:text-fuchsia-400 transition-colors cursor-pointer font-medium text-xs sm:text-[11px]"
+                className="text-slate-600 dark:text-slate-400 hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition-colors cursor-pointer font-medium text-xs sm:text-[11px]"
               >
                 Forgot password?
               </button>
@@ -328,13 +331,13 @@ export default function Login() {
 
         {/* Footer */}
         <div className="pt-4 pb-2 text-center shrink-0 relative z-10">
-          <p className="text-slate-600 text-[11px]">
+          <p className="text-slate-500 dark:text-slate-600 text-[11px]">
             RMC PlayCast &copy; {new Date().getFullYear()} —{' '}
             <a
               href="https://bluechipllp.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-600 hover:text-white hover:underline hover:underline-offset-2 hover:bg-white/5 px-1 py-0.5 -mx-1 rounded transition-all duration-200 cursor-pointer inline-block"
+              className="text-slate-600 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white hover:underline hover:underline-offset-2 hover:bg-slate-200/60 dark:hover:bg-white/5 px-1 py-0.5 -mx-1 rounded transition-all duration-200 cursor-pointer inline-block"
               title="Visit BlueChip Computers LLP"
             >
               BlueChip Computers LLP
@@ -346,24 +349,24 @@ export default function Login() {
 
       {/* Forgot Password Modal */}
       <Dialog open={isForgotPasswordOpen} onOpenChange={setIsForgotPasswordOpen}>
-        <DialogContent className="max-w-md bg-slate-950 border border-white/10 text-slate-200 p-6">
+        <DialogContent className="max-w-md bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 p-6 shadow-2xl">
           <DialogHeader className="space-y-2">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-1">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 dark:text-amber-400 mb-1">
               <ShieldAlert className="w-4.5 h-4.5" />
             </div>
-            <DialogTitle className="text-sm font-bold text-white">
+            <DialogTitle className="text-sm font-bold text-slate-900 dark:text-white">
               Password Reset Assistance
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-2.5 text-xs text-slate-300 pt-1">
+          <div className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300 pt-1">
             <p>
               For security, church operator account credentials and password resets are
               managed centrally by your organization&apos;s Super Administrator.
             </p>
-            <div className="bg-slate-900 border border-white/5 rounded-lg p-3 space-y-1">
-              <div className="font-semibold text-white">Need a Password Reset?</div>
-              <p className="text-slate-400 text-[11px]">
-                Please contact your church Super Administrator (<code className="text-fuchsia-300">@admin</code>)
+            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-lg p-3 space-y-1">
+              <div className="font-semibold text-slate-900 dark:text-white">Need a Password Reset?</div>
+              <p className="text-slate-500 dark:text-slate-400 text-[11px]">
+                Please contact your church Super Administrator (<code className="text-fuchsia-600 dark:text-fuchsia-300 font-semibold">@admin</code>)
                 who can issue an instant password reset or temporary credentials from the Super Admin Panel.
               </p>
             </div>

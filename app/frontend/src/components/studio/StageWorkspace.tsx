@@ -114,44 +114,44 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-black text-white min-h-0 min-w-0 overflow-hidden font-sans select-none">
+    <div className="flex-1 flex flex-col bg-slate-50 dark:bg-black text-slate-900 dark:text-white min-h-0 min-w-0 overflow-hidden font-sans select-none">
       {/* Sub-Header */}
-      <div className="h-12 bg-slate-950 border-b border-white/10 px-4 flex items-center justify-between shrink-0">
+      <div className="h-12 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-white/10 px-4 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <Button
             size="sm"
             variant="ghost"
             onClick={onClose}
-            className="h-8 px-2.5 text-xs text-slate-400 hover:text-white hover:bg-white/10 flex items-center gap-1.5"
+            className="h-8 px-2.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 flex items-center gap-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Show</span>
           </Button>
 
-          <div className="h-4 w-px bg-white/10" />
+          <div className="h-4 w-px bg-slate-200 dark:bg-white/10" />
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/30 flex items-center gap-1.5">
-              <Tv className="w-3 h-3 text-amber-400" />
+            <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-600/30 flex items-center gap-1.5">
+              <Tv className="w-3 h-3 text-amber-600 dark:text-amber-400" />
               STAGE CONFIDENCE DIRECTOR
             </span>
-            <span className="text-xs text-slate-400 hidden sm:inline">
-              Topic: <strong className="text-white">{serviceName}</strong>
+            <span className="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline">
+              Topic: <strong className="text-slate-900 dark:text-white">{serviceName}</strong>
             </span>
           </div>
         </div>
 
         {/* Right: Clock & Launch External Display */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-sm font-mono font-bold text-amber-400 bg-slate-900 border border-white/10 px-2.5 py-1 rounded-md">
-            <Clock className="w-3.5 h-3.5 text-amber-400/80" />
+          <div className="flex items-center gap-1.5 text-sm font-mono font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-slate-900 border border-amber-200 dark:border-white/10 px-2.5 py-1 rounded-md">
+            <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400/80" />
             <span>{currentTime}</span>
           </div>
 
           <Button
             size="sm"
             onClick={openStageWindow}
-            className="h-8 px-3 text-xs font-bold bg-amber-600 hover:bg-amber-500 text-black flex items-center gap-1.5 shadow-md shadow-amber-600/20"
+            className="h-8 px-3 text-xs font-bold bg-amber-500 hover:bg-amber-400 dark:bg-amber-600 dark:hover:bg-amber-500 text-slate-950 flex items-center gap-1.5 shadow-md shadow-amber-600/20"
           >
             <ExternalLink className="w-3.5 h-3.5" />
             <span>Open Stage Window</span>
@@ -162,11 +162,11 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
       {/* Main 2-Column Stage View */}
       <div className="flex-1 flex min-h-0 min-w-0 overflow-hidden">
         {/* Left Column: Real-time Stage Confidence Screen View */}
-        <div className="flex-1 flex flex-col justify-between p-6 bg-slate-950/90 border-r border-white/10 overflow-y-auto">
+        <div className="flex-1 flex flex-col justify-between p-6 bg-slate-100/70 dark:bg-slate-950/90 border-r border-slate-200 dark:border-white/10 overflow-y-auto">
           {/* Stage Monitor Header */}
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-mono font-bold tracking-wider text-emerald-400 flex items-center gap-1.5 bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-1 rounded">
+              <span className="text-xs uppercase font-mono font-bold tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-500/30 px-2.5 py-1 rounded">
                 <Tv className="w-3.5 h-3.5" />
                 STAGE MONITOR SIMULATOR
               </span>
@@ -174,8 +174,8 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
               <span
                 className={`text-xs font-bold px-2 py-0.5 rounded uppercase ${
                   isLive && !isBlank
-                    ? 'bg-rose-950 text-rose-300 border border-rose-500/40 animate-pulse'
-                    : 'bg-slate-800 text-slate-400'
+                    ? 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-500/40 animate-pulse'
+                    : 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
                 }`}
               >
                 {isLive && !isBlank ? '● ON AIR' : 'STANDBY'}
@@ -184,9 +184,9 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
 
             {/* Active Live Timer */}
             {activeTimer && (
-              <div className="flex items-center gap-2 bg-slate-900 border border-amber-500/40 px-3 py-1 rounded-lg">
-                <Clock className="w-3.5 h-3.5 text-amber-400 animate-spin" />
-                <span className="text-xs font-mono font-bold text-amber-400">
+              <div className="flex items-center gap-2 bg-amber-50 dark:bg-slate-900 border border-amber-300 dark:border-amber-500/40 px-3 py-1 rounded-lg">
+                <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 animate-spin" />
+                <span className="text-xs font-mono font-bold text-amber-700 dark:text-amber-400">
                   {activeTimer.label}:{' '}
                   {Math.floor((activeTimer.remainingSeconds ?? 0) / 60)
                     .toString()
@@ -250,43 +250,43 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
           </div>
 
           {/* Next Slide Preview Box */}
-          <div className="shrink-0 bg-slate-900/80 border border-white/10 rounded-xl p-3.5 flex items-center justify-between gap-4">
+          <div className="shrink-0 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 rounded-xl p-3.5 flex items-center justify-between gap-4">
             <div className="flex-1 truncate">
-              <div className="text-[10px] uppercase font-bold tracking-wider text-amber-400 mb-0.5 flex items-center gap-1.5">
+              <div className="text-[10px] uppercase font-bold tracking-wider text-amber-600 dark:text-amber-400 mb-0.5 flex items-center gap-1.5">
                 <span>Next Slide ➜</span>
                 {nextSlide?.label && (
-                  <span className="text-slate-400 font-normal">({nextSlide.label})</span>
+                  <span className="text-slate-500 dark:text-slate-400 font-normal">({nextSlide.label})</span>
                 )}
               </div>
-              <p className="text-xs sm:text-sm font-semibold text-slate-300 truncate">
+              <p className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 truncate">
                 {nextSlide?.textTamil || nextSlide?.textEnglish || 'End of Item / Next Item'}
               </p>
             </div>
 
-            <div className="shrink-0 flex items-center gap-1.5 bg-slate-950 border border-white/10 px-2.5 py-1 rounded text-[11px] text-slate-400">
-              <Eye className="w-3.5 h-3.5 text-amber-400" />
+            <div className="shrink-0 flex items-center gap-1.5 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-white/10 px-2.5 py-1 rounded text-[11px] text-slate-600 dark:text-slate-400">
+              <Eye className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
               <span>Singer Preview</span>
             </div>
           </div>
         </div>
 
         {/* Right Column: Stage Director Control Console */}
-        <div className="w-80 sm:w-92 bg-slate-950 border-l border-white/10 flex flex-col shrink-0 p-4 space-y-5 overflow-y-auto">
+        <div className="w-80 sm:w-92 bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-white/10 flex flex-col shrink-0 p-4 space-y-5 overflow-y-auto">
           {/* 1. Stage Prompter / Message Dispatcher */}
-          <div className="space-y-3 pb-4 border-b border-white/10">
+          <div className="space-y-3 pb-4 border-b border-slate-200 dark:border-white/10">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
                 <MessageSquare className="w-3.5 h-3.5" />
                 Stage Alert Prompter
               </span>
               {alertSuccess && (
-                <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3" />
                   Sent!
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
               Send instant high-visibility alerts directly to the preacher or worship team.
             </p>
 
@@ -302,7 +302,7 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
                 <button
                   key={preset}
                   onClick={() => handleSendPreset(preset)}
-                  className="px-2 py-1 rounded text-[11px] font-medium bg-slate-900 border border-white/10 hover:border-amber-500/40 hover:bg-slate-800 text-slate-300 hover:text-white transition-all cursor-pointer text-left"
+                  className="px-2 py-1 rounded text-[11px] font-medium bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-amber-500/40 hover:bg-amber-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer text-left"
                 >
                   {preset}
                 </button>
@@ -316,12 +316,12 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
                 onChange={(e) => setCustomMsg(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendCustom()}
                 placeholder="Type custom stage alert..."
-                className="h-8 text-xs bg-slate-900 border-white/10 text-white"
+                className="h-8 text-xs bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-white/10 text-slate-900 dark:text-white"
               />
               <Button
                 size="sm"
                 onClick={handleSendCustom}
-                className="h-8 px-2.5 bg-amber-600 hover:bg-amber-500 text-black font-bold text-xs shrink-0"
+                className="h-8 px-2.5 bg-amber-500 hover:bg-amber-400 dark:bg-amber-600 dark:hover:bg-amber-500 text-slate-950 font-bold text-xs shrink-0"
               >
                 <Send className="w-3.5 h-3.5" />
               </Button>
@@ -330,7 +330,7 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
                   size="sm"
                   variant="ghost"
                   onClick={handleClearMessage}
-                  className="h-8 px-2 text-rose-400 hover:bg-rose-950/40 text-xs shrink-0"
+                  className="h-8 px-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs shrink-0"
                   title="Clear Active Alert"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -340,9 +340,9 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
           </div>
 
           {/* 2. Stage Timer Controller */}
-          <div className="space-y-3 pb-4 border-b border-white/10">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-fuchsia-400" />
+          <div className="space-y-3 pb-4 border-b border-slate-200 dark:border-white/10">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-fuchsia-600 dark:text-fuchsia-400" />
               Stage Countdown Timers
             </span>
 
@@ -351,7 +351,7 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
                 size="sm"
                 variant="outline"
                 onClick={() => handleStartTimer(300, 'Pre-Service Countdown')}
-                className="h-8 text-xs bg-slate-900 border-white/10 hover:bg-white/10 text-slate-200"
+                className="h-8 text-xs bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200"
               >
                 5 Min Countdown
               </Button>
@@ -359,7 +359,7 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
                 size="sm"
                 variant="outline"
                 onClick={() => handleStartTimer(600, 'Pre-Service Countdown')}
-                className="h-8 text-xs bg-slate-900 border-white/10 hover:bg-white/10 text-slate-200"
+                className="h-8 text-xs bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200"
               >
                 10 Min Countdown
               </Button>
@@ -367,7 +367,7 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
                 size="sm"
                 variant="outline"
                 onClick={() => handleStartTimer(1800, 'Sermon Time Limit')}
-                className="h-8 text-xs bg-slate-900 border-white/10 hover:bg-white/10 text-slate-200"
+                className="h-8 text-xs bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200"
               >
                 30 Min Sermon
               </Button>
@@ -375,7 +375,7 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
                 size="sm"
                 variant="outline"
                 onClick={() => handleStartTimer(2700, 'Sermon Time Limit')}
-                className="h-8 text-xs bg-slate-900 border-white/10 hover:bg-white/10 text-slate-200"
+                className="h-8 text-xs bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200"
               >
                 45 Min Sermon
               </Button>
@@ -410,7 +410,7 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
                   size="sm"
                   variant="outline"
                   onClick={handleResetTimer}
-                  className="h-8 px-2.5 text-xs bg-slate-900 border-white/10 hover:bg-white/10 text-slate-300"
+                  className="h-8 px-2.5 text-xs bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300"
                   title="Reset Timer"
                 >
                   <RotateCcw className="w-3 h-3" />
@@ -420,7 +420,7 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
                   size="sm"
                   variant="ghost"
                   onClick={() => onUpdateTimer(null)}
-                  className="h-8 px-2 text-rose-400 hover:bg-rose-950/40 text-xs"
+                  className="h-8 px-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs"
                   title="Stop and Clear Timer"
                 >
                   <Trash2 className="w-3 h-3" />
@@ -430,12 +430,12 @@ export const StageWorkspace: React.FC<StageWorkspaceProps> = ({
           </div>
 
           {/* 3. Output Window Instructions */}
-          <div className="p-3 bg-slate-900/60 border border-white/10 rounded-xl space-y-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-              <AlertCircle className="w-3 h-3 text-cyan-400" />
+          <div className="p-3 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 rounded-xl space-y-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1">
+              <AlertCircle className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
               Stage Display Setup Tip
             </span>
-            <p className="text-[11px] text-slate-400 leading-relaxed">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
               Open <strong>/stage</strong> in a separate browser tab and drag it onto your secondary HDMI cable or stage TV monitor. Press <strong>F11</strong> for borderless fullscreen.
             </p>
           </div>

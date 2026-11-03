@@ -6,6 +6,38 @@
 
 @layer base {
   :root {
+    color-scheme: light dark;
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 270 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 16% 93%;
+    --secondary-foreground: 215 16% 35%;
+    --muted: 210 16% 93%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 42 80% 55%;
+    --accent-foreground: 42 90% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 270 70% 55%;
+    --radius: 0.5rem;
+    --sidebar-background: 210 20% 98%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 270 70% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 16% 93%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 270 70% 55%;
+  }
+
+  .dark {
     --background: 230 20% 8%;
     --foreground: 220 15% 92%;
     --card: 230 18% 11%;
@@ -25,7 +57,6 @@
     --border: 230 12% 20%;
     --input: 230 12% 22%;
     --ring: 260 60% 60%;
-    --radius: 0.5rem;
     --sidebar-background: 230 20% 7%;
     --sidebar-foreground: 220 15% 85%;
     --sidebar-primary: 260 60% 60%;
@@ -41,31 +72,45 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Noto Sans Tamil', 'Noto Sans', system-ui, sans-serif;
     font-feature-settings: "kern" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
-/* Scrollbar styling for dark theme */
+/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(230 20% 8%);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(230 12% 25%);
+  background: rgba(148, 163, 184, 0.4);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: hsl(230 20% 8%);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(230 12% 25%);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
   background: hsl(230 12% 35%);
 }
 
@@ -76,8 +121,15 @@
 
 /* Animations */
 @keyframes pulse-live {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .animate-pulse-live {

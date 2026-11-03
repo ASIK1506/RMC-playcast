@@ -377,12 +377,12 @@ export const BottomDock: React.FC<BottomDockProps> = ({
 
   return (
     <div
-      className={`border-t border-border/40 bg-slate-950/95 flex flex-col min-h-0 select-none shrink-0 z-20 backdrop-blur-md transition-all duration-200 w-full max-w-full min-w-0 overflow-x-hidden ${
+      className={`border-t border-slate-200 dark:border-border/40 bg-white/95 dark:bg-slate-950/95 flex flex-col min-h-0 select-none shrink-0 z-20 backdrop-blur-md transition-all duration-200 w-full max-w-full min-w-0 overflow-x-hidden ${
         isCollapsed ? 'h-10 overflow-hidden' : 'h-64'
       }`}
     >
       {/* Top Navigation Tabs */}
-      <div className="h-10 px-3 border-b border-white/10 flex items-center gap-1 overflow-x-auto bg-slate-900/60 shrink-0">
+      <div className="h-10 px-3 border-b border-slate-200 dark:border-white/10 flex items-center gap-1 overflow-x-auto bg-slate-100/90 dark:bg-slate-900/60 shrink-0">
         <button
           onClick={() => {
             setActiveTab('scripture');
@@ -390,11 +390,11 @@ export const BottomDock: React.FC<BottomDockProps> = ({
           }}
           className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer shrink-0 ${
             activeTab === 'scripture'
-              ? 'bg-fuchsia-600/30 text-fuchsia-300 border border-fuchsia-500/40 shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-fuchsia-100 text-fuchsia-800 border border-fuchsia-400 dark:bg-fuchsia-600/30 dark:text-fuchsia-300 dark:border-fuchsia-500/40 shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
           }`}
         >
-          <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+          <BookOpen className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
           <span>Scripture (வேதாகமம்)</span>
         </button>
 
@@ -405,11 +405,11 @@ export const BottomDock: React.FC<BottomDockProps> = ({
           }}
           className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer shrink-0 ${
             activeTab === 'lyrics'
-              ? 'bg-fuchsia-600/30 text-fuchsia-300 border border-fuchsia-500/40 shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-fuchsia-100 text-fuchsia-800 border border-fuchsia-400 dark:bg-fuchsia-600/30 dark:text-fuchsia-300 dark:border-fuchsia-500/40 shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
           }`}
         >
-          <Music className="w-3.5 h-3.5 text-fuchsia-400" />
+          <Music className="w-3.5 h-3.5 text-fuchsia-600 dark:text-fuchsia-400" />
           <span>Lyrics Library</span>
         </button>
 
@@ -420,11 +420,11 @@ export const BottomDock: React.FC<BottomDockProps> = ({
           }}
           className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer shrink-0 ${
             activeTab === 'media'
-              ? 'bg-fuchsia-600/30 text-fuchsia-300 border border-fuchsia-500/40 shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-fuchsia-100 text-fuchsia-800 border border-fuchsia-400 dark:bg-fuchsia-600/30 dark:text-fuchsia-300 dark:border-fuchsia-500/40 shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
           }`}
         >
-          <ImageIcon className="w-3.5 h-3.5 text-emerald-400" />
+          <ImageIcon className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
           <span>Media & Backgrounds</span>
         </button>
 
@@ -435,11 +435,11 @@ export const BottomDock: React.FC<BottomDockProps> = ({
           }}
           className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer shrink-0 ${
             activeTab === 'templates'
-              ? 'bg-fuchsia-600/30 text-fuchsia-300 border border-fuchsia-500/40 shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-fuchsia-100 text-fuchsia-800 border border-fuchsia-400 dark:bg-fuchsia-600/30 dark:text-fuchsia-300 dark:border-fuchsia-500/40 shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
           }`}
         >
-          <LayoutTemplate className="w-3.5 h-3.5 text-indigo-400" />
+          <LayoutTemplate className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
           <span>Templates</span>
         </button>
 
@@ -450,14 +450,14 @@ export const BottomDock: React.FC<BottomDockProps> = ({
           }}
           className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer shrink-0 ${
             activeTab === 'timers'
-              ? 'bg-fuchsia-600/30 text-fuchsia-300 border border-fuchsia-500/40 shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-fuchsia-100 text-fuchsia-800 border border-fuchsia-400 dark:bg-fuchsia-600/30 dark:text-fuchsia-300 dark:border-fuchsia-500/40 shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
           }`}
         >
-          <Clock className="w-3.5 h-3.5 text-amber-400" />
+          <Clock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
           <span>Timers</span>
           {(isCountdownRunning || isSermonRunning) && (
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping ml-0.5" />
+            <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-ping ml-0.5" />
           )}
         </button>
 
@@ -465,12 +465,12 @@ export const BottomDock: React.FC<BottomDockProps> = ({
         <div className="ml-auto flex items-center pr-1 shrink-0">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="flex items-center gap-1 text-[11px] font-medium text-slate-300 hover:text-white px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-white/10 cursor-pointer transition-all"
+            className="flex items-center gap-1 text-[11px] font-medium text-slate-700 hover:text-slate-900 bg-slate-200/80 hover:bg-slate-300/80 border border-slate-300 dark:text-slate-300 dark:hover:text-white px-2 py-1 rounded dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-white/10 cursor-pointer transition-all"
             title={isCollapsed ? 'Expand Bottom Dock' : 'Collapse Bottom Dock'}
           >
             {isCollapsed ? (
               <>
-                <ChevronUp className="w-3.5 h-3.5 text-fuchsia-400" />
+                <ChevronUp className="w-3.5 h-3.5 text-fuchsia-600 dark:text-fuchsia-400" />
                 <span className="text-[10px]">Expand Dock</span>
               </>
             ) : (
@@ -490,8 +490,8 @@ export const BottomDock: React.FC<BottomDockProps> = ({
           {activeTab === 'scripture' && (
             <div className="h-full flex gap-3 min-w-0">
               {/* Left: Book & Chapter Picker */}
-              <div className="w-48 flex flex-col gap-2 shrink-0 border-r border-white/5 pr-3">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="w-48 flex flex-col gap-2 shrink-0 border-r border-slate-200 dark:border-white/5 pr-3">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-muted-foreground">
                   Select Book (புத்தகம்)
                 </label>
                 <select
@@ -500,7 +500,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                     setSelectedBookId(Number(e.target.value));
                     setSelectedChapter(1);
                   }}
-                  className="w-full bg-slate-900 border border-white/10 rounded-md px-2.5 py-1.5 text-xs font-medium text-white focus:outline-none focus:border-fuchsia-500"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-md px-2.5 py-1.5 text-xs font-medium text-slate-900 focus:outline-none focus:border-fuchsia-500 dark:bg-slate-900 dark:border-white/10 dark:text-white"
                 >
                   {bibleBooks.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -511,13 +511,13 @@ export const BottomDock: React.FC<BottomDockProps> = ({
 
                 <div className="flex items-center gap-2 mt-1">
                   <div className="flex-1">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-muted-foreground">
                       Chapter
                     </label>
                     <select
                       value={selectedChapter}
                       onChange={(e) => setSelectedChapter(Number(e.target.value))}
-                      className="w-full bg-slate-900 border border-white/10 rounded-md px-2 py-1 text-xs font-medium text-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-md px-2 py-1 text-xs font-medium text-slate-900 dark:bg-slate-900 dark:border-white/10 dark:text-white"
                     >
                       {Array.from({ length: currentBook.chapters }, (_, i) => i + 1).map((ch) => (
                         <option key={ch} value={ch}>
@@ -531,7 +531,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({
 
               {/* Right: Verse List */}
               <div className="flex-1 overflow-y-auto pr-1 min-w-0">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-muted-foreground mb-1.5">
                   {currentBook.nameTamil} {selectedChapter} — VERSES ({chapterVerses.length})
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 min-w-0">
@@ -547,15 +547,15 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                           reference: `${currentBook.nameTamil} ${selectedChapter}:${v.verse}`,
                         })
                       }
-                      className="p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-white/10 hover:border-fuchsia-500/50 text-left text-xs cursor-pointer transition-all flex items-start gap-2 group min-w-0"
+                      className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100/90 border border-slate-200 hover:border-fuchsia-500/50 text-left text-xs cursor-pointer transition-all flex items-start gap-2 group min-w-0 dark:bg-slate-900/60 dark:hover:bg-slate-900 dark:border-white/10"
                     >
-                      <span className="font-bold text-amber-400 font-mono text-[11px] shrink-0 mt-0.5">
+                      <span className="font-bold text-amber-600 dark:text-amber-400 font-mono text-[11px] shrink-0 mt-0.5">
                         {v.verse}
                       </span>
-                      <p className="line-clamp-2 text-slate-300 font-['Noto_Sans_Tamil'] group-hover:text-white flex-1 min-w-0">
+                      <p className="line-clamp-2 text-slate-800 dark:text-slate-300 font-['Noto_Sans_Tamil'] group-hover:text-slate-950 dark:group-hover:text-white flex-1 min-w-0">
                         {v.text}
                       </p>
-                      <Plus className="w-3.5 h-3.5 text-slate-500 group-hover:text-fuchsia-400 shrink-0 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <Plus className="w-3.5 h-3.5 text-slate-400 group-hover:text-fuchsia-600 dark:text-slate-500 dark:group-hover:text-fuchsia-400 shrink-0 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                   ))}
                 </div>
@@ -568,7 +568,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({
             <div className="h-full flex flex-col gap-2 min-w-0">
               <div className="flex items-center justify-between gap-3 min-w-0">
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-muted-foreground">
                     Worship Songs ({filteredSongs.length})
                   </span>
                   <button
@@ -579,13 +579,13 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                   </button>
                 </div>
                 <div className="relative flex-1 max-w-sm">
-                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-muted-foreground" />
                   <input
                     type="text"
                     value={songSearchQuery}
                     onChange={(e) => setSongSearchQuery(e.target.value)}
                     placeholder="Search song title or lyrics..."
-                    className="w-full bg-slate-900 border border-white/10 rounded-md pl-8 pr-3 py-1 text-xs text-white placeholder:text-muted-foreground focus:outline-none focus:border-fuchsia-500"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-md pl-8 pr-3 py-1 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-fuchsia-500 dark:bg-slate-900 dark:border-white/10 dark:text-white dark:placeholder:text-muted-foreground"
                   />
                 </div>
               </div>
@@ -595,28 +595,28 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                   <div
                     key={song.id}
                     onClick={() => onAddSongToService(song)}
-                    className="p-3 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-white/10 hover:border-fuchsia-500/50 text-left cursor-pointer transition-all group min-w-0 overflow-hidden flex flex-col justify-between"
+                    className="p-3 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 hover:border-fuchsia-500/50 text-left cursor-pointer transition-all group min-w-0 overflow-hidden flex flex-col justify-between dark:bg-slate-900/60 dark:hover:bg-slate-900 dark:border-white/10"
                   >
                     <div className="min-w-0">
                       <div className="flex items-center justify-between gap-2 min-w-0">
-                        <span className="font-semibold text-xs text-white group-hover:text-fuchsia-300 truncate">
+                        <span className="font-semibold text-xs text-slate-900 dark:text-white group-hover:text-fuchsia-600 dark:group-hover:text-fuchsia-300 truncate">
                           {song.title}
                         </span>
                         {song.key && (
-                          <span className="text-[9px] bg-slate-800 text-slate-400 px-1 rounded font-mono shrink-0">
+                          <span className="text-[9px] bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400 px-1 rounded font-mono shrink-0">
                             Key: {song.key}
                           </span>
                         )}
                       </div>
                       {song.tamilTitle && (
-                        <div className="text-[11px] text-muted-foreground mt-0.5 truncate">
+                        <div className="text-[11px] text-slate-500 dark:text-muted-foreground mt-0.5 truncate">
                           {song.tamilTitle}
                         </div>
                       )}
                     </div>
-                    <div className="text-[10px] text-slate-500 mt-2 flex items-center justify-between pt-1 border-t border-white/5">
+                    <div className="text-[10px] text-slate-500 mt-2 flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-white/5">
                       <span>{song.sections.length} parts</span>
-                      <span className="text-fuchsia-400 font-medium group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                      <span className="text-fuchsia-600 dark:text-fuchsia-400 font-medium group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
                         + Add to Service
                       </span>
                     </div>
@@ -745,24 +745,24 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                       onClick={() => onApplyTemplate(tpl.id)}
                       className={`p-3 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-between min-w-0 ${
                         active
-                          ? 'bg-fuchsia-950/50 border-fuchsia-400 ring-2 ring-fuchsia-500 shadow-lg shadow-fuchsia-500/20'
-                          : 'bg-slate-900/60 border-white/10 hover:border-white/20'
+                          ? 'bg-fuchsia-50 dark:bg-fuchsia-950/50 border-fuchsia-400 ring-2 ring-fuchsia-500 shadow-lg shadow-fuchsia-500/20'
+                          : 'bg-slate-50 border-slate-200 hover:border-slate-300 dark:bg-slate-900/60 dark:border-white/10 dark:hover:border-white/20'
                       }`}
                     >
                       <div>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-bold text-white">{tpl.name}</span>
+                          <span className="text-xs font-bold text-slate-900 dark:text-white">{tpl.name}</span>
                           {active && (
-                            <span className="text-[9px] bg-fuchsia-500 text-white font-bold px-1.5 py-0.2 rounded-full flex items-center gap-0.5">
+                            <span className="text-[9px] bg-fuchsia-600 text-white font-bold px-1.5 py-0.2 rounded-full flex items-center gap-0.5">
                               <Check className="w-2.5 h-2.5" /> Active
                             </span>
                           )}
                         </div>
-                        <div className="text-[10px] text-muted-foreground leading-normal">
+                        <div className="text-[10px] text-slate-600 dark:text-muted-foreground leading-normal">
                           {tpl.desc}
                         </div>
                       </div>
-                      <div className="mt-2 text-[10px] font-semibold text-fuchsia-400 flex items-center gap-1">
+                      <div className="mt-2 text-[10px] font-semibold text-fuchsia-600 dark:text-fuchsia-400 flex items-center gap-1">
                         {active ? 'Currently Selected' : 'Click to Apply'}
                       </div>
                     </div>
@@ -776,19 +776,19 @@ export const BottomDock: React.FC<BottomDockProps> = ({
           {activeTab === 'timers' && (
             <div className="h-full flex items-center justify-around text-center p-2 gap-4 min-w-0">
               {/* TIMER 1: Pre-Service Countdown */}
-              <div className="p-3.5 rounded-xl bg-slate-900/80 border border-white/10 w-72 flex flex-col items-center">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-fuchsia-400" />
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 w-72 flex flex-col items-center">
+                <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-muted-foreground flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-fuchsia-500 dark:text-fuchsia-400" />
                   Pre-Service Countdown
                 </span>
 
                 <div
                   className={`text-3xl font-mono font-bold my-1.5 tracking-wider ${
                     countdownRemaining === 0
-                      ? 'text-emerald-400 animate-pulse'
+                      ? 'text-emerald-500 dark:text-emerald-400 animate-pulse'
                       : isCountdownRunning
-                      ? 'text-fuchsia-400 animate-pulse'
-                      : 'text-white'
+                      ? 'text-fuchsia-600 dark:text-fuchsia-400 animate-pulse'
+                      : 'text-slate-900 dark:text-white'
                   }`}
                 >
                   {formatTime(countdownRemaining)}
@@ -812,7 +812,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                       className={`text-[10px] px-2 py-0.5 rounded font-mono border transition-colors cursor-pointer ${
                         countdownDuration === p.sec
                           ? 'bg-fuchsia-600 text-white border-fuchsia-500'
-                          : 'bg-slate-800 text-slate-300 border-white/10 hover:bg-slate-700'
+                          : 'bg-slate-200 text-slate-700 border-slate-300 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-white/10 dark:hover:bg-slate-700'
                       }`}
                     >
                       {p.label}
@@ -852,7 +852,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                       setCountdownRemaining(countdownDuration);
                       if (onUpdateTimer) onUpdateTimer(null);
                     }}
-                    className="text-xs border-white/10 hover:bg-slate-800 cursor-pointer"
+                    className="text-xs border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-white/10 dark:text-white dark:hover:bg-slate-800 cursor-pointer"
                     title="Reset Countdown"
                   >
                     <RotateCcw className="w-3 h-3" />
@@ -861,21 +861,21 @@ export const BottomDock: React.FC<BottomDockProps> = ({
               </div>
 
               {/* TIMER 2: Sermon Duration Timer */}
-              <div className="p-3.5 rounded-xl bg-slate-900/80 border border-white/10 w-72 flex flex-col items-center">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-emerald-400" />
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 w-72 flex flex-col items-center">
+                <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-muted-foreground flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-emerald-500 dark:text-emerald-400" />
                   Sermon Timer
                 </span>
 
                 <div
                   className={`text-3xl font-mono font-bold my-1.5 tracking-wider ${
                     sermonRemaining <= 120 && sermonRemaining > 0
-                      ? 'text-amber-400 animate-pulse'
+                      ? 'text-amber-500 dark:text-amber-400 animate-pulse'
                       : sermonRemaining === 0
                       ? 'text-rose-500 animate-pulse'
                       : isSermonRunning
-                      ? 'text-emerald-400'
-                      : 'text-white'
+                      ? 'text-emerald-500 dark:text-emerald-400'
+                      : 'text-slate-900 dark:text-white'
                   }`}
                 >
                   {formatTime(sermonRemaining)}
@@ -899,7 +899,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                       className={`text-[10px] px-2 py-0.5 rounded font-mono border transition-colors cursor-pointer ${
                         sermonDuration === p.sec
                           ? 'bg-emerald-600 text-white border-emerald-500'
-                          : 'bg-slate-800 text-slate-300 border-white/10 hover:bg-slate-700'
+                          : 'bg-slate-200 text-slate-700 border-slate-300 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-white/10 dark:hover:bg-slate-700'
                       }`}
                     >
                       {p.label}
@@ -939,7 +939,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                       setSermonRemaining(sermonDuration);
                       if (onUpdateTimer) onUpdateTimer(null);
                     }}
-                    className="text-xs border-white/10 hover:bg-slate-800 cursor-pointer"
+                    className="text-xs border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-white/10 dark:text-white dark:hover:bg-slate-800 cursor-pointer"
                     title="Reset Sermon Timer"
                   >
                     <RotateCcw className="w-3 h-3" />
@@ -953,17 +953,17 @@ export const BottomDock: React.FC<BottomDockProps> = ({
 
       {/* NEW SONG MODAL */}
       <Dialog open={isNewSongModalOpen} onOpenChange={setIsNewSongModalOpen}>
-        <DialogContent className="max-w-lg bg-slate-900 border border-white/10 text-slate-100 p-6 sm:rounded-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader className="border-b border-white/10 pb-3">
+        <DialogContent className="max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 p-6 sm:rounded-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+          <DialogHeader className="border-b border-slate-200 dark:border-white/10 pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-fuchsia-600/10 border border-fuchsia-500/20 flex items-center justify-center text-fuchsia-400 shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-fuchsia-600/10 border border-fuchsia-500/20 flex items-center justify-center text-fuchsia-600 dark:text-fuchsia-400 shrink-0">
                 <Music className="w-4 h-4" />
               </div>
               <div>
-                <DialogTitle className="text-base font-bold text-white">
+                <DialogTitle className="text-base font-bold text-slate-900 dark:text-white">
                   Add New Worship Song
                 </DialogTitle>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-muted-foreground mt-0.5">
                   Save lyrics and metadata permanently to your church song library
                 </p>
               </div>
@@ -973,7 +973,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({
           <form onSubmit={handleCreateSong} className="space-y-3.5 pt-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                   English Title *
                 </label>
                 <input
@@ -982,11 +982,11 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="e.g. Way Maker"
-                  className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 dark:bg-slate-950 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500"
                 />
               </div>
               <div>
-                <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                   Tamil Title (தமிழ்)
                 </label>
                 <input
@@ -994,20 +994,20 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                   value={newTamilTitle}
                   onChange={(e) => setNewTamilTitle(e.target.value)}
                   placeholder="e.g. வழி உண்டாக்குபவர்"
-                  className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 font-['Noto_Sans_Tamil']"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 dark:bg-slate-950 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500 font-['Noto_Sans_Tamil']"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                   Song Key
                 </label>
                 <select
                   value={newKey}
                   onChange={(e) => setNewKey(e.target.value)}
-                  className="w-full bg-slate-950 border border-white/10 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 cursor-pointer"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 dark:bg-slate-950 dark:border-white/10 dark:text-white cursor-pointer"
                 >
                   {['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B', 'Am', 'Em', 'Dm'].map((k) => (
                     <option key={k} value={k}>Key of {k}</option>
@@ -1015,7 +1015,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                 </select>
               </div>
               <div>
-                <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                   Author / Composer
                 </label>
                 <input
@@ -1023,13 +1023,13 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                   value={newAuthor}
                   onChange={(e) => setNewAuthor(e.target.value)}
                   placeholder="e.g. Sinach"
-                  className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 dark:bg-slate-950 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+              <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                 Lyrics / Verses (Separate sections with an empty line)
               </label>
               <textarea
@@ -1037,20 +1037,20 @@ export const BottomDock: React.FC<BottomDockProps> = ({
                 value={newLyrics}
                 onChange={(e) => setNewLyrics(e.target.value)}
                 placeholder="You are here, moving in our midst...&#10;&#10;Way maker, miracle worker, promise keeper..."
-                className="w-full bg-slate-950 border border-white/10 rounded-lg p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 font-mono leading-relaxed resize-none"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 dark:bg-slate-950 dark:border-white/10 dark:text-white dark:placeholder:text-slate-500 font-mono leading-relaxed resize-none"
               />
-              <span className="text-[10px] text-muted-foreground block mt-1">
+              <span className="text-[10px] text-slate-500 dark:text-muted-foreground block mt-1">
                 Double line breaks automatically split the song into Verse 1, Chorus, Verse 2, etc.
               </span>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200 dark:border-white/10">
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={() => setIsNewSongModalOpen(false)}
-                className="border-white/10 text-xs text-slate-300 hover:text-white hover:bg-slate-800"
+                className="border-slate-300 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:border-white/10 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800"
               >
                 Cancel
               </Button>

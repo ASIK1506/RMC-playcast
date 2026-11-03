@@ -22,10 +22,10 @@ export const SlideMatrix: React.FC<SlideMatrixProps> = ({
 }) => {
   if (!item) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-slate-950/40 text-muted-foreground select-none p-6">
-        <Layers className="w-10 h-10 mb-3 opacity-30 text-fuchsia-400" />
-        <p className="text-sm font-semibold text-slate-300">Select an item from the playlist</p>
-        <p className="text-xs text-muted-foreground mt-1">
+      <div className="flex-1 flex flex-col items-center justify-center bg-slate-100/60 dark:bg-slate-950/40 text-slate-500 dark:text-muted-foreground select-none p-6 transition-colors">
+        <Layers className="w-10 h-10 mb-3 opacity-30 text-fuchsia-500 dark:text-fuchsia-400" />
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">Select an item from the playlist</p>
+        <p className="text-xs text-slate-500 dark:text-muted-foreground mt-1">
           Choose a worship song or scripture reading to display its slide matrix
         </p>
       </div>
@@ -34,32 +34,32 @@ export const SlideMatrix: React.FC<SlideMatrixProps> = ({
 
   const getTagColor = (label: string) => {
     const l = label.toLowerCase();
-    if (l.includes('chorus')) return 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30';
-    if (l.includes('verse')) return 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30';
-    if (l.includes('bridge')) return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
-    if (l.includes('outro') || l.includes('ending')) return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
-    return 'bg-slate-700/40 text-slate-300 border-slate-600/30';
+    if (l.includes('chorus')) return 'bg-fuchsia-500/15 text-fuchsia-700 border-fuchsia-300 dark:bg-fuchsia-500/20 dark:text-fuchsia-300 dark:border-fuchsia-500/30';
+    if (l.includes('verse')) return 'bg-indigo-500/15 text-indigo-700 border-indigo-300 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30';
+    if (l.includes('bridge')) return 'bg-amber-500/15 text-amber-700 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30';
+    if (l.includes('outro') || l.includes('ending')) return 'bg-purple-500/15 text-purple-700 border-purple-300 dark:bg-purple-500/20 dark:text-purple-300 dark:border-purple-500/30';
+    return 'bg-slate-200/60 text-slate-700 border-slate-300 dark:bg-slate-700/40 dark:text-slate-300 dark:border-slate-600/30';
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 min-w-0 bg-slate-950/40 select-none overflow-hidden">
+    <div className="flex-1 flex flex-col min-h-0 min-w-0 bg-slate-100/40 dark:bg-slate-950/40 select-none overflow-hidden transition-colors">
       {/* Item Header & Arrangements Toolbar */}
-      <div className="h-12 border-b border-border/40 px-4 flex items-center justify-between shrink-0 bg-slate-950/60 backdrop-blur-sm min-w-0">
+      <div className="h-12 border-b border-slate-200 dark:border-border/40 px-4 flex items-center justify-between shrink-0 bg-white/80 dark:bg-slate-950/60 backdrop-blur-sm min-w-0">
         <div className="flex items-center gap-3 truncate min-w-0">
-          <h2 className="text-sm font-bold text-white truncate flex items-center gap-2">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-white truncate flex items-center gap-2">
             <span>{item.title}</span>
             {item.tamilTitle && (
-              <span className="text-xs font-normal text-muted-foreground truncate">
+              <span className="text-xs font-normal text-slate-500 dark:text-muted-foreground truncate">
                 ({item.tamilTitle})
               </span>
             )}
           </h2>
 
-          <div className="h-3.5 w-px bg-white/10 shrink-0" />
+          <div className="h-3.5 w-px bg-slate-200 dark:bg-white/10 shrink-0" />
 
           {/* Arrangement Tabs (FreeShow style) */}
           <div className="flex items-center gap-1 shrink-0">
-            <span className="text-[10px] text-muted-foreground font-semibold uppercase mr-1">
+            <span className="text-[10px] text-slate-500 dark:text-muted-foreground font-semibold uppercase mr-1">
               Arrangement:
             </span>
             {['Default', 'Shorter'].map((arr) => (
@@ -67,8 +67,8 @@ export const SlideMatrix: React.FC<SlideMatrixProps> = ({
                 key={arr}
                 className={`text-[11px] px-2.5 py-0.5 rounded-full font-medium transition-all cursor-pointer ${
                   item.arrangement === arr
-                    ? 'bg-fuchsia-600/25 text-fuchsia-300 border border-fuchsia-500/40'
-                    : 'text-slate-400 hover:text-white bg-slate-900 border border-white/5'
+                    ? 'bg-fuchsia-600/20 text-fuchsia-700 border border-fuchsia-400 dark:bg-fuchsia-600/25 dark:text-fuchsia-300 dark:border-fuchsia-500/40'
+                    : 'text-slate-600 hover:text-slate-900 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5'
                 }`}
               >
                 {arr}
@@ -83,9 +83,9 @@ export const SlideMatrix: React.FC<SlideMatrixProps> = ({
               variant="outline"
               size="sm"
               onClick={onAddSlide}
-              className="h-7 text-xs border-white/10 bg-slate-900 hover:bg-slate-800 text-slate-300 cursor-pointer"
+              className="h-7 text-xs border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer shadow-sm"
             >
-              <Plus className="w-3 h-3 mr-1 text-fuchsia-400" />
+              <Plus className="w-3 h-3 mr-1 text-fuchsia-500 dark:text-fuchsia-400" />
               Add Slide
             </Button>
           )}
@@ -104,16 +104,16 @@ export const SlideMatrix: React.FC<SlideMatrixProps> = ({
                 key={slide.id}
                 onClick={() => onSelectSlide(slide)}
                 onDoubleClick={() => onGoLiveSlide(slide)}
-                className={`group relative rounded-xl border transition-all duration-200 cursor-pointer flex flex-col overflow-hidden min-w-0 ${
+                className={`group relative rounded-xl border transition-all duration-200 cursor-pointer flex flex-col overflow-hidden min-w-0 shadow-sm ${
                   isLive
                     ? 'border-fuchsia-500 shadow-xl shadow-fuchsia-500/20 ring-2 ring-fuchsia-500/80 bg-fuchsia-950/25'
                     : isPreview
-                    ? 'border-amber-500 shadow-md shadow-amber-500/10 ring-1 ring-amber-500 bg-slate-900/90'
-                    : 'border-white/10 hover:border-white/25 bg-slate-900/60 hover:bg-slate-900/90'
+                    ? 'border-amber-500 shadow-md shadow-amber-500/10 ring-1 ring-amber-500 bg-amber-500/5 dark:bg-slate-900/90'
+                    : 'border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 dark:border-white/10 dark:hover:border-white/25 dark:bg-slate-900/60 dark:hover:bg-slate-900/90'
                 }`}
               >
                 {/* Card Header (Tag & Slide Actions) */}
-                <div className="h-7 px-2.5 bg-slate-950/80 border-b border-white/5 flex items-center justify-between">
+                <div className="h-7 px-2.5 bg-slate-50 dark:bg-slate-950/80 border-b border-slate-200 dark:border-white/5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <span
                       className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded border ${getTagColor(
@@ -126,7 +126,7 @@ export const SlideMatrix: React.FC<SlideMatrixProps> = ({
 
                   <div className="flex items-center gap-1.5">
                     {slide.duration && (
-                      <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                      <span className="text-[10px] text-slate-500 dark:text-muted-foreground flex items-center gap-1">
                         <Clock className="w-2.5 h-2.5" />
                         {slide.duration}s
                       </span>
@@ -174,8 +174,8 @@ export const SlideMatrix: React.FC<SlideMatrixProps> = ({
                 </div>
 
                 {/* Card Footer / Status Marker */}
-                <div className="h-6 px-2.5 bg-slate-950/90 flex items-center justify-between text-[10px] border-t border-white/5">
-                  <span className="text-muted-foreground truncate">
+                <div className="h-6 px-2.5 bg-slate-50 dark:bg-slate-950/90 flex items-center justify-between text-[10px] border-t border-slate-200 dark:border-white/5">
+                  <span className="text-slate-500 dark:text-muted-foreground truncate">
                     {slide.reference || slide.title || ''}
                   </span>
                   {isLive && (

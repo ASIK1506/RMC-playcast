@@ -750,7 +750,7 @@ export default function PlayCastStudio() {
 
       {/* Settings Dialog */}
       <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-        <DialogContent className="max-w-xl bg-slate-950 border-white/15 text-white max-h-[85vh] overflow-y-auto">
+        <DialogContent className="max-w-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/15 text-slate-900 dark:text-white max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-base font-bold flex items-center gap-2">
               Display & Output Settings

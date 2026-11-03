@@ -151,8 +151,8 @@ export default function AdminSettings() {
   return (
     <div className="p-5 lg:p-8 max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <div className="pb-4 border-b border-white/5">
-        <h1 className="text-xl font-extrabold text-white tracking-tight">License & System Settings</h1>
+      <div className="pb-4 border-b border-slate-200 dark:border-white/5">
+        <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">License & System Settings</h1>
         <p className="text-[13px] text-slate-500 mt-1">
           Configure church license capacity, manage security policies, and monitor system health.
         </p>
@@ -162,26 +162,26 @@ export default function AdminSettings() {
         {/* Left Column: License & Capacity (2 spans) */}
         <div className="md:col-span-2 space-y-6">
           {/* License Configuration Box */}
-          <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-5">
+          <div className="bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-5">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center">
-                <Users className="w-4 h-4 text-fuchsia-400" />
+                <Users className="w-4 h-4 text-fuchsia-600 dark:text-fuchsia-400" />
               </div>
               <div>
-                <h2 className="text-sm font-bold text-white">License Capacity Policy</h2>
+                <h2 className="text-sm font-bold text-slate-900 dark:text-white">License Capacity Policy</h2>
                 <p className="text-[11px] text-slate-500">Control operator account limits and subscription tier</p>
               </div>
             </div>
 
             {settingsSuccess && (
-              <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2">
+              <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 shrink-0" />
                 <span>{settingsSuccess}</span>
               </div>
             )}
 
             {settingsError && (
-              <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+              <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-500/40 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>{settingsError}</span>
               </div>
@@ -190,19 +190,19 @@ export default function AdminSettings() {
             <form onSubmit={handleSaveSettings} className="space-y-4">
               {/* License Tier */}
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1.5">License Tier / Package Name</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">License Tier / Package Name</label>
                 <input
                   type="text"
                   value={licenseTier}
                   onChange={(e) => setLicenseTier(e.target.value)}
                   placeholder="e.g. Standard Church License, Multi-Campus Edition"
-                  className="w-full px-3 py-2 bg-[#0a0d14] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-fuchsia-500/60 transition"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-[#0a0d14] border border-slate-300 dark:border-white/10 rounded-lg text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500 transition shadow-sm"
                 />
               </div>
 
               {/* Account Capacity Limit Toggle */}
               <div className="space-y-3">
-                <label className="text-xs font-semibold text-slate-300 block">User Account Limit</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">User Account Limit</label>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {/* Fixed Limit Option */}
@@ -210,8 +210,8 @@ export default function AdminSettings() {
                     onClick={() => setIsUnlimited(false)}
                     className={`p-3.5 rounded-lg border transition cursor-pointer flex flex-col justify-between ${
                       !isUnlimited
-                        ? 'bg-fuchsia-950/20 border-fuchsia-500/40 text-white'
-                        : 'bg-[#0a0d14] border-white/5 text-slate-400 hover:border-white/15'
+                        ? 'bg-fuchsia-50 dark:bg-fuchsia-950/20 border-fuchsia-400 dark:border-fuchsia-500/40 text-slate-900 dark:text-white'
+                        : 'bg-slate-50 dark:bg-[#0a0d14] border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/15'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -223,7 +223,7 @@ export default function AdminSettings() {
                         className="text-fuchsia-600 focus:ring-0"
                       />
                     </div>
-                    <p className="text-xs text-slate-400 leading-normal">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-normal">
                       Limit total registered operator accounts to a specific number.
                     </p>
                   </label>
@@ -233,13 +233,13 @@ export default function AdminSettings() {
                     onClick={() => setIsUnlimited(true)}
                     className={`p-3.5 rounded-lg border transition cursor-pointer flex flex-col justify-between ${
                       isUnlimited
-                        ? 'bg-fuchsia-950/20 border-fuchsia-500/40 text-white'
-                        : 'bg-[#0a0d14] border-white/5 text-slate-400 hover:border-white/15'
+                        ? 'bg-fuchsia-50 dark:bg-fuchsia-950/20 border-fuchsia-400 dark:border-fuchsia-500/40 text-slate-900 dark:text-white'
+                        : 'bg-slate-50 dark:bg-[#0a0d14] border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/15'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1.5 font-semibold text-sm">
-                        <InfinityIcon className="w-4 h-4 text-fuchsia-400" />
+                        <InfinityIcon className="w-4 h-4 text-fuchsia-600 dark:text-fuchsia-400" />
                         <span>Unlimited Accounts</span>
                       </div>
                       <input
@@ -249,7 +249,7 @@ export default function AdminSettings() {
                         className="text-fuchsia-600 focus:ring-0"
                       />
                     </div>
-                    <p className="text-xs text-slate-400 leading-normal">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-normal">
                       No restriction on operator accounts. Ideal for enterprise & large worship teams.
                     </p>
                   </label>
@@ -266,7 +266,7 @@ export default function AdminSettings() {
                           max="10000"
                           value={maxUsers}
                           onChange={(e) => setMaxUsers(parseInt(e.target.value) || 1)}
-                          className="w-full px-3 py-2 bg-[#0a0d14] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-fuchsia-500/60 transition font-mono"
+                          className="w-full px-3 py-2 bg-slate-50 dark:bg-[#0a0d14] border border-slate-300 dark:border-white/10 rounded-lg text-sm text-slate-900 dark:text-white focus:outline-none focus:border-fuchsia-500 transition font-mono shadow-sm"
                         />
                       </div>
                       <div className="flex gap-2">
@@ -278,7 +278,7 @@ export default function AdminSettings() {
                             className={`px-3 py-2 text-xs font-semibold rounded-lg border transition cursor-pointer ${
                               maxUsers === preset
                                 ? 'bg-fuchsia-600 border-fuchsia-500 text-white'
-                                : 'bg-slate-800 border-white/10 text-slate-300 hover:bg-slate-700'
+                                : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                             }`}
                           >
                             {preset}
@@ -292,15 +292,15 @@ export default function AdminSettings() {
 
               {/* Live Capacity Feedback */}
               {capacity && (
-                <div className="p-3.5 rounded-lg bg-[#0a0d14] border border-white/5 space-y-2">
+                <div className="p-3.5 rounded-lg bg-slate-50 dark:bg-[#0a0d14] border border-slate-200 dark:border-white/5 space-y-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-400">Current Usage:</span>
-                    <span className="font-bold text-white">
+                    <span className="text-slate-500 dark:text-slate-400">Current Usage:</span>
+                    <span className="font-bold text-slate-900 dark:text-white">
                       {capacity.unlimited ? `${capacity.current} accounts (Unlimited)` : `${capacity.current} of ${capacity.max} accounts (${Math.round((capacity.current / capacity.max) * 100)}%)`}
                     </span>
                   </div>
                   {!capacity.unlimited && (
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-fuchsia-500 transition-all duration-500"
                         style={{ width: `${Math.min(100, (capacity.current / capacity.max) * 100)}%` }}
@@ -322,26 +322,26 @@ export default function AdminSettings() {
           </div>
 
           {/* Change Super Admin Password */}
-          <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-5">
+          <div className="bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-5">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-                <Lock className="w-4 h-4 text-amber-400" />
+                <Lock className="w-4 h-4 text-amber-500 dark:text-amber-400" />
               </div>
               <div>
-                <h2 className="text-sm font-bold text-white">Change Super Admin Password</h2>
+                <h2 className="text-sm font-bold text-slate-900 dark:text-white">Change Super Admin Password</h2>
                 <p className="text-[11px] text-slate-500">Update master security credentials for @{user?.username || 'admin'}</p>
               </div>
             </div>
 
             {passwordSuccess && (
-              <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2">
+              <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 shrink-0" />
                 <span>{passwordSuccess}</span>
               </div>
             )}
 
             {passwordError && (
-              <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+              <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-500/40 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>{passwordError}</span>
               </div>
@@ -349,36 +349,36 @@ export default function AdminSettings() {
 
             <form onSubmit={handleChangePassword} className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Current Password *</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Current Password *</label>
                 <input
                   required
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#0a0d14] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-amber-500/60 transition"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-[#0a0d14] border border-slate-300 dark:border-white/10 rounded-lg text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 transition shadow-sm"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">New Password * (Min 8 chars)</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">New Password * (Min 8 chars)</label>
                   <input
                     required
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#0a0d14] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-amber-500/60 transition"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-[#0a0d14] border border-slate-300 dark:border-white/10 rounded-lg text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 transition shadow-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Confirm New Password *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Confirm New Password *</label>
                   <input
                     required
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#0a0d14] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-amber-500/60 transition"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-[#0a0d14] border border-slate-300 dark:border-white/10 rounded-lg text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 transition shadow-sm"
                   />
                 </div>
               </div>
@@ -386,7 +386,7 @@ export default function AdminSettings() {
               <button
                 type="submit"
                 disabled={savingPassword}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-amber-600 hover:bg-amber-500 text-white transition disabled:opacity-50 cursor-pointer w-full sm:w-auto"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-amber-600 hover:bg-amber-500 text-white transition disabled:opacity-50 cursor-pointer w-full sm:w-auto shadow-sm"
               >
                 <Key className="w-4 h-4" />
                 <span>{savingPassword ? 'Updating...' : 'Update Password'}</span>
@@ -398,46 +398,46 @@ export default function AdminSettings() {
         {/* Right Column: System & Architecture Info (1 span) */}
         <div className="space-y-6">
           {/* Cloud Database Info */}
-          <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                <Database className="w-4 h-4 text-emerald-400" />
+                <Database className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white">Cloud Database</h3>
-                <span className="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider">Connected & Synced</span>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Cloud Database</h3>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider">Connected & Synced</span>
               </div>
             </div>
 
-            <div className="space-y-3 pt-2 text-xs border-t border-white/5">
+            <div className="space-y-3 pt-2 text-xs border-t border-slate-200 dark:border-white/5">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">Database Engine</span>
-                <span className="font-semibold text-white">MySQL 8.0</span>
+                <span className="text-slate-500 dark:text-slate-400">Database Engine</span>
+                <span className="font-semibold text-slate-900 dark:text-white">MySQL 8.0</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">Total Worship Songs</span>
-                <span className="font-bold text-fuchsia-400">
+                <span className="text-slate-500 dark:text-slate-400">Total Worship Songs</span>
+                <span className="font-bold text-fuchsia-600 dark:text-fuchsia-400">
                   {totalSongsCount !== null ? `${totalSongsCount} Songs` : 'Loading...'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">Tamil Bible DB</span>
-                <span className="font-semibold text-emerald-400">31,102 Verses</span>
+                <span className="text-slate-500 dark:text-slate-400">Tamil Bible DB</span>
+                <span className="font-semibold text-emerald-600 dark:text-emerald-400">31,102 Verses</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">Shared Data Mode</span>
-                <span className="font-semibold text-white">Multi-Operator Central</span>
+                <span className="text-slate-500 dark:text-slate-400">Shared Data Mode</span>
+                <span className="font-semibold text-slate-900 dark:text-white">Multi-Operator Central</span>
               </div>
             </div>
           </div>
 
           {/* Architecture Guardrails Reminder */}
-          <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-3 text-xs">
-            <div className="flex items-center gap-2 text-slate-300 font-bold uppercase tracking-wider text-[10px]">
-              <Shield className="w-3.5 h-3.5 text-fuchsia-400" />
+          <div className="bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-3 text-xs">
+            <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px]">
+              <Shield className="w-3.5 h-3.5 text-fuchsia-600 dark:text-fuchsia-400" />
               <span>SaaS Security Core</span>
             </div>
-            <ul className="space-y-2 text-slate-400 leading-relaxed list-disc list-inside">
+            <ul className="space-y-2 text-slate-600 dark:text-slate-400 leading-relaxed list-disc list-inside">
               <li>Authentication is strictly enforced on the PHP backend via cryptographically secure session tokens.</li>
               <li>Each user has individual credentials and session audit trails.</li>
               <li>Super Admin can remotely revoke sessions and enforce immediate lockouts.</li>

@@ -5,6 +5,26 @@
     <link rel="icon" type="image/png" href="/logo.png" />
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <script>
+      (function() {
+        try {
+          var stored = localStorage.getItem('playcast-theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored ? stored : 'dark';
+          var resolved = theme === 'system' ? (prefersDark ? 'dark' : 'light') : theme;
+          if (resolved === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+          }
+          var meta = document.querySelector('meta[name="color-scheme"]');
+          if (meta) meta.setAttribute('content', resolved);
+        } catch (e) {}
+      })();
+    </script>
     <title>RMC Church PlayCast</title>
     <meta name="description" content="RMC Church PlayCast — Church Presentation, Worship Lyrics, Tamil Bible & OBS Studio Broadcast Software." />
     <meta name="author" content="BlueChip Computers LLP" />

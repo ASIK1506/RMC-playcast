@@ -53,16 +53,16 @@ export default function AdminDashboard() {
   return (
     <div className="p-5 lg:p-8 space-y-5 max-w-7xl mx-auto">
       {/* Executive Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-white/10">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-extrabold text-white tracking-tight">System Dashboard</h1>
-            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">System Dashboard</h1>
+            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
               Live Cloud DB
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Overview of SaaS operator accounts, licensing capacity, and security activity.
           </p>
         </div>
@@ -80,7 +80,7 @@ export default function AdminDashboard() {
             size="sm"
             variant="outline"
             onClick={() => navigate('/admin/settings')}
-            className="h-8 text-xs border-white/10 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer"
+            className="h-8 text-xs border border-slate-300 dark:border-white/10 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white cursor-pointer shadow-sm"
           >
             <span>License Policy</span>
           </Button>
@@ -90,25 +90,25 @@ export default function AdminDashboard() {
       {/* Stats Grid: Sleek, Anti-Slop Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
         <StatCard
-          icon={<Users className="w-4 h-4 text-slate-300" />}
+          icon={<Users className="w-4 h-4 text-slate-600 dark:text-slate-300" />}
           label="Total Accounts"
           value={data.totalUsers}
           subtext="Provisioned operators"
         />
         <StatCard
-          icon={<UserCheck className="w-4 h-4 text-emerald-400" />}
+          icon={<UserCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />}
           label="Active Accounts"
           value={data.activeUsers}
           badge={{ text: 'Active', color: 'emerald' }}
         />
         <StatCard
-          icon={<UserX className="w-4 h-4 text-rose-400" />}
+          icon={<UserX className="w-4 h-4 text-rose-600 dark:text-rose-400" />}
           label="Disabled"
           value={data.disabledUsers}
           subtext={data.disabledUsers > 0 ? 'Access suspended' : 'No accounts disabled'}
         />
         <StatCard
-          icon={<Clock className="w-4 h-4 text-amber-400" />}
+          icon={<Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />}
           label="Expired"
           value={data.expiredUsers}
           subtext={data.expiredUsers > 0 ? 'Requires renewal' : 'All accounts valid'}
@@ -118,38 +118,38 @@ export default function AdminDashboard() {
       {/* Row 2: Capacity Gauge + Recently Registered */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Capacity Card */}
-        <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-3.5">
+        <div className="bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-3.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center text-fuchsia-400">
+              <div className="w-7 h-7 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center text-fuchsia-600 dark:text-fuchsia-400">
                 <Shield className="w-3.5 h-3.5" />
               </div>
-              <h3 className="text-xs font-bold text-white tracking-wide">License & Capacity</h3>
+              <h3 className="text-xs font-bold text-slate-900 dark:text-white tracking-wide">License & Capacity</h3>
             </div>
-            <span className="text-[10px] font-semibold text-fuchsia-300 bg-fuchsia-950/40 border border-fuchsia-500/30 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] font-semibold text-fuchsia-700 dark:text-fuchsia-300 bg-fuchsia-100 dark:bg-fuchsia-950/40 border border-fuchsia-300 dark:border-fuchsia-500/30 px-2 py-0.5 rounded-full">
               {data.capacity.tier}
             </span>
           </div>
 
           <div className="space-y-2 text-xs">
-            <div className="flex items-center justify-between text-slate-400">
+            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
               <span>Account Limit Policy:</span>
-              <span className="text-white font-semibold">
+              <span className="text-slate-900 dark:text-white font-semibold">
                 {data.capacity.unlimited
                   ? 'Unlimited Accounts Policy (0)'
                   : `${data.capacity.max} Accounts Fixed Cap`}
               </span>
             </div>
-            <div className="flex items-center justify-between text-slate-400">
+            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
               <span>Currently In Use:</span>
-              <span className="text-white font-semibold">
+              <span className="text-slate-900 dark:text-white font-semibold">
                 {data.capacity.current} {data.capacity.current === 1 ? 'account' : 'accounts'}
               </span>
             </div>
 
             {!data.capacity.unlimited && data.capacity.max > 0 ? (
               <div className="pt-2">
-                <div className="w-full bg-slate-900 border border-white/5 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-full h-2 overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
                       capacityPercent >= 90
@@ -167,8 +167,8 @@ export default function AdminDashboard() {
                 </div>
               </div>
             ) : (
-              <div className="pt-1 flex items-center gap-2 text-[11px] text-emerald-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <div className="pt-1 flex items-center gap-2 text-[11px] text-emerald-600 dark:text-emerald-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                 <span>Unlimited account capacity active — no hard limits applied.</span>
               </div>
             )}
@@ -176,13 +176,13 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recently Registered Users */}
-        <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-3">
+        <div className="bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                 <Users className="w-3.5 h-3.5" />
               </div>
-              <h3 className="text-xs font-bold text-white tracking-wide">Recent Operator Accounts</h3>
+              <h3 className="text-xs font-bold text-slate-900 dark:text-white tracking-wide">Recent Operator Accounts</h3>
             </div>
             <span className="text-[10px] text-slate-500 font-mono">
               {data.recentUsers.length} shown
@@ -196,14 +196,14 @@ export default function AdminDashboard() {
               data.recentUsers.slice(0, 5).map((u) => (
                 <div
                   key={u.id}
-                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/40 border border-white/5 hover:border-white/10 transition-colors"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/10 transition-colors"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-6 h-6 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
+                    <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-white/10 flex items-center justify-center text-[10px] font-bold text-slate-700 dark:text-white shrink-0">
                       {u.name?.charAt(0)?.toUpperCase() || u.username.charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold text-white truncate leading-tight">
+                      <p className="text-xs font-semibold text-slate-900 dark:text-white truncate leading-tight">
                         {u.name || u.username}
                       </p>
                       <p className="text-[10px] text-slate-500 truncate mt-0.5">
@@ -214,10 +214,10 @@ export default function AdminDashboard() {
                   <span
                     className={`text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
                       u.status === 'ACTIVE'
-                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
+                        ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
                         : u.status === 'DISABLED'
-                        ? 'bg-rose-500/15 text-rose-400 border border-rose-500/20'
-                        : 'bg-amber-500/15 text-amber-400 border border-amber-500/20'
+                        ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20'
+                        : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20'
                     }`}
                   >
                     {u.status}
@@ -230,14 +230,14 @@ export default function AdminDashboard() {
       </div>
 
       {/* Row 3: Security & Activity Audit Log */}
-      <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-3">
+      <div className="bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-xl p-4 sm:p-5 shadow-sm space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
               <Activity className="w-3.5 h-3.5" />
             </div>
             <div>
-              <h3 className="text-xs font-bold text-white tracking-wide">Security Audit Trail</h3>
+              <h3 className="text-xs font-bold text-slate-900 dark:text-white tracking-wide">Security Audit Trail</h3>
               <p className="text-[10px] text-slate-500">Live access logs, credential changes, and system events</p>
             </div>
           </div>
@@ -246,10 +246,10 @@ export default function AdminDashboard() {
           </span>
         </div>
 
-        <div className="overflow-x-auto rounded-lg border border-white/5">
+        <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-white/5">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-white/5 bg-slate-900/60 text-slate-400">
+              <tr className="border-b border-slate-200 dark:border-white/5 bg-slate-100/80 dark:bg-slate-900/60 text-slate-600 dark:text-slate-400">
                 <th className="text-left py-2 px-3 font-semibold text-[11px]">Timestamp</th>
                 <th className="text-left py-2 px-3 font-semibold text-[11px]">User</th>
                 <th className="text-left py-2 px-3 font-semibold text-[11px]">Action</th>
@@ -257,7 +257,7 @@ export default function AdminDashboard() {
                 <th className="text-left py-2 px-3 font-semibold text-[11px]">Details</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-slate-200 dark:divide-white/5">
               {data.recentActivity.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="py-6 text-center text-slate-500">
@@ -266,14 +266,14 @@ export default function AdminDashboard() {
                 </tr>
               ) : (
                 data.recentActivity.map((log) => (
-                  <tr key={log.id} className="hover:bg-slate-900/30 transition-colors">
-                    <td className="py-2 px-3 text-slate-400 font-mono text-[10px] whitespace-nowrap">
+                  <tr key={log.id} className="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
+                    <td className="py-2 px-3 text-slate-500 dark:text-slate-400 font-mono text-[10px] whitespace-nowrap">
                       {new Date(log.createdAt).toLocaleString('en-IN', {
                         dateStyle: 'short',
                         timeStyle: 'medium',
                       })}
                     </td>
-                    <td className="py-2 px-3 text-white font-medium">
+                    <td className="py-2 px-3 text-slate-900 dark:text-white font-medium">
                       {log.username ? `@${log.username}` : 'System'}
                     </td>
                     <td className="py-2 px-3">
@@ -285,10 +285,10 @@ export default function AdminDashboard() {
                         {formatActionLabel(log.action)}
                       </span>
                     </td>
-                    <td className="py-2 px-3 text-slate-400 font-mono text-[10px]">
+                    <td className="py-2 px-3 text-slate-500 dark:text-slate-400 font-mono text-[10px]">
                       {log.ipAddress}
                     </td>
-                    <td className="py-2 px-3 text-slate-400 text-[11px]">
+                    <td className="py-2 px-3 text-slate-600 dark:text-slate-400 text-[11px]">
                       {formatDetails(log.details)}
                     </td>
                   </tr>
@@ -316,21 +316,21 @@ function StatCard({
   badge?: { text: string; color: string };
 }) {
   return (
-    <div className="bg-[#0c0f16] border border-white/10 rounded-xl p-3.5 sm:p-4 shadow-sm flex flex-col justify-between">
+    <div className="bg-white dark:bg-[#0c0f16] border border-slate-200 dark:border-white/10 rounded-xl p-3.5 sm:p-4 shadow-sm flex flex-col justify-between">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           {label}
         </span>
-        <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center shrink-0">
+        <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 flex items-center justify-center shrink-0">
           {icon}
         </div>
       </div>
       <div>
-        <p className="text-2xl font-extrabold text-white tracking-tight">{value}</p>
+        <p className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">{value}</p>
         {subtext && <p className="text-[10px] text-slate-500 mt-0.5 truncate">{subtext}</p>}
         {badge && (
-          <div className="flex items-center gap-1 mt-1 text-[10px] text-emerald-400 font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <div className="flex items-center gap-1 mt-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
             <span>{badge.text}</span>
           </div>
         )}
